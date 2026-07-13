@@ -16,7 +16,7 @@ abstract: >-
   22-vector threat-control crosswalk, a matched malicious/benign test corpus,
   tool adapters, a runner and scorer, and an accompanying whitepaper.
 license: Apache-2.0
-version: 0.1.0
+version: 0.2.0
 date-released: "2026-07-13"
 keywords:
   - Model Context Protocol
