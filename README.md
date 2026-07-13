@@ -7,6 +7,8 @@ surface they actually defend — mapped to NIST AI RMF and the OWASP Top 10s.**
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21346206.svg)](https://doi.org/10.5281/zenodo.21346206)
 
+📊 **Live leaderboard: [gowthaman90.github.io/mcp-defense-bench](https://gowthaman90.github.io/mcp-defense-bench/)**
+
 _Working name — pre-publication, freely renameable._
 
 </div>
