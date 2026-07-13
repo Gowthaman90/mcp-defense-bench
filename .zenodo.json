@@ -1,0 +1,26 @@
+{
+  "title": "mcp-defense-bench: A Layer-Aware, Framework-Mapped Benchmark for Model Context Protocol Security Proxies",
+  "upload_type": "software",
+  "description": "<p>A vendor-neutral benchmark that measures how much of the Model Context Protocol (MCP) attack surface a defensive proxy or gateway actually covers, driving each tool through its real code. It contributes: (1) a threat–control crosswalk of 22 MCP attack vectors mapped to architectural layer, STRIDE, the NIST AI Risk Management Framework, and the OWASP Top 10 for LLM and Agentic Applications; (2) a matched malicious/benign test corpus; (3) adapters, a runner, and a scorer; and (4) an accompanying whitepaper. This deposit includes the rubric, corpus, adapters, harness, and the whitepaper (Markdown, LaTeX, and PDF).</p><p>Rubric data and the whitepaper are licensed CC-BY-4.0; the harness code is Apache-2.0.</p>",
+  "creators": [
+    {
+      "name": "Arumugam, Gowthaman",
+      "affiliation": "Independent Researcher"
+    }
+  ],
+  "license": "Apache-2.0",
+  "access_right": "open",
+  "keywords": [
+    "Model Context Protocol",
+    "MCP",
+    "AI security",
+    "LLM agents",
+    "agentic AI",
+    "security benchmark",
+    "tool poisoning",
+    "prompt injection",
+    "NIST AI RMF",
+    "OWASP LLM Top 10",
+    "OWASP Agentic Top 10"
+  ]
+}

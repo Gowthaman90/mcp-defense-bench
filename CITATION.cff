@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or its crosswalk, please cite it."
+title: "mcp-defense-bench: A Layer-Aware, Framework-Mapped Benchmark for Model Context Protocol Security Proxies"
+type: software
+authors:
+  - given-names: Gowthaman
+    family-names: Arumugam
+    email: agowthaman90@gmail.com
+    affiliation: "Independent Researcher"
+repository-code: "https://github.com/Gowthaman90/mcp-defense-bench"
+url: "https://github.com/Gowthaman90/mcp-defense-bench"
+abstract: >-
+  A vendor-neutral benchmark measuring how much of the Model Context Protocol
+  (MCP) attack surface a defensive proxy actually covers, crosswalked to the
+  NIST AI RMF and the OWASP Top 10 for LLM and Agentic Applications. Includes a
+  22-vector threat-control crosswalk, a matched malicious/benign test corpus,
+  tool adapters, a runner and scorer, and an accompanying whitepaper.
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-07-13"
+keywords:
+  - Model Context Protocol
+  - MCP
+  - AI security
+  - LLM agents
+  - security benchmark
+  - NIST AI RMF
+  - OWASP
