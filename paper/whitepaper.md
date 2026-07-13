@@ -291,6 +291,7 @@ track their progress.
 - Evaluated third-party tools are used under their own licenses (mcp-firewall: AGPL-3.0; pipelock:
   Apache-2.0 core) and are not redistributed here.
 
+- **Preprint of this paper:** DOI [10.6084/m9.figshare.32978657](https://doi.org/10.6084/m9.figshare.32978657)
 - **mcp-defense-bench:** https://github.com/Gowthaman90/mcp-defense-bench · archived on Zenodo,
   DOI [10.5281/zenodo.21346206](https://doi.org/10.5281/zenodo.21346206)
 - **mcp-bastion:** https://github.com/Gowthaman90/mcp-bastion · npm: `mcp-bastion`

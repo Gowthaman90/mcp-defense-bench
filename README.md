@@ -11,8 +11,10 @@ _Working name — pre-publication, freely renameable._
 
 </div>
 
-> **Cite this work:** Arumugam, G. (2026). *mcp-defense-bench: A Layer-Aware, Framework-Mapped
-> Benchmark for Model Context Protocol Security Proxies.* Zenodo. https://doi.org/10.5281/zenodo.21346206
+> **Cite this work:** Arumugam, G. (2026). *Measuring the Defenders: A Layer-Aware, Framework-Mapped
+> Benchmark for Model Context Protocol Security Proxies.*
+> Preprint: [10.6084/m9.figshare.32978657](https://doi.org/10.6084/m9.figshare.32978657) ·
+> Benchmark archive: [10.5281/zenodo.21346206](https://doi.org/10.5281/zenodo.21346206)
 
 ---
 
