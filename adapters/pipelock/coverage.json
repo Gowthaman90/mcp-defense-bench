@@ -28,12 +28,12 @@
       "verified": true
     },
     "response-injection": {
-      "level": "none",
-      "evidence": "response-injection/001-result-borne-instruction",
+      "level": "detect",
+      "evidence": "response-injection/002-homoglyph-evasion",
       "verified": true
     },
     "indirect-retrieval-injection": {
-      "level": "none",
+      "level": "detect",
       "evidence": "indirect-retrieval-injection/001-document-borne-payload",
       "verified": true
     },
@@ -113,8 +113,8 @@
       "verified": true
     },
     "system-prompt-leakage": {
-      "level": "none",
-      "evidence": "system-prompt-leakage/001-context-exfil-request",
+      "level": "detect",
+      "evidence": "system-prompt-leakage/002-result-solicits-prompt",
       "verified": true
     }
   }

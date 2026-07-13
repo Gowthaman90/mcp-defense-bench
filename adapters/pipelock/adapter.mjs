@@ -1,14 +1,14 @@
 /**
- * pipelock adapter — drives the tool's REAL scanner via `pipelock explain --json`.
+ * pipelock adapter — drives the tool's REAL scanners, offline and deterministically:
+ *   - `pipelock explain --json <url>`  → URL/egress verdict (SSRF, cloud-metadata, private-IP, DLP)
+ *   - `pipelock mcp scan --json` (stdin) → prompt-injection scan of an MCP JSON-RPC response
  *
- * pipelock (Go, Apache-2.0 core) is a network/egress firewall: it decides whether a destination URL
- * is safe (SSRF, cloud-metadata, private-IP, DLP, blocklist, path traversal). `explain` runs the
- * offline, pre-DNS layers and emits a structured verdict — deterministic and safe (no network).
- *
- * Integrity rule (adapters/CONTRACT.md): pipelock inspects DESTINATIONS. So this adapter extracts the
- * URLs a fixture would cause the agent to reach (URL literals anywhere, plus a URL built from an
- * explicit host/endpoint field) and scans each. Fixtures with no destination (tool definitions,
- * registry entries, consent) are not something pipelock inspects → detect=false, honestly.
+ * Neither needs the network or a running server. Per the integrity rule (adapters/CONTRACT.md),
+ * pipelock inspects (a) destination URLs and (b) response content, so this adapter checks exactly
+ * those: it extracts destination URLs from a fixture and scans them, and for tool-result fixtures it
+ * wraps the returned content in an MCP response and runs pipelock's injection scanner. Fixtures with
+ * neither a destination nor a scannable response (tool definitions, registry entries, consent) are
+ * not something pipelock inspects here → detect=false, honestly.
  */
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -24,14 +24,13 @@ function ensureSetup() {
   if (checked) return;
   if (!existsSync(bin)) {
     throw new Error(
-      `pipelock binary not found at ${bin}. See docs/ADAPTERS.md (download + checksum-verify the ` +
-        `darwin/linux release into .tools/pipelock/).`,
+      `pipelock binary not found at ${bin}. See docs/ADAPTERS.md (download + checksum-verify the release into .tools/pipelock/).`,
     );
   }
   checked = true;
 }
 
-/** Every destination URL a fixture implies: URL literals + a URL built from a host/endpoint field. */
+/** Destination URLs a fixture implies: URL literals + a URL built from an outbound `endpoint` field. */
 function urlsIn(input) {
   const found = new Set();
   const walk = (v) => {
@@ -42,8 +41,6 @@ function urlsIn(input) {
       v.forEach(walk);
     } else if (v && typeof v === "object") {
       for (const [k, val] of Object.entries(v)) {
-        // A bare outbound endpoint the agent would connect to. NB: only `endpoint` — not `host`,
-        // which in these fixtures is an INBOUND local target, not an egress destination pipelock sees.
         if (k === "endpoint" && typeof val === "string" && !/^https?:\/\//.test(val)) {
           found.add(`http://${val}`);
         }
@@ -55,14 +52,28 @@ function urlsIn(input) {
   return [...found];
 }
 
+/** Scan one URL through pipelock's offline SSRF/DLP/egress layers. */
 function scanUrl(u) {
   const res = spawnSync(bin, ["explain", "--json", u], { encoding: "utf8", timeout: 15000 });
   const out = (res.stdout || "").trim();
   if (!out) return null;
   try {
-    // explain may prepend advisory lines; take the JSON object.
-    const json = out.slice(out.indexOf("{"));
-    return JSON.parse(json);
+    return JSON.parse(out.slice(out.indexOf("{")));
+  } catch {
+    return null;
+  }
+}
+
+/** Run pipelock's MCP prompt-injection scanner over a tool result's returned content. */
+function scanResponse(input) {
+  const content = input.result?.content;
+  if (!Array.isArray(content)) return null;
+  const rpc = JSON.stringify({ jsonrpc: "2.0", id: 1, result: { content } });
+  const res = spawnSync(bin, ["mcp", "scan", "--json"], { input: rpc + "\n", encoding: "utf8", timeout: 15000 });
+  const line = (res.stdout || "").trim().split("\n").filter((l) => l.startsWith("{")).pop();
+  if (!line) return null;
+  try {
+    return JSON.parse(line); // { clean, action, matches }
   } catch {
     return null;
   }
@@ -70,18 +81,24 @@ function scanUrl(u) {
 
 export async function assess(input, _testcase) {
   ensureSetup();
-  const urls = urlsIn(input);
-  if (urls.length === 0) return { detect: false, enforce: false };
 
-  for (const u of urls) {
+  // (a) Destination/egress scanning — a blocked URL is an outright enforce.
+  for (const u of urlsIn(input)) {
     const v = scanUrl(u);
     if (v && v.allowed === false) {
-      return {
-        detect: true,
-        enforce: true, // pipelock blocks the destination outright
-        signal: `${v.scanner ?? "block"}: ${(v.reason ?? "blocked").toString().slice(0, 70)}`,
-      };
+      return { detect: true, enforce: true, signal: `${v.scanner ?? "block"}: ${(v.reason ?? "blocked").toString().slice(0, 60)}` };
     }
   }
+
+  // (b) Response content scanning — prompt injection in a tool result.
+  if (input.type === "malicious-tool-result" || input.type === "benign-tool-result") {
+    const v = scanResponse(input);
+    if (v && v.clean === false) {
+      const enforce = v.action === "block" || v.action === "strip";
+      const rules = (v.matches ?? []).map((m) => m.pattern_name).join(", ");
+      return { detect: true, enforce, signal: `mcp-injection: ${rules || v.action}` };
+    }
+  }
+
   return { detect: false, enforce: false };
 }

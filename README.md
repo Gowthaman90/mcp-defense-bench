@@ -72,15 +72,20 @@ Measured against the v2 corpus (28 cases: 22 v1 + 6 realistic/tool-neutral):
 
 | Tool | Class | Weighted coverage | Verified | False positives |
 |---|---|--:|---|---|
-| `mcp-bastion` | runtime-proxy | **34% (7.5/22)** | 22/22 | 0 / 28 |
-| `mcp-firewall` | runtime-proxy | **14% (3.0/22)** | 22/22 | 0 / 28 |
-| `pipelock` | egress-firewall | **5% (1.0/22)** | 22/22 | 0 / 28 |
-| `null-baseline` | control | 0% | 22/22 | 0 / 28 |
+| `mcp-bastion` | runtime-proxy | **34% (7.5/22)** | 22/22 | 0 / 31 |
+| `mcp-firewall` | runtime-proxy | **14% (3.0/22)** | 22/22 | 0 / 31 |
+| `pipelock` | egress-firewall | **11% (2.5/22)** | 22/22 | 0 / 31 |
+| `null-baseline` | control | 0% | 22/22 | 0 / 31 |
 
-_(mcp-bastion coverage reflects v0.3–v0.6 features — response scanning, schema validation, transport
-hardening, sensitive-argument + least-privilege scanning — each added and then verified by this
-benchmark, 9% → 34%, zero false positives. 34% is a runtime proxy's realistic ceiling; the remaining
-9 vectors need attestation / OS isolation.)_
+_Corpus: 31 cases (22 base + 6 realistic + 3 evasion). mcp-bastion coverage reflects v0.3–v0.6
+features — response scanning, schema validation, transport hardening, sensitive-argument +
+least-privilege scanning — each verified here (9% → 34%). pipelock is driven through both its URL/egress
+scanner and its MCP injection scanner. 34% is a runtime proxy's realistic ceiling; the remaining 9
+vectors need attestation / OS isolation._
+
+**Evasion robustness** ([docs/ROBUSTNESS.md](docs/ROBUSTNESS.md)): obfuscated attack variants show the
+tools are robust to *different* evasions — mcp-bastion catches zero-width/bidi (1/3), pipelock catches
+homoglyph + base64 (2/3), and no tool survives all three. Defense-in-depth holds at the evasion layer too.
 
 Each drives the tool's **real** code (bastion's `scanTool`/`scanText`/`hashToolDefinition`;
 mcp-firewall's Python SDK; pipelock's `explain` scanner). The headline finding is **complementarity,

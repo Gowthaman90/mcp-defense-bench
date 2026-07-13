@@ -36,8 +36,12 @@ hand; it validates every rubric vector is covered before writing).
 | Breadth | Status |
 |---|---|
 | ≥1 malicious + benign fixture per vector (22/22) | ✅ done |
-| Multiple fixtures per vector (variants, evasions) | ⬜ next — deepen high-severity vectors first |
-| Live adapter runner that executes fixtures against a tool | ⬜ next — turns claims into `verified: true` |
+| Realistic tool-neutral encodings (v2, 6 cases) | ✅ done |
+| Evasion-robustness variants (v3, 3 cases: zero-width/bidi, homoglyph, base64) | ✅ done — see `../docs/ROBUSTNESS.md` |
+| Live adapter runner that executes fixtures against a tool | ✅ done — `../bin/run.mjs` |
+
+**Corpus size: 31 cases** across 22 vectors. Fixtures with an `evasion` field are obfuscated variants
+used by `../bin/robustness.mjs` to measure per-encoding detection.
 
 Next: a runner that feeds each fixture to an adapter and records detect/enforce, so the scorer
 reports **verified** coverage instead of self-reported or `unknown` levels.

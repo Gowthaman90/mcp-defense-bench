@@ -75,13 +75,14 @@ vector only when a fixture confirms it. `unknown` = not yet assessed (scored as 
 - ✅ **mcp-firewall** — installed (py3.12 venv, v0.1.0), wired via `probe_server.py` → real SDK with
   committed `mcp-firewall.yaml`. Measured 5%. Verified fully local (no cloud key). Confirmed AGPL —
   we run it to benchmark, we don't redistribute its code.
-- ✅ **pipelock** — v3.0.0 binary (checksum-verified), wired via `pipelock explain --json` (offline,
-  deterministic, no network). Adapter extracts each fixture's destination URLs and scans them.
-  Measured 5% (cross-tool-exfiltration via SSRF/metadata), 0 false positives.
-  **Known limitation:** only pipelock's **URL/egress scanner** is wired. Its text-based prompt-injection
-  (32 patterns) and tool-poisoning (17 MCP rules) run in its **server/eval mode**, which this adapter
-  does not drive — so pipelock's measured coverage is a *lower bound* on its egress capability and
-  excludes its content scanning. Wiring the eval endpoint is future work.
+- ✅ **pipelock** — v3.0.0 binary (checksum-verified), wired via two offline, deterministic interfaces:
+  `pipelock explain --json <url>` (URL/egress: SSRF, cloud-metadata, DLP) **and** `pipelock mcp scan`
+  (stdin MCP JSON-RPC → prompt-injection scan of tool results). Measured 11% (cross-tool-exfiltration
+  via SSRF; indirect-retrieval, system-prompt-leak, and response-injection via injection scanning),
+  0 false positives. Also robust to homoglyph + base64 evasions (see docs/ROBUSTNESS.md).
+  **Remaining limitation:** poisoned tool *descriptions* (in `tools/list`) aren't flagged by the
+  standalone `mcp scan` CLI, and the full DLP/tool_call eval endpoint (bearer-token HTTP server) is not
+  driven — so this is still a lower bound on pipelock's total capability.
 
 ## Open verification tasks before publishing the leaderboard
 
