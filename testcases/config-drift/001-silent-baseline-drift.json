@@ -1,0 +1,47 @@
+{
+  "vector": "config-drift",
+  "id": "config-drift/001-silent-baseline-drift",
+  "severity": "medium",
+  "description": "A server's effective configuration drifts from a reviewed baseline, weakening a control without a tool-schema change.",
+  "fixture": {
+    "type": "config-snapshot-diff",
+    "baseline": {
+      "tls": "required",
+      "allowedHosts": [
+        "api.internal"
+      ]
+    },
+    "current": {
+      "tls": "optional",
+      "allowedHosts": [
+        "api.internal",
+        "*"
+      ]
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "security-relevant config weakened vs baseline (TLS downgraded, host allowlist widened)"
+  },
+  "benignControl": {
+    "type": "config-snapshot-diff",
+    "baseline": {
+      "tls": "required",
+      "allowedHosts": [
+        "api.internal"
+      ]
+    },
+    "current": {
+      "tls": "required",
+      "allowedHosts": [
+        "api.internal"
+      ]
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic; configuration drift per AgentDefense-Bench."
+}

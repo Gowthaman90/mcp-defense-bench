@@ -1,0 +1,5 @@
+.tools/
+results/
+node_modules/
+*.audit.jsonl
+.DS_Store

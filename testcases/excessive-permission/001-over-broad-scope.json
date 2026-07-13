@@ -1,0 +1,40 @@
+{
+  "vector": "excessive-permission",
+  "id": "excessive-permission/001-over-broad-scope",
+  "severity": "medium",
+  "description": "A read-only task server requests write/delete scopes far beyond its function.",
+  "fixture": {
+    "type": "capability-grant",
+    "tool": {
+      "name": "get_calendar",
+      "description": "Read calendar events."
+    },
+    "requestedScopes": [
+      "calendar.read",
+      "calendar.write",
+      "calendar.delete",
+      "contacts.read",
+      "mail.send"
+    ]
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "requested scopes exceed least-privilege for a read-only calendar tool"
+  },
+  "benignControl": {
+    "type": "capability-grant",
+    "tool": {
+      "name": "get_calendar",
+      "description": "Read calendar events."
+    },
+    "requestedScopes": [
+      "calendar.read"
+    ],
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic; excessive agency / least-privilege per MSB, OWASP LLM06."
+}

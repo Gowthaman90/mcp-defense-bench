@@ -1,0 +1,121 @@
+{
+  "tool": "mcp-firewall",
+  "repo": "https://github.com/ressl/mcp-firewall",
+  "class": "runtime-proxy",
+  "reproducible": true,
+  "version": "TBD",
+  "rubricVersion": "0.1.0-draft",
+  "measuredBy": "bin/run.mjs",
+  "coverage": {
+    "tool-poisoning": {
+      "level": "none",
+      "evidence": "tool-poisoning/001-instruction-override",
+      "verified": true
+    },
+    "tool-shadowing": {
+      "level": "none",
+      "evidence": "tool-shadowing/001-name-collision-override",
+      "verified": true
+    },
+    "rug-pull": {
+      "level": "none",
+      "evidence": "rug-pull/001-post-trust-mutation",
+      "verified": true
+    },
+    "out-of-scope-params": {
+      "level": "none",
+      "evidence": "out-of-scope-params/001-argument-smuggling",
+      "verified": true
+    },
+    "response-injection": {
+      "level": "none",
+      "evidence": "response-injection/001-result-borne-instruction",
+      "verified": true
+    },
+    "indirect-retrieval-injection": {
+      "level": "enforce",
+      "evidence": "indirect-retrieval-injection/002-secret-in-fetched-doc",
+      "verified": true
+    },
+    "cross-tool-exfiltration": {
+      "level": "enforce",
+      "evidence": "cross-tool-exfiltration/001-confused-deputy-chain",
+      "verified": true
+    },
+    "tool-transfer": {
+      "level": "none",
+      "evidence": "tool-transfer/001-cross-server-chaining",
+      "verified": true
+    },
+    "false-error-escalation": {
+      "level": "none",
+      "evidence": "false-error-escalation/001-fake-failure-retry",
+      "verified": true
+    },
+    "package-squatting": {
+      "level": "none",
+      "evidence": "package-squatting/001-typosquat-server-name",
+      "verified": true
+    },
+    "supply-chain-poisoning": {
+      "level": "none",
+      "evidence": "supply-chain-poisoning/001-unverified-artifact-swap",
+      "verified": true
+    },
+    "config-drift": {
+      "level": "none",
+      "evidence": "config-drift/001-silent-baseline-drift",
+      "verified": true
+    },
+    "sandbox-escape": {
+      "level": "none",
+      "evidence": "sandbox-escape/001-host-path-breakout",
+      "verified": true
+    },
+    "schema-bypass": {
+      "level": "none",
+      "evidence": "schema-bypass/001-validation-bypass",
+      "verified": true
+    },
+    "mitm-transport": {
+      "level": "none",
+      "evidence": "mitm-transport/001-downgraded-transport",
+      "verified": true
+    },
+    "dns-rebinding": {
+      "level": "none",
+      "evidence": "dns-rebinding/001-local-server-rebind",
+      "verified": true
+    },
+    "server-impersonation": {
+      "level": "none",
+      "evidence": "server-impersonation/001-unverified-identity",
+      "verified": true
+    },
+    "excessive-permission": {
+      "level": "none",
+      "evidence": "excessive-permission/001-over-broad-scope",
+      "verified": true
+    },
+    "credential-token-theft": {
+      "level": "enforce",
+      "evidence": "credential-token-theft/002-aws-key-in-response",
+      "verified": true
+    },
+    "consent-fatigue": {
+      "level": "none",
+      "evidence": "consent-fatigue/001-broad-standing-grant",
+      "verified": true
+    },
+    "command-injection": {
+      "level": "none",
+      "evidence": "command-injection/001-shell-metacharacter",
+      "verified": true
+    },
+    "system-prompt-leakage": {
+      "level": "none",
+      "evidence": "system-prompt-leakage/001-context-exfil-request",
+      "verified": true
+    }
+  }
+}

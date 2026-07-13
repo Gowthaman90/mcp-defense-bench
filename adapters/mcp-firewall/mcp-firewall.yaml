@@ -1,0 +1,72 @@
+# mcp-firewall configuration
+# Docs: https://github.com/ressl/mcp-firewall/blob/main/docs/policies.md
+version: 1
+defaultAction: prompt  # allow | deny | prompt
+
+globalRateLimit:
+  maxCalls: 200
+  windowSeconds: 60
+
+security:
+  injectionDetection:
+    enabled: true
+    sensitivity: medium  # low | medium | high
+  egressControl:
+    enabled: true
+    blockPrivateIPs: true
+    blockCloudMetadata: true
+
+responseScanning:
+  detectSecrets: true
+  detectPII: false
+
+# Agent-specific policies (RBAC)
+# agents:
+#   claude-desktop:
+#     allow: [read_file, search]
+#     deny: [exec, shell, rm]
+#     rate_limit: "100/min"
+#   cursor:
+#     allow: [read_file, write_file]
+#     require_approval: [exec]
+
+rules:
+  # Block credential access
+  - name: block-ssh-keys
+    tool: "*"
+    match:
+      arguments:
+        path: "**/.ssh/**"
+    action: deny
+    message: "SSH key access blocked"
+
+  # Block env files
+  - name: block-env-files
+    tool: "*"
+    match:
+      arguments:
+        path: "**/.env*"
+    action: deny
+    message: "Environment file access blocked"
+
+  # Block credential directories
+  - name: block-credentials
+    tool: "*"
+    match:
+      arguments:
+        path: "**/.aws/**"
+    action: deny
+
+  # Approve shell commands
+  - name: approve-shell
+    tool: "shell_exec|run_command|execute_command|bash"
+    action: prompt
+
+  # Allow safe reads
+  - name: allow-reads
+    tool: "read_file|get_file_contents|view_file|list_directory"
+    action: allow
+
+audit:
+  enabled: true
+  path: mcp-firewall.audit.jsonl

@@ -1,0 +1,33 @@
+{
+  "vector": "package-squatting",
+  "id": "package-squatting/001-typosquat-server-name",
+  "severity": "medium",
+  "description": "A registry entry uses a name confusingly similar to a popular server to trick installation.",
+  "fixture": {
+    "type": "malicious-registry-entry",
+    "entry": {
+      "name": "io.github.moddelcontextprotocol/filesystem",
+      "displayName": "Filesystem (official)",
+      "publisher": "unverified"
+    },
+    "lookalikeOf": "io.github.modelcontextprotocol/filesystem"
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "server name is a near-edit-distance lookalike of a known-good name"
+  },
+  "benignControl": {
+    "type": "benign-registry-entry",
+    "entry": {
+      "name": "io.github.modelcontextprotocol/filesystem",
+      "displayName": "Filesystem",
+      "publisher": "verified"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic; package/name squatting per AgentDefense-Bench."
+}

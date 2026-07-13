@@ -1,0 +1,720 @@
+{
+  "$schema": "./rubric.schema.json",
+  "artifact": "MCP Threat–Control Crosswalk (rubric)",
+  "version": "0.1.0-draft",
+  "date": "2026-07-13",
+  "license": "CC-BY-4.0",
+  "description": "Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, and OWASP Agentic 2026. Per-tool coverage lives in adapters/*, NOT here, so the rubric stays neutral.",
+  "_frameworks": {
+    "mcpLayer": [
+      "host-orchestration",
+      "client",
+      "transport",
+      "server",
+      "tool",
+      "registry-supply-chain"
+    ],
+    "stride": [
+      "Spoofing",
+      "Tampering",
+      "Repudiation",
+      "InformationDisclosure",
+      "DenialOfService",
+      "ElevationOfPrivilege"
+    ],
+    "nistAiRmf": [
+      "GOVERN",
+      "MAP",
+      "MEASURE",
+      "MANAGE"
+    ],
+    "owaspLlm2025": {
+      "LLM01": "Prompt Injection",
+      "LLM02": "Sensitive Information Disclosure",
+      "LLM03": "Supply Chain",
+      "LLM04": "Data and Model Poisoning",
+      "LLM05": "Improper Output Handling",
+      "LLM06": "Excessive Agency",
+      "LLM07": "System Prompt Leakage",
+      "LLM08": "Vector and Embedding Weaknesses",
+      "LLM09": "Misinformation",
+      "LLM10": "Unbounded Consumption"
+    },
+    "owaspAgentic2026": {
+      "ASI01": "Agent Goal Hijack",
+      "ASI02": "Tool Misuse and Exploitation",
+      "ASI03": "Identity and Privilege Abuse",
+      "ASI04": "Agentic Supply Chain Vulnerabilities",
+      "ASI05": "Unexpected Code Execution (RCE)",
+      "ASI06": "Memory & Context Poisoning",
+      "ASI07": "Insecure Inter-Agent Communication",
+      "ASI08": "Cascading Failures",
+      "ASI09": "Human-Agent Trust Exploitation",
+      "ASI10": "Rogue Agents"
+    }
+  },
+  "_todo": [
+    "DONE 2026-07-13: OWASP Agentic ASI01–ASI10 official titles confirmed against the OWASP GenAI Security Project 2026 release.",
+    "Add NIST AI RMF subcategory IDs (e.g. MEASURE 2.7) where confident; currently function-level only.",
+    "DONE 2026-07-13: second-reviewer pass on all 22 owaspLlm2025 mappings — 20 confirmed, 2 corrected (indirect-retrieval-injection LLM08→LLM01; false-error-escalation +LLM01).",
+    "Populate priorArtCoverage per-benchmark once MSB/MCPTox/AgentDefense-Bench vector lists are reconciled to these IDs."
+  ],
+  "vectors": [
+    {
+      "id": "tool-poisoning",
+      "name": "Tool poisoning",
+      "aliases": [
+        "malicious tool description",
+        "instruction injection via metadata"
+      ],
+      "description": "Malicious instructions embedded in a tool's name/description/schema metadata that the model reads as trusted context. The dominant, most-impactful client-side MCP vulnerability.",
+      "mcpLayer": [
+        "tool",
+        "client"
+      ],
+      "stride": [
+        "Tampering",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI02"
+      ],
+      "priorArtCoverage": [
+        "MSB",
+        "MCPTox",
+        "AgentDefense-Bench",
+        "MCP-Scan"
+      ]
+    },
+    {
+      "id": "tool-shadowing",
+      "name": "Tool name collision / shadowing",
+      "aliases": [
+        "name squatting",
+        "tool override"
+      ],
+      "description": "A malicious server exposes a tool whose name collides with a trusted tool, so the agent may route calls to the attacker's implementation.",
+      "mcpLayer": [
+        "client",
+        "tool"
+      ],
+      "stride": [
+        "Spoofing",
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI04"
+      ],
+      "priorArtCoverage": [
+        "MSB",
+        "AgentDefense-Bench",
+        "MCP-Scan"
+      ]
+    },
+    {
+      "id": "rug-pull",
+      "name": "Rug pull / dynamic capability mutation",
+      "aliases": [
+        "definition mutation after trust",
+        "TOCTOU on tool def"
+      ],
+      "description": "A tool definition changes after it has been approved/trusted, swapping benign behavior for malicious. Time-of-check/time-of-use on the tool schema.",
+      "mcpLayer": [
+        "tool",
+        "registry-supply-chain"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI04"
+      ],
+      "priorArtCoverage": [
+        "MSB",
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "out-of-scope-params",
+      "name": "Out-of-scope parameter injection",
+      "aliases": [
+        "parameter expansion",
+        "argument smuggling"
+      ],
+      "description": "Tool invoked with parameters beyond its declared schema, or values that widen its effect past intended scope.",
+      "mcpLayer": [
+        "tool",
+        "server"
+      ],
+      "stride": [
+        "Tampering",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM05",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02"
+      ],
+      "priorArtCoverage": [
+        "MSB"
+      ]
+    },
+    {
+      "id": "response-injection",
+      "name": "Prompt injection via tool results",
+      "aliases": [
+        "response-handling injection",
+        "output injection"
+      ],
+      "description": "Attacker-controlled content in a tool's *return value* injects instructions the agent then acts on during response handling.",
+      "mcpLayer": [
+        "tool",
+        "client"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM05"
+      ],
+      "owaspAgentic2026": [
+        "ASI01"
+      ],
+      "priorArtCoverage": [
+        "MSB",
+        "MCP-Scan"
+      ]
+    },
+    {
+      "id": "indirect-retrieval-injection",
+      "name": "Indirect / retrieval injection",
+      "aliases": [
+        "RAG injection",
+        "document-borne injection"
+      ],
+      "description": "A tool fetches external content (web page, doc, record) that carries an embedded payload, injecting indirectly without the attacker touching the tool definition.",
+      "mcpLayer": [
+        "tool",
+        "server"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01"
+      ],
+      "owaspAgentic2026": [
+        "ASI01"
+      ],
+      "priorArtCoverage": [
+        "MSB"
+      ]
+    },
+    {
+      "id": "cross-tool-exfiltration",
+      "name": "Cross-tool data exfiltration / confused deputy",
+      "aliases": [
+        "confused deputy",
+        "data siphoning across tools"
+      ],
+      "description": "Sensitive data obtained via one (trusted) tool is exfiltrated through another tool/channel; the agent is the confused deputy.",
+      "mcpLayer": [
+        "client",
+        "host-orchestration"
+      ],
+      "stride": [
+        "InformationDisclosure",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02",
+        "ASI03"
+      ],
+      "priorArtCoverage": [
+        "MSB",
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "tool-transfer",
+      "name": "Tool-transfer / cross-server chaining",
+      "aliases": [
+        "cross-server attack chaining"
+      ],
+      "description": "An attack staged on one server manipulates the agent into acting on another server, chaining privileges across trust boundaries.",
+      "mcpLayer": [
+        "host-orchestration",
+        "client"
+      ],
+      "stride": [
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02",
+        "ASI03"
+      ],
+      "priorArtCoverage": [
+        "MSB"
+      ]
+    },
+    {
+      "id": "false-error-escalation",
+      "name": "False-error escalation",
+      "aliases": [
+        "fake failure retry",
+        "error-driven privilege bait"
+      ],
+      "description": "A tool returns fabricated errors to bait the agent into retrying with broader permissions or an alternate, attacker-preferred path.",
+      "mcpLayer": [
+        "tool",
+        "client"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "DenialOfService"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI02"
+      ],
+      "priorArtCoverage": [
+        "MSB"
+      ]
+    },
+    {
+      "id": "package-squatting",
+      "name": "Package / name squatting in registry",
+      "aliases": [
+        "typosquatting",
+        "server-name squatting"
+      ],
+      "description": "A malicious MCP server published under a name confusingly similar to a trusted one, exploiting the registry's pointer architecture.",
+      "mcpLayer": [
+        "registry-supply-chain"
+      ],
+      "stride": [
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MAP"
+      ],
+      "owaspLlm2025": [
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI04"
+      ],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "supply-chain-poisoning",
+      "name": "Supply-chain poisoning (unverified provenance)",
+      "aliases": [
+        "artifact provenance gap"
+      ],
+      "description": "The registry indexes metadata pointers with no cryptographic verification of the underlying artifact, so a poisoned binary/endpoint can be served under a trusted name.",
+      "mcpLayer": [
+        "registry-supply-chain"
+      ],
+      "stride": [
+        "Tampering",
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM03",
+        "LLM04"
+      ],
+      "owaspAgentic2026": [
+        "ASI04"
+      ],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "config-drift",
+      "name": "Configuration drift",
+      "aliases": [
+        "silent config change"
+      ],
+      "description": "Server/tool configuration changes over time away from a reviewed baseline, weakening controls without an explicit rug-pull of the tool schema.",
+      "mcpLayer": [
+        "server",
+        "host-orchestration"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI04"
+      ],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "sandbox-escape",
+      "name": "Sandbox escape",
+      "aliases": [
+        "host compromise via server"
+      ],
+      "description": "A server exploits weak isolation to execute beyond its sandbox on the host.",
+      "mcpLayer": [
+        "server",
+        "host-orchestration"
+      ],
+      "stride": [
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02",
+        "ASI03"
+      ],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "schema-bypass",
+      "name": "Schema / validation bypass",
+      "aliases": [
+        "input validation bypass"
+      ],
+      "description": "Crafted inputs bypass declared schema/validation to reach unintended server code paths.",
+      "mcpLayer": [
+        "server",
+        "tool"
+      ],
+      "stride": [
+        "Tampering",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM05"
+      ],
+      "owaspAgentic2026": [
+        "ASI02"
+      ],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "mitm-transport",
+      "name": "Man-in-the-middle (transport)",
+      "aliases": [
+        "transport interception"
+      ],
+      "description": "Interception/modification of MCP messages in transit on an unauthenticated or downgraded transport.",
+      "mcpLayer": [
+        "transport"
+      ],
+      "stride": [
+        "Tampering",
+        "InformationDisclosure",
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM02"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "priorArtCoverage": []
+    },
+    {
+      "id": "dns-rebinding",
+      "name": "DNS rebinding (local servers)",
+      "aliases": [
+        "local-server rebinding"
+      ],
+      "description": "A malicious web origin rebinds DNS to reach a locally-bound MCP server, crossing the local trust boundary.",
+      "mcpLayer": [
+        "transport",
+        "host-orchestration"
+      ],
+      "stride": [
+        "Spoofing",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "server-impersonation",
+      "name": "Server impersonation / identity spoofing",
+      "aliases": [
+        "unverified server identity"
+      ],
+      "description": "An endpoint impersonates a trusted server because server identity is unverified (registry proves publisher identity, not artifact/endpoint).",
+      "mcpLayer": [
+        "registry-supply-chain",
+        "transport"
+      ],
+      "stride": [
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI03",
+        "ASI04"
+      ],
+      "priorArtCoverage": []
+    },
+    {
+      "id": "excessive-permission",
+      "name": "Excessive permission / privilege escalation",
+      "aliases": [
+        "over-broad scopes",
+        "privilege creep"
+      ],
+      "description": "A tool/server is granted or acquires more privilege than its task requires, expanding blast radius.",
+      "mcpLayer": [
+        "host-orchestration",
+        "server"
+      ],
+      "stride": [
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "priorArtCoverage": [
+        "MSB"
+      ]
+    },
+    {
+      "id": "credential-token-theft",
+      "name": "Credential / token theft via passthrough",
+      "aliases": [
+        "OAuth token abuse",
+        "token passthrough"
+      ],
+      "description": "Abuse of OAuth/token passthrough to capture or replay credentials the agent holds for downstream services.",
+      "mcpLayer": [
+        "host-orchestration",
+        "transport"
+      ],
+      "stride": [
+        "InformationDisclosure",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "priorArtCoverage": []
+    },
+    {
+      "id": "consent-fatigue",
+      "name": "Consent fatigue / over-broad grants",
+      "aliases": [
+        "click-through consent"
+      ],
+      "description": "Users approve broad scopes under repeated prompts, granting standing access an attacker later abuses.",
+      "mcpLayer": [
+        "client",
+        "host-orchestration"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "Repudiation"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "priorArtCoverage": []
+    },
+    {
+      "id": "command-injection",
+      "name": "Command injection in tool execution",
+      "aliases": [
+        "OS command injection"
+      ],
+      "description": "Unsanitized arguments reach a shell/OS call inside a server, executing attacker commands.",
+      "mcpLayer": [
+        "server"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM05"
+      ],
+      "owaspAgentic2026": [
+        "ASI02"
+      ],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ]
+    },
+    {
+      "id": "system-prompt-leakage",
+      "name": "System-prompt / context leakage via tools",
+      "aliases": [
+        "context exfiltration"
+      ],
+      "description": "A tool coaxes the agent into revealing its system prompt or privileged context in a tool call or response.",
+      "mcpLayer": [
+        "client",
+        "tool"
+      ],
+      "stride": [
+        "InformationDisclosure"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM07",
+        "LLM02"
+      ],
+      "owaspAgentic2026": [
+        "ASI01"
+      ],
+      "priorArtCoverage": [
+        "MSB"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "vector": "dns-rebinding",
+  "id": "dns-rebinding/001-local-server-rebind",
+  "severity": "high",
+  "description": "A remote web origin uses DNS rebinding to reach a locally-bound MCP server, crossing the local trust boundary.",
+  "fixture": {
+    "type": "scenario",
+    "setup": "Local MCP server on 127.0.0.1:7000 with no Origin/Host validation.",
+    "request": {
+      "host": "127.0.0.1:7000",
+      "origin": "https://attacker.example"
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "request to a loopback MCP server carries a foreign Origin (no allowlist)"
+  },
+  "benignControl": {
+    "type": "scenario",
+    "setup": "Local MCP server on 127.0.0.1:7000 with Origin allowlist.",
+    "request": {
+      "host": "127.0.0.1:7000",
+      "origin": "http://localhost:7000"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic; DNS rebinding per AgentDefense-Bench; RFC-5735 loopback."
+}

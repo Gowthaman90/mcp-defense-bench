@@ -1,0 +1,26 @@
+{
+  "vector": "mitm-transport",
+  "id": "mitm-transport/002-plaintext-remote-endpoint",
+  "severity": "high",
+  "description": "A concrete plaintext remote MCP endpoint URL, for tools that inspect transport/egress.",
+  "fixture": {
+    "type": "scenario",
+    "setup": "Remote MCP server configured at an unencrypted endpoint.",
+    "endpoint": "http://mcp.vendor.example/rpc"
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "http:// (plaintext) endpoint to a remote host"
+  },
+  "benignControl": {
+    "type": "scenario",
+    "setup": "Remote MCP server over TLS.",
+    "endpoint": "https://mcp.vendor.example/rpc",
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic; transport-layer gap per MCP-DPT (arXiv:2604.07551)."
+}

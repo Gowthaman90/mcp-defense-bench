@@ -1,0 +1,121 @@
+{
+  "tool": "mcp-bastion",
+  "repo": "https://github.com/Gowthaman90/mcp-bastion",
+  "class": "runtime-proxy",
+  "reproducible": true,
+  "version": "0.2.0",
+  "rubricVersion": "0.1.0-draft",
+  "measuredBy": "bin/run.mjs",
+  "coverage": {
+    "tool-poisoning": {
+      "level": "detect",
+      "evidence": "tool-poisoning/001-instruction-override",
+      "verified": true
+    },
+    "tool-shadowing": {
+      "level": "detect",
+      "evidence": "tool-shadowing/001-name-collision-override",
+      "verified": true
+    },
+    "rug-pull": {
+      "level": "enforce",
+      "evidence": "rug-pull/001-post-trust-mutation",
+      "verified": true
+    },
+    "out-of-scope-params": {
+      "level": "detect",
+      "evidence": "out-of-scope-params/001-argument-smuggling",
+      "verified": true
+    },
+    "response-injection": {
+      "level": "detect",
+      "evidence": "response-injection/001-result-borne-instruction",
+      "verified": true
+    },
+    "indirect-retrieval-injection": {
+      "level": "detect",
+      "evidence": "indirect-retrieval-injection/001-document-borne-payload",
+      "verified": true
+    },
+    "cross-tool-exfiltration": {
+      "level": "detect",
+      "evidence": "cross-tool-exfiltration/001-confused-deputy-chain",
+      "verified": true
+    },
+    "tool-transfer": {
+      "level": "none",
+      "evidence": "tool-transfer/001-cross-server-chaining",
+      "verified": true
+    },
+    "false-error-escalation": {
+      "level": "none",
+      "evidence": "false-error-escalation/001-fake-failure-retry",
+      "verified": true
+    },
+    "package-squatting": {
+      "level": "none",
+      "evidence": "package-squatting/001-typosquat-server-name",
+      "verified": true
+    },
+    "supply-chain-poisoning": {
+      "level": "none",
+      "evidence": "supply-chain-poisoning/001-unverified-artifact-swap",
+      "verified": true
+    },
+    "config-drift": {
+      "level": "none",
+      "evidence": "config-drift/001-silent-baseline-drift",
+      "verified": true
+    },
+    "sandbox-escape": {
+      "level": "none",
+      "evidence": "sandbox-escape/001-host-path-breakout",
+      "verified": true
+    },
+    "schema-bypass": {
+      "level": "detect",
+      "evidence": "schema-bypass/001-validation-bypass",
+      "verified": true
+    },
+    "mitm-transport": {
+      "level": "detect",
+      "evidence": "mitm-transport/002-plaintext-remote-endpoint",
+      "verified": true
+    },
+    "dns-rebinding": {
+      "level": "enforce",
+      "evidence": "dns-rebinding/001-local-server-rebind",
+      "verified": true
+    },
+    "server-impersonation": {
+      "level": "none",
+      "evidence": "server-impersonation/001-unverified-identity",
+      "verified": true
+    },
+    "excessive-permission": {
+      "level": "detect",
+      "evidence": "excessive-permission/001-over-broad-scope",
+      "verified": true
+    },
+    "credential-token-theft": {
+      "level": "detect",
+      "evidence": "credential-token-theft/001-token-passthrough-leak",
+      "verified": true
+    },
+    "consent-fatigue": {
+      "level": "none",
+      "evidence": "consent-fatigue/001-broad-standing-grant",
+      "verified": true
+    },
+    "command-injection": {
+      "level": "none",
+      "evidence": "command-injection/001-shell-metacharacter",
+      "verified": true
+    },
+    "system-prompt-leakage": {
+      "level": "detect",
+      "evidence": "system-prompt-leakage/002-result-solicits-prompt",
+      "verified": true
+    }
+  }
+}

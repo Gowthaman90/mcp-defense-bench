@@ -1,0 +1,17 @@
+{
+  "name": "mcp-defense-bench",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Vendor-neutral benchmark scoring MCP security proxies/gateways on attack-surface coverage, crosswalked to NIST AI RMF and the OWASP LLM/Agentic Top 10s.",
+  "type": "module",
+  "bin": {
+    "mcp-defense-bench": "bin/score.mjs"
+  },
+  "scripts": {
+    "score:bastion": "node bin/score.mjs adapters/mcp-bastion/coverage.json",
+    "gen:rubric-md": "node docs/gen-crosswalk-md.mjs > docs/CROSSWALK.md",
+    "validate": "node -e \"JSON.parse(require('fs').readFileSync('rubric/crosswalk.json'))\" && echo ok"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["mcp", "model-context-protocol", "security", "benchmark", "nist-ai-rmf", "owasp"]
+}
