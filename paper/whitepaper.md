@@ -1,8 +1,9 @@
 # Measuring the Defenders: A Layer-Aware, Framework-Mapped Benchmark for Model Context Protocol Security Proxies
 
 **Author:** Gowthaman Arumugam, Independent Researcher (⟨agowthaman90@gmail.com⟩)
-**Version:** 0.1 draft · 2026-07-13 · _preprint, not peer-reviewed_
+**Version:** 0.2 · 2026-07-14 · _preprint, not peer-reviewed_
 **Artifacts:** mcp-defense-bench (benchmark) · mcp-bastion (reference proxy) — see [Availability](#availability)
+**Changes in v0.2:** pipelock's MCP-response injection scanner is now driven (coverage 5% → 11%); the corpus is expanded to 31 cases with an evasion-robustness dimension; framework references include direct URLs.
 
 ---
 
@@ -19,7 +20,7 @@ architectural layer, STRIDE class, NIST AI RMF function, and OWASP category; and
 vendor-neutral **defense-side benchmark** that runs a candidate MCP security proxy against a corpus of
 attack fixtures with matched benign controls, and scores its coverage using the crosswalk as a rubric.
 Each tool is driven through its *real* code, not a mock. We evaluate three open-source proxies
-(mcp-bastion, mcp-firewall, pipelock) plus a null baseline over 28 test cases. The strongest proxy
+(mcp-bastion, mcp-firewall, pipelock) plus a null baseline over 31 test cases. The strongest proxy
 reaches **34% weighted coverage (13 of 22 vectors)** — a proxy's realistic ceiling — and even the
 union of all three tools leaves **9 of 22 vectors covered by none**: the entire registry/supply-chain
 surface, OS-isolation-dependent vectors, and several semantic vectors. All results carry zero false
@@ -28,8 +29,11 @@ proxy alone is insufficient and that defense-in-depth spanning *distinct mechani
 cryptographic attestation, OS isolation) is required. We also report two methodological findings we
 observed first-hand: benchmark scores are sensitive to how attack fixtures are encoded (a fairness
 hazard), and the benchmark can *guide* a defender's development — over the study, mcp-bastion's
-coverage rose from 9% to 34% as gaps it surfaced were fixed and re-verified. A matched benign-control
-design and a "measure only what the tool inspects at runtime" integrity rule keep the results honest.
+coverage rose from 9% to 34% as gaps it surfaced were fixed and re-verified. An evasion-robustness
+dimension makes the encoding-sensitivity point concrete: obfuscated variants (zero-width, homoglyph,
+base64) of known attacks are caught by *different* tools, and no single tool survives all three. A
+matched benign-control design and a "measure only what the tool inspects at runtime" integrity rule
+keep the results honest.
 
 ---
 
@@ -182,15 +186,15 @@ cloud-gated Snyk agent-scan; it includes the three proxies below.
 
 ## 5. Experimental Setup
 
-We evaluate four adapters over a 28-case corpus (22 base cases + 6 realistic "v2" cases added for
-fairness; see Section 7):
+We evaluate four adapters over a 31-case corpus (22 base cases + 6 realistic "v2" cases for fairness +
+3 "v3" evasion-robustness cases; see Section 7):
 
 | Tool | Class | License | How driven |
 |---|---|---|---|
 | **null-baseline** | control | — | returns "not detected" for all inputs |
 | **mcp-bastion** | runtime proxy | Apache-2.0 | imports real detection: `scanTool`, `scanText`, `validateArguments`, `checkRequestedScopes`, `checkTransportSecurity`, `checkRequestOrigin`, `hashToolDefinition` |
 | **mcp-firewall** | runtime proxy (Python) | AGPL-3.0 | real SDK (`Gateway.check` / `scan_response`) with a committed config |
-| **pipelock** | egress firewall (Go) | Apache-2.0 core | real scanner via `explain --json` (offline, deterministic) |
+| **pipelock** | egress firewall (Go) | Apache-2.0 core | real scanners via `explain --json` (URL/egress) and `mcp scan` (MCP-response injection), both offline and deterministic |
 
 For AGPL/other licensed tools we *run* the tool to benchmark it and report scores; we do not
 redistribute their code. Each tool is pinned to a released version and configured with its own
@@ -198,20 +202,21 @@ recommended/starter policy, committed to the repository for reproducibility.
 
 ## 6. Results
 
-**Table 2. Verified coverage (28 cases; weighted over 22 vectors).**
+**Table 2. Verified coverage (31 cases; weighted over 22 vectors).**
 
 | Tool | Class | Weighted coverage | enforce | detect | none | False positives |
 |---|---|--:|--:|--:|--:|--:|
-| mcp-bastion | runtime proxy | **34% (7.5/22)** | 2 | 11 | 9 | 0 / 28 |
-| mcp-firewall | runtime proxy | **14% (3.0/22)** | 3 | 0 | 19 | 0 / 28 |
-| pipelock | egress firewall | **5% (1.0/22)** | 1 | 0 | 21 | 0 / 28 |
-| null-baseline | control | 0% | 0 | 0 | 22 | 0 / 28 |
+| mcp-bastion | runtime proxy | **34% (7.5/22)** | 2 | 11 | 9 | 0 / 31 |
+| mcp-firewall | runtime proxy | **14% (3.0/22)** | 3 | 0 | 19 | 0 / 31 |
+| pipelock | egress firewall | **11% (2.5/22)** | 1 | 2 | 19 | 0 / 31 |
+| null-baseline | control | 0% | 0 | 0 | 22 | 0 / 31 |
 
 **A proxy's ceiling is partial.** mcp-bastion, the broadest tool, spans the definition, response,
 argument, transport, and egress/least-privilege layers (poisoning, shadowing, rug-pull; response and
 retrieval injection and result-borne leakage; schema/parameter validation; plaintext-transport and
 DNS-rebinding defense; sensitive-argument and over-broad-scope detection). mcp-firewall and pipelock
-add *enforcement* (deny/redact/SSRF-block) on the call and egress layers where bastion only warns.
+add *enforcement* (deny/redact/SSRF-block) on the call and egress layers where bastion only warns;
+pipelock additionally detects response-borne prompt injection via its MCP-response scanner.
 
 **Defense-in-depth across mechanism classes is required.** Even with the strongest proxy at 34%, and
 across all three tools, **13 of 22 vectors are covered by at least one tool; 9 are covered by none** —
@@ -221,7 +226,14 @@ false-error escalation, configuration drift, command injection, consent fatigue)
 addressable by *any* runtime proxy; they require different mechanisms — cryptographic attestation, OS
 sandboxing, and client-side controls. A proxy is necessary but not sufficient.
 
-**Zero false positives.** No tool flagged any benign control, across all 28 cases and every feature
+**Evasion robustness.** The corpus includes three obfuscated variants of known attacks — zero-width /
+bidirectional-control characters, Cyrillic homoglyph substitution, and base64-wrapped payloads. The
+tools resist *different* evasions: mcp-bastion catches the zero-width/bidi variant (via a
+hidden-character rule) but misses the others; pipelock catches the homoglyph and base64 variants (via
+a normalization pipeline) but misses zero-width; mcp-firewall catches none. No single tool survives
+all three, so the defense-in-depth conclusion holds at the evasion layer as well as the vector layer.
+
+**Zero false positives.** No tool flagged any benign control, across all 31 cases and every feature
 iteration.
 
 ## 7. Discussion
@@ -256,8 +268,9 @@ positive and corrected by restricting URL synthesis to outbound endpoints.
   pending a second-reviewer pass; OWASP Agentic ASI05–ASI10 labels are unconfirmed.
 - **Small, seeded corpus.** Most vectors have 1–2 fixtures. Absolute coverage numbers should be read as
   lower bounds and are corpus-dependent (Section 7).
-- **Partial tool interfaces.** pipelock's text-injection scanner (server/eval mode) is not driven; only
-  its URL/egress scanner is measured, so its number is a lower bound on its egress capability.
+- **Partial tool interfaces.** For pipelock we drive its offline URL/egress scanner and its MCP-response
+  injection scanner, but not its poisoned-tool-description check or its full DLP/tool-call HTTP eval
+  endpoint; its number therefore remains a lower bound on its total capability.
 - **Configuration dependence.** Results depend on each tool's configured policy; we commit the exact
   configs, but different policies would yield different numbers.
 - **Scope.** We score locally-deterministic proxies; cloud-model and isolation-based tools are out of
@@ -265,8 +278,9 @@ positive and corrected by restricting URL synthesis to outbound endpoints.
 
 ## 9. Future Work
 
-Expand the corpus to multiple tool-neutral fixtures per vector; drive pipelock's content-scanning mode
-and add further defenders (including a fully-local mode of cloud-gated gateways, if exposed); publish a
+Expand the corpus to multiple tool-neutral fixtures per vector and deepen the evasion-robustness set;
+drive pipelock's remaining interfaces (poisoned-description and DLP/tool-call eval endpoint) and add
+further defenders (including a fully-local mode of cloud-gated gateways, if exposed); publish a
 public leaderboard; complete the second-reviewer pass on framework mappings and confirm ASI labels; and
 build an **attestation-conformance** suite to test tool-integrity/provenance schemes (ETDI, the
 Trustworthy Registry composition) as a coupled bench-plus-attestation artifact.
@@ -298,9 +312,10 @@ track their progress.
 
 ## References
 
-_Titles, authors, and identifiers below were verified against primary sources on 2026-07-13. The
-2603/2604-series works are recent, non-peer-reviewed preprints and may have updated versions; verify
-current version and page/DOI details at camera-ready time._
+_Titles, authors, and identifiers below were verified against primary sources on 2026-07-13. Each
+arXiv item resolves at `https://arxiv.org/abs/<id>`. The 2603/2604-series works are recent,
+non-peer-reviewed preprints and may have updated versions; verify current version and page/DOI details
+at camera-ready time._
 
 - [SoK-2512.08290] S. Gaire, S. Gyawali, S. Mishra, S. Niroula, D. Thakur, U. Yadav.
   "Systematization of Knowledge: Security and Safety in the Model Context Protocol Ecosystem."
@@ -328,10 +343,16 @@ current version and page/DOI details at camera-ready time._
 - [TrustReg-FI2026] L. Mas, J. Vilaplana, J. Rius, R. Spaimoc, J. Mateo. "The Trustworthy Model
   Context Protocol (MCP) Registry: An Architectural Blueprint for Cryptographic Provenance and Runtime
   Integrity." Future Internet, vol. 18, no. 5, art. 243, 2026. doi:10.3390/fi18050243.
-- [NIST-AI-RMF] National Institute of Standards and Technology. "AI Risk Management Framework
-  (AI RMF 1.0)." NIST AI 100-1, 2023 (functions: Govern, Map, Measure, Manage).
+- [NIST-AI-RMF] National Institute of Standards and Technology (U.S. Dept. of Commerce). "AI Risk
+  Management Framework (AI RMF 1.0)." NIST AI 100-1, 2023 (functions: Govern, Map, Measure, Manage).
+  https://www.nist.gov/itl/ai-risk-management-framework ·
+  https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf
 - [OWASP-LLM-2025] OWASP GenAI Security Project. "OWASP Top 10 for LLM Applications," 2025 edition.
+  https://genai.owasp.org/llm-top-10/
 - [OWASP-ASI-2026] OWASP GenAI Security Project. "OWASP Top 10 for Agentic Applications," 2026
   (published Dec. 9, 2025; categories ASI01–ASI10).
+  https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
+- [STRIDE] Microsoft. "STRIDE — Threat Modeling."
+  https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats
 - [AgentDefense-Bench] A. Sanna. "AgentDefense-Bench" (open-source dataset), GitHub.
 - [Snyk-agent-scan] Snyk. "agent-scan" (formerly Invariant Labs MCP-Scan), GitHub / vendor tooling.
