@@ -80,6 +80,11 @@ const evRows = evasion
   .join("\n");
 const robust = tools.map((t) => `${esc(t.tool)} ${evasion.filter((e) => (t.byId[e.id] ?? "none") !== "none").length}/${evasion.length}`).join(" · ");
 
+// Framework mapping: every vector -> STRIDE / NIST AI RMF / OWASP LLM 2025 / OWASP Agentic 2026.
+const fwRows = rubric.vectors
+  .map((v) => `<tr><td class="vec">${esc(v.name)}</td><td class="layer">${esc(v.mcpLayer[0])}</td><td class="layer">${esc(v.stride.join("/"))}</td><td>${esc(v.nistAiRmf.join(", "))}</td><td>${esc((v.owaspLlm2025 || []).join(", "))}</td><td>${esc((v.owaspAgentic2026 || []).join(", "))}</td></tr>`)
+  .join("\n");
+
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -177,6 +182,34 @@ const html = `<!doctype html>
     <tbody>${evRows}</tbody>
   </table></div>
   <p class="note"><b>Robustness (evasion fixtures detected):</b> ${robust}. The tools are robust to <em>different</em> obfuscations — no single tool survives all of them.</p>` : ""}
+
+  <h2>Framework mapping</h2>
+  <p class="note">Every attack vector is crosswalked to the frameworks security and compliance teams govern by. NIST AI RMF is a U.S. federal framework (NIST, Dept. of Commerce); OWASP is an international open standard; STRIDE is the classic threat-modeling taxonomy.</p>
+  <div class="card scroll"><table class="mx">
+    <thead><tr><th>Vector</th><th>Layer</th><th>STRIDE</th><th>NIST AI RMF</th><th>OWASP LLM 2025</th><th>OWASP Agentic 2026</th></tr></thead>
+    <tbody>${fwRows}</tbody>
+  </table></div>
+  <p class="note"><b>NIST AI RMF:</b> GOVERN · MAP · MEASURE · MANAGE. <b>OWASP LLM:</b> LLM01 Prompt Injection · LLM02 Sensitive Info Disclosure · LLM03 Supply Chain · LLM04 Data/Model Poisoning · LLM05 Improper Output Handling · LLM06 Excessive Agency · LLM07 System Prompt Leakage · LLM08 Vector/Embedding. <b>OWASP Agentic:</b> ASI01 Agent Goal Hijack · ASI02 Tool Misuse · ASI03 Identity &amp; Privilege Abuse · ASI04 Agentic Supply Chain.</p>
+
+  <h2>References</h2>
+  <p class="note"><b>Frameworks:</b>
+    <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF 1.0</a> (U.S. federal) ·
+    <a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Apps (2025)</a> ·
+    <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Apps (2026)</a> ·
+    <a href="https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats">STRIDE</a>.<br>
+    <b>MCP security research:</b>
+    <a href="https://arxiv.org/abs/2512.08290">SoK 2512.08290</a> ·
+    <a href="https://arxiv.org/abs/2604.05969">Formal framework 2604.05969</a> ·
+    <a href="https://arxiv.org/abs/2603.22489">STRIDE/DREAD 2603.22489</a> ·
+    <a href="https://arxiv.org/abs/2604.07551">MCP-DPT 2604.07551</a> ·
+    <a href="https://arxiv.org/abs/2510.15994">MSB 2510.15994</a> ·
+    <a href="https://arxiv.org/abs/2508.14925">MCPTox 2508.14925</a> ·
+    <a href="https://arxiv.org/abs/2506.01333">ETDI 2506.01333</a> ·
+    <a href="https://doi.org/10.3390/fi18050243">Trustworthy MCP Registry</a>.<br>
+    <b>MCP protocol:</b>
+    <a href="https://modelcontextprotocol.io/specification">Specification</a> ·
+    <a href="https://modelcontextprotocol.io/registry/about">Registry</a>.
+  </p>
 
   <h2>Method &amp; honesty</h2>
   <p class="note">

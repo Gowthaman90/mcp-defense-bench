@@ -134,6 +134,55 @@
   </table></div>
   <p class="note"><b>Robustness (evasion fixtures detected):</b> mcp-bastion 1/3 · mcp-firewall 0/3 · pipelock 2/3 · null-baseline 0/3. The tools are robust to <em>different</em> obfuscations — no single tool survives all of them.</p>
 
+  <h2>Framework mapping</h2>
+  <p class="note">Every attack vector is crosswalked to the frameworks security and compliance teams govern by. NIST AI RMF is a U.S. federal framework (NIST, Dept. of Commerce); OWASP is an international open standard; STRIDE is the classic threat-modeling taxonomy.</p>
+  <div class="card scroll"><table class="mx">
+    <thead><tr><th>Vector</th><th>Layer</th><th>STRIDE</th><th>NIST AI RMF</th><th>OWASP LLM 2025</th><th>OWASP Agentic 2026</th></tr></thead>
+    <tbody><tr><td class="vec">Tool poisoning</td><td class="layer">tool</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MAP, MEASURE, MANAGE</td><td>LLM01, LLM06</td><td>ASI01, ASI02</td></tr>
+<tr><td class="vec">Tool name collision / shadowing</td><td class="layer">client</td><td class="layer">Spoofing/Tampering</td><td>MAP, MANAGE</td><td>LLM01, LLM03</td><td>ASI01, ASI04</td></tr>
+<tr><td class="vec">Rug pull / dynamic capability mutation</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM03, LLM06</td><td>ASI04</td></tr>
+<tr><td class="vec">Out-of-scope parameter injection</td><td class="layer">tool</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MEASURE, MANAGE</td><td>LLM05, LLM06</td><td>ASI02</td></tr>
+<tr><td class="vec">Prompt injection via tool results</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM01, LLM05</td><td>ASI01</td></tr>
+<tr><td class="vec">Indirect / retrieval injection</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM01</td><td>ASI01</td></tr>
+<tr><td class="vec">Cross-tool data exfiltration / confused deputy</td><td class="layer">client</td><td class="layer">InformationDisclosure/ElevationOfPrivilege</td><td>MAP, MEASURE, MANAGE</td><td>LLM02, LLM06</td><td>ASI02, ASI03</td></tr>
+<tr><td class="vec">Tool-transfer / cross-server chaining</td><td class="layer">host-orchestration</td><td class="layer">ElevationOfPrivilege</td><td>MAP, MANAGE</td><td>LLM06</td><td>ASI02, ASI03</td></tr>
+<tr><td class="vec">False-error escalation</td><td class="layer">tool</td><td class="layer">ElevationOfPrivilege/DenialOfService</td><td>MEASURE, MANAGE</td><td>LLM01, LLM06</td><td>ASI01, ASI02</td></tr>
+<tr><td class="vec">Package / name squatting in registry</td><td class="layer">registry-supply-chain</td><td class="layer">Spoofing</td><td>GOVERN, MAP</td><td>LLM03</td><td>ASI04</td></tr>
+<tr><td class="vec">Supply-chain poisoning (unverified provenance)</td><td class="layer">registry-supply-chain</td><td class="layer">Tampering/Spoofing</td><td>GOVERN, MAP, MANAGE</td><td>LLM03, LLM04</td><td>ASI04</td></tr>
+<tr><td class="vec">Configuration drift</td><td class="layer">server</td><td class="layer">Tampering</td><td>GOVERN, MEASURE, MANAGE</td><td>LLM03</td><td>ASI04</td></tr>
+<tr><td class="vec">Sandbox escape</td><td class="layer">server</td><td class="layer">ElevationOfPrivilege</td><td>MANAGE</td><td>LLM06</td><td>ASI02, ASI03</td></tr>
+<tr><td class="vec">Schema / validation bypass</td><td class="layer">server</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MEASURE, MANAGE</td><td>LLM05</td><td>ASI02</td></tr>
+<tr><td class="vec">Man-in-the-middle (transport)</td><td class="layer">transport</td><td class="layer">Tampering/InformationDisclosure/Spoofing</td><td>MANAGE</td><td>LLM02</td><td>ASI03</td></tr>
+<tr><td class="vec">DNS rebinding (local servers)</td><td class="layer">transport</td><td class="layer">Spoofing/ElevationOfPrivilege</td><td>MANAGE</td><td>LLM06</td><td>ASI03</td></tr>
+<tr><td class="vec">Server impersonation / identity spoofing</td><td class="layer">registry-supply-chain</td><td class="layer">Spoofing</td><td>GOVERN, MAP, MANAGE</td><td>LLM03</td><td>ASI03, ASI04</td></tr>
+<tr><td class="vec">Excessive permission / privilege escalation</td><td class="layer">host-orchestration</td><td class="layer">ElevationOfPrivilege</td><td>GOVERN, MAP, MANAGE</td><td>LLM06</td><td>ASI03</td></tr>
+<tr><td class="vec">Credential / token theft via passthrough</td><td class="layer">host-orchestration</td><td class="layer">InformationDisclosure/ElevationOfPrivilege</td><td>GOVERN, MANAGE</td><td>LLM02, LLM06</td><td>ASI03</td></tr>
+<tr><td class="vec">Consent fatigue / over-broad grants</td><td class="layer">client</td><td class="layer">ElevationOfPrivilege/Repudiation</td><td>GOVERN, MANAGE</td><td>LLM06</td><td>ASI03</td></tr>
+<tr><td class="vec">Command injection in tool execution</td><td class="layer">server</td><td class="layer">ElevationOfPrivilege/Tampering</td><td>MEASURE, MANAGE</td><td>LLM05</td><td>ASI02</td></tr>
+<tr><td class="vec">System-prompt / context leakage via tools</td><td class="layer">client</td><td class="layer">InformationDisclosure</td><td>MEASURE, MANAGE</td><td>LLM07, LLM02</td><td>ASI01</td></tr></tbody>
+  </table></div>
+  <p class="note"><b>NIST AI RMF:</b> GOVERN · MAP · MEASURE · MANAGE. <b>OWASP LLM:</b> LLM01 Prompt Injection · LLM02 Sensitive Info Disclosure · LLM03 Supply Chain · LLM04 Data/Model Poisoning · LLM05 Improper Output Handling · LLM06 Excessive Agency · LLM07 System Prompt Leakage · LLM08 Vector/Embedding. <b>OWASP Agentic:</b> ASI01 Agent Goal Hijack · ASI02 Tool Misuse · ASI03 Identity &amp; Privilege Abuse · ASI04 Agentic Supply Chain.</p>
+
+  <h2>References</h2>
+  <p class="note"><b>Frameworks:</b>
+    <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF 1.0</a> (U.S. federal) ·
+    <a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Apps (2025)</a> ·
+    <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Apps (2026)</a> ·
+    <a href="https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats">STRIDE</a>.<br>
+    <b>MCP security research:</b>
+    <a href="https://arxiv.org/abs/2512.08290">SoK 2512.08290</a> ·
+    <a href="https://arxiv.org/abs/2604.05969">Formal framework 2604.05969</a> ·
+    <a href="https://arxiv.org/abs/2603.22489">STRIDE/DREAD 2603.22489</a> ·
+    <a href="https://arxiv.org/abs/2604.07551">MCP-DPT 2604.07551</a> ·
+    <a href="https://arxiv.org/abs/2510.15994">MSB 2510.15994</a> ·
+    <a href="https://arxiv.org/abs/2508.14925">MCPTox 2508.14925</a> ·
+    <a href="https://arxiv.org/abs/2506.01333">ETDI 2506.01333</a> ·
+    <a href="https://doi.org/10.3390/fi18050243">Trustworthy MCP Registry</a>.<br>
+    <b>MCP protocol:</b>
+    <a href="https://modelcontextprotocol.io/specification">Specification</a> ·
+    <a href="https://modelcontextprotocol.io/registry/about">Registry</a>.
+  </p>
+
   <h2>Method &amp; honesty</h2>
   <p class="note">
     Each adapter drives the tool's actual detection code or CLI — never a mock. A defender is scored only on what it inspects at runtime (a proxy that ignores tool results scores <em>none</em> there, even if its rules would match the text in isolation). Absolute totals are corpus-dependent; the per-vector matrix is the more reliable read. Scored tools run locally and deterministically; cloud-model tools are observed, not scored. Full methodology, prior-art positioning, and the whitepaper are in the <a href="https://github.com/Gowthaman90/mcp-defense-bench">repository</a>.
