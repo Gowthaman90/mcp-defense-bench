@@ -715,6 +715,68 @@
       "priorArtCoverage": [
         "MSB"
       ]
+    },
+    {
+      "id": "mid-session-tool-injection",
+      "name": "Mid-session tool injection (MSTI)",
+      "aliases": [
+        "tool hijacking",
+        "tool framing",
+        "runtime tool-surface poisoning"
+      ],
+      "description": "Tools are injected, or their metadata is altered, during an ACTIVE session (not at registration) — via dynamic tool-lifecycle races (AbortSignal, registration races) or by re-framing metadata (readOnlyHint, description, inputSchema) to mislead the agent. Distinct from definition-time poisoning.",
+      "mcpLayer": [
+        "client",
+        "tool"
+      ],
+      "stride": [
+        "Tampering",
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI04"
+      ],
+      "priorArtCoverage": [],
+      "provenance": "arXiv:2606.06387 (WebMCP Tool Surface Poisoning / MSTI)"
+    },
+    {
+      "id": "multi-tool-split-poisoning",
+      "name": "Multi-tool split poisoning (ShareLock)",
+      "aliases": [
+        "threshold poisoning",
+        "split-payload tool poisoning"
+      ],
+      "description": "A malicious instruction is split across multiple benign-looking tool descriptions (threshold secret-sharing) so each tool passes single-tool scanning; the payload reassembles via a covert trigger. Defeats per-tool detectors.",
+      "mcpLayer": [
+        "tool",
+        "registry-supply-chain"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI04"
+      ],
+      "priorArtCoverage": [],
+      "provenance": "arXiv:2606.27027 (ShareLock threshold poisoning)"
     }
   ]
 }

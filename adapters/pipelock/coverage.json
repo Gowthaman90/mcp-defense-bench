@@ -116,6 +116,16 @@
       "level": "detect",
       "evidence": "system-prompt-leakage/002-result-solicits-prompt",
       "verified": true
+    },
+    "mid-session-tool-injection": {
+      "level": "none",
+      "evidence": "mid-session-tool-injection/001-tool-framing-metadata",
+      "verified": true
+    },
+    "multi-tool-split-poisoning": {
+      "level": "none",
+      "evidence": "multi-tool-split-poisoning/001-threshold-shares",
+      "verified": true
     }
   }
 }

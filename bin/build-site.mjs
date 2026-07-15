@@ -205,7 +205,9 @@ const html = `<!doctype html>
     <a href="https://arxiv.org/abs/2510.15994">MSB 2510.15994</a> ·
     <a href="https://arxiv.org/abs/2508.14925">MCPTox 2508.14925</a> ·
     <a href="https://arxiv.org/abs/2506.01333">ETDI 2506.01333</a> ·
-    <a href="https://doi.org/10.3390/fi18050243">Trustworthy MCP Registry</a>.<br>
+    <a href="https://doi.org/10.3390/fi18050243">Trustworthy MCP Registry</a> ·
+    <a href="https://arxiv.org/abs/2606.06387">WebMCP/MSTI 2606.06387</a> ·
+    <a href="https://arxiv.org/abs/2606.27027">ShareLock 2606.27027</a>.<br>
     <b>MCP protocol:</b>
     <a href="https://modelcontextprotocol.io/specification">Specification</a> ·
     <a href="https://modelcontextprotocol.io/registry/about">Registry</a>.
