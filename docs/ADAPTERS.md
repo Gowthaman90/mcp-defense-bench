@@ -37,11 +37,21 @@ fine. We do not vendor their source._
 | **Lasso MCP Gateway** | `lasso-security/mcp-gateway` | Plugin gateway; security scan routes through Lasso's API. |
 | **EnkryptAI Secure MCP Gateway** | `enkryptai/secure-mcp-gateway` | Guardrails configured/enforced via Enkrypt platform; sandbox isolation (Docker/Podman/microVM) is local but detection is cloud. |
 
-### Different class — context, not a peer
+### Different class — context, not a peer (access-control / governance / isolation gateways)
 
-| Tool | Repo | Note |
+These are legitimate MCP-security tools, but a **different mechanism class** from the scored set: they
+enforce access-control policies, isolation, registry/identity, and input validation — not the
+content-heuristic detection (poisoning/injection/exfiltration) the 24-vector content rubric emphasizes.
+They are also **running servers**, so scoring them would require standing up + configuring the server
+and routing traffic — heavy and config-dependent, breaking the reproducibility rule. Forcing them onto
+the content rubric would show a misleading ~0% (they defend a *different thing*). Tracked here for
+completeness; candidates for a future *class-appropriate* evaluation.
+
+| Tool | Repo | Class / note |
 |---|---|---|
-| **Docker MCP Gateway** | `docker/mcp-gateway` | Security via container isolation + signed images (supply-chain), not gateway-layer attack detection. Mounts docker.sock (root-equiv) — a caveat to cite. |
+| **Docker MCP Gateway** | `docker/mcp-gateway` | Isolation gateway — container isolation + signed images (supply-chain). Mounts docker.sock (root-equiv) — a caveat to cite. |
+| **MCPX (lunar)** | `TheLunarCompany/lunar` (`/mcpx`) | Governance/access-control gateway — global/service/tool-level access policies, tool groups, audit logs, metrics. Open-source core (free non-prod). No content scanning. Runs locally/Docker. |
+| **IBM ContextForge** | `IBM/mcp-context-forge` | AI gateway + registry — input validation (SecurityValidator: char/URL-scheme/JSON-depth limits), OAuth/OIDC access control, SSRF strict defaults, plugins. Overlaps a few vectors (schema-bypass, out-of-scope-params, SSRF/transport) — the **strongest future scored-adapter candidate** of the gateway class, but needs the running server. |
 
 ### Cited landscape only — not runnable neutrally
 
