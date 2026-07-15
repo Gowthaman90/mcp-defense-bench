@@ -51,6 +51,12 @@
       "ASI08": "Cascading Failures",
       "ASI09": "Human-Agent Trust Exploitation",
       "ASI10": "Rogue Agents"
+    },
+    "nsaGuidance": {
+      "AUTH": "Authentication & Access Control (verify every session; least-privilege tokens per action/tool; signed provenance for discovered servers)",
+      "LOG": "Monitoring & Logging (log all tool/model invocations with parameters, identities, and result hashes)",
+      "SEG": "Data Classification & Segmentation (align tools/models to data-classification zones)",
+      "RT": "Runtime Controls (egress-filtering proxy, DLP, sandboxing, message integrity, output filtering, local MCP scans)"
     }
   },
   "_todo": [
@@ -94,6 +100,10 @@
         "MCPTox",
         "AgentDefense-Bench",
         "MCP-Scan"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "AUTH"
       ]
     },
     {
@@ -128,6 +138,10 @@
         "MSB",
         "AgentDefense-Bench",
         "MCP-Scan"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
       ]
     },
     {
@@ -159,6 +173,10 @@
       "priorArtCoverage": [
         "MSB",
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
       ]
     },
     {
@@ -190,6 +208,10 @@
       ],
       "priorArtCoverage": [
         "MSB"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "AUTH"
       ]
     },
     {
@@ -221,6 +243,9 @@
       "priorArtCoverage": [
         "MSB",
         "MCP-Scan"
+      ],
+      "nsaGuidance": [
+        "RT"
       ]
     },
     {
@@ -250,6 +275,9 @@
       ],
       "priorArtCoverage": [
         "MSB"
+      ],
+      "nsaGuidance": [
+        "RT"
       ]
     },
     {
@@ -284,6 +312,10 @@
       "priorArtCoverage": [
         "MSB",
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "SEG"
       ]
     },
     {
@@ -313,6 +345,10 @@
       ],
       "priorArtCoverage": [
         "MSB"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "SEG"
       ]
     },
     {
@@ -345,6 +381,10 @@
       ],
       "priorArtCoverage": [
         "MSB"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "LOG"
       ]
     },
     {
@@ -373,6 +413,9 @@
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "AUTH"
       ]
     },
     {
@@ -403,6 +446,9 @@
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "AUTH"
       ]
     },
     {
@@ -432,6 +478,10 @@
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "LOG",
+        "AUTH"
       ]
     },
     {
@@ -460,6 +510,9 @@
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "RT"
       ]
     },
     {
@@ -489,6 +542,9 @@
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "RT"
       ]
     },
     {
@@ -515,7 +571,11 @@
       "owaspAgentic2026": [
         "ASI03"
       ],
-      "priorArtCoverage": []
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "RT",
+        "AUTH"
+      ]
     },
     {
       "id": "dns-rebinding",
@@ -543,6 +603,10 @@
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
       ]
     },
     {
@@ -571,7 +635,10 @@
         "ASI03",
         "ASI04"
       ],
-      "priorArtCoverage": []
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "AUTH"
+      ]
     },
     {
       "id": "excessive-permission",
@@ -601,6 +668,9 @@
       ],
       "priorArtCoverage": [
         "MSB"
+      ],
+      "nsaGuidance": [
+        "AUTH"
       ]
     },
     {
@@ -630,7 +700,12 @@
       "owaspAgentic2026": [
         "ASI03"
       ],
-      "priorArtCoverage": []
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "RT",
+        "SEG",
+        "AUTH"
+      ]
     },
     {
       "id": "consent-fatigue",
@@ -657,7 +732,10 @@
       "owaspAgentic2026": [
         "ASI03"
       ],
-      "priorArtCoverage": []
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "AUTH"
+      ]
     },
     {
       "id": "command-injection",
@@ -685,6 +763,9 @@
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
+      ],
+      "nsaGuidance": [
+        "RT"
       ]
     },
     {
@@ -714,6 +795,10 @@
       ],
       "priorArtCoverage": [
         "MSB"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "LOG"
       ]
     },
     {
@@ -746,7 +831,11 @@
         "ASI04"
       ],
       "priorArtCoverage": [],
-      "provenance": "arXiv:2606.06387 (WebMCP Tool Surface Poisoning / MSTI)"
+      "provenance": "arXiv:2606.06387 (WebMCP Tool Surface Poisoning / MSTI)",
+      "nsaGuidance": [
+        "AUTH",
+        "LOG"
+      ]
     },
     {
       "id": "multi-tool-split-poisoning",
@@ -776,7 +865,11 @@
         "ASI04"
       ],
       "priorArtCoverage": [],
-      "provenance": "arXiv:2606.27027 (ShareLock threshold poisoning)"
+      "provenance": "arXiv:2606.27027 (ShareLock threshold poisoning)",
+      "nsaGuidance": [
+        "RT",
+        "LOG"
+      ]
     }
   ]
 }
