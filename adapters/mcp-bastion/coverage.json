@@ -43,8 +43,8 @@
       "verified": true
     },
     "tool-transfer": {
-      "level": "none",
-      "evidence": "tool-transfer/001-cross-server-chaining",
+      "level": "detect",
+      "evidence": "tool-transfer/002-cross-server-data-exfil",
       "verified": true
     },
     "false-error-escalation": {
@@ -63,7 +63,7 @@
       "verified": true
     },
     "config-drift": {
-      "level": "none",
+      "level": "detect",
       "evidence": "config-drift/001-silent-baseline-drift",
       "verified": true
     },
@@ -88,8 +88,8 @@
       "verified": true
     },
     "server-impersonation": {
-      "level": "none",
-      "evidence": "server-impersonation/001-unverified-identity",
+      "level": "enforce",
+      "evidence": "server-impersonation/002-pinned-identity-change",
       "verified": true
     },
     "excessive-permission": {
@@ -108,7 +108,7 @@
       "verified": true
     },
     "command-injection": {
-      "level": "none",
+      "level": "detect",
       "evidence": "command-injection/001-shell-metacharacter",
       "verified": true
     },

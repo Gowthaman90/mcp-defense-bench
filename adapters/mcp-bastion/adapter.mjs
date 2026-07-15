@@ -32,12 +32,24 @@ const {
   checkTransportSecurity,
   checkRequestOrigin,
   scanToolSet,
+  checkCommandInjection,
+  checkConfigDrift,
+  checkServerIdentity,
+  hashServerIdentity,
+  scanCallSequence,
   hashToolDefinition,
 } = bastion;
 
-/** bastion's argument inspection: schema validation + content scanning of argument values. */
+/**
+ * bastion's argument inspection: schema validation + content scanning of argument values +
+ * command-injection payload scanning (v0.5). Mirrors the engine's argumentInterceptor.
+ */
 function inspectArgs(schema, args) {
-  return [...(validateArguments(schema, args) ?? []), ...(scanText(JSON.stringify(args ?? {})) ?? [])];
+  return [
+    ...(validateArguments(schema, args) ?? []),
+    ...(scanText(JSON.stringify(args ?? {})) ?? []),
+    ...(checkCommandInjection(args) ?? []),
+  ];
 }
 
 export const meta = { tool: "mcp-bastion", class: "runtime-proxy", reproducible: true };
@@ -71,14 +83,21 @@ export async function assess(input, _testcase) {
     }
 
     case "tool-call-sequence": {
-      // Cross-tool exfiltration (v0.6): bastion inspects each call's arguments; a sensitive-source
-      // read (e.g. ~/.ssh/id_rsa, .env) trips content scanning on that call.
-      const findings = (input.calls ?? []).flatMap((c) => inspectArgs(undefined, c.arguments));
+      // Two runtime paths bastion applies over a call sequence:
+      //   (v0.6) per-call argument inspection — a sensitive-source read (~/.ssh/id_rsa, .env) trips
+      //          content scanning on that call (cross-tool exfiltration); and
+      //   (v0.5) cross-server taint tracking — a credential returned by one server reappearing in an
+      //          argument to a *different* server (tool-transfer / cross-server exfiltration).
+      const argFindings = (input.calls ?? []).flatMap((c) => inspectArgs(undefined, c.arguments));
+      const crossServer = scanCallSequence(input.calls ?? []) ?? [];
+      const findings = [...argFindings, ...crossServer];
       if (findings.length === 0) return { detect: false, enforce: false };
       return {
         detect: true,
         enforce: false,
-        signal: `arg rules: ${findings.map((f) => f.rule).join(", ")}`,
+        signal: crossServer.length
+          ? `cross-server: ${crossServer.map((f) => f.rule).join(", ")}`
+          : `arg rules: ${argFindings.map((f) => f.rule).join(", ")}`,
       };
     }
 
@@ -138,6 +157,38 @@ export async function assess(input, _testcase) {
               : `poisoning: ${poison.map((f) => f.rule).join(", ")}`,
         };
       return { detect: false, enforce: false };
+    }
+
+    case "server-identity": {
+      // Server-identity (v0.5). Two modes:
+      //   verify — flag a claimed identity with no verified binding (advisory → detect).
+      //   change — endpoint/name/TLS changed after TOFU pinning; bastion blocks by default
+      //            (onIdentityChange:block, like rug-pull) → enforce.
+      if (input.mode === "change") {
+        const changed = hashServerIdentity(input.before ?? {}) !== hashServerIdentity(input.after ?? {});
+        return changed
+          ? { detect: true, enforce: true, signal: "pinned server identity changed (endpoint/TLS)" }
+          : { detect: false, enforce: false };
+      }
+      const findings = checkServerIdentity(input.identity ?? {}) ?? [];
+      if (findings.length === 0) return { detect: false, enforce: false };
+      return {
+        detect: true,
+        enforce: false, // identity verification is advisory by default
+        signal: `identity: ${findings.map((f) => f.rule).join(", ")}`,
+      };
+    }
+
+    case "config-snapshot-diff": {
+      // Config drift (v0.5): bastion pins a server's config snapshot (TOFU) and flags a later
+      // snapshot that weakens a control (TLS downgrade, allowlist widened, protection disabled).
+      const findings = checkConfigDrift(input.baseline ?? {}, input.current ?? {}) ?? [];
+      if (findings.length === 0) return { detect: false, enforce: false };
+      return {
+        detect: true,
+        enforce: false, // drift is advisory by default
+        signal: `config-drift: ${findings.map((f) => f.excerpt).join("; ")}`,
+      };
     }
 
     case "scenario": {
