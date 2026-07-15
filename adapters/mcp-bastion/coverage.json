@@ -123,7 +123,7 @@
       "verified": true
     },
     "multi-tool-split-poisoning": {
-      "level": "none",
+      "level": "detect",
       "evidence": "multi-tool-split-poisoning/001-threshold-shares",
       "verified": true
     }

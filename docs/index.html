@@ -64,7 +64,7 @@
   <div class="meta">
     <span>Corpus: 33 cases</span>
     <span>Vectors: 24</span>
-    <span>Covered by ≥ 1 tool: 14/24</span>
+    <span>Covered by ≥ 1 tool: 15/24</span>
     <span><a href="https://github.com/Gowthaman90/mcp-defense-bench">Repository</a></span>
     <span><a href="https://doi.org/10.5281/zenodo.21346206">Zenodo DOI</a></span>
     <span><a href="https://doi.org/10.6084/m9.figshare.32978657">Preprint</a></span>
@@ -74,8 +74,8 @@
   <div class="card scroll"><table>
     <thead><tr><th>Tool</th><th>Class</th><th class="num">Weighted coverage</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
     <tbody><tr><td class="tool">mcp-bastion</td><td class="cls">runtime-proxy</td>
-      <td class="num"><b>35%</b> <span class="muted">(8.5/24)</span></td>
-      <td class="num en">3</td><td class="num de">11</td><td class="num">10</td>
+      <td class="num"><b>38%</b> <span class="muted">(9.0/24)</span></td>
+      <td class="num en">3</td><td class="num de">12</td><td class="num">9</td>
       <td class="num">0 / 33</td></tr>
 <tr><td class="tool">mcp-firewall</td><td class="cls">runtime-proxy</td>
       <td class="num"><b>13%</b> <span class="muted">(3.0/24)</span></td>
@@ -118,14 +118,14 @@
 <tr><td class="vec">Command injection in tool execution</td><td class="layer">server</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">System-prompt / context leakage via tools</td><td class="layer">client</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Mid-session tool injection (MSTI)</td><td class="layer">client</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Multi-tool split poisoning (ShareLock)</td><td class="layer">tool</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr></tbody>
+<tr><td class="vec">Multi-tool split poisoning (ShareLock)</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr></tbody>
   </table></div>
   <div class="legend">
     <span><span class="sw" style="background:var(--enforce-bg);border:1px solid var(--enforce)"></span>● enforce (blocks)</span>
     <span><span class="sw" style="background:var(--detect-bg);border:1px solid var(--detect)"></span>◐ detect (warns)</span>
     <span><span class="sw" style="background:var(--none-bg);border:1px solid var(--line)"></span>not covered</span>
   </div>
-  <p class="note"><b>Defense-in-depth:</b> the tools cover different layers; <b>14 of 24</b> vectors are covered by at least one tool and <b>10</b> by none (registry/supply-chain, OS-isolation, and semantic vectors that lie outside a runtime proxy's reach). No single proxy is sufficient.</p>
+  <p class="note"><b>Defense-in-depth:</b> the tools cover different layers; <b>15 of 24</b> vectors are covered by at least one tool and <b>9</b> by none (registry/supply-chain, OS-isolation, and semantic vectors that lie outside a runtime proxy's reach). No single proxy is sufficient.</p>
 
   <h2>Evasion robustness</h2>
   <div class="card scroll"><table class="mx">

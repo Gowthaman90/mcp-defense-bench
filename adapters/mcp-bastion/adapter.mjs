@@ -31,6 +31,7 @@ const {
   checkRequestedScopes,
   checkTransportSecurity,
   checkRequestOrigin,
+  scanToolSet,
   hashToolDefinition,
 } = bastion;
 
@@ -122,15 +123,19 @@ export async function assess(input, _testcase) {
       for (const s of input.servers ?? [])
         for (const t of s.tools ?? []) names.set(t.name, (names.get(t.name) ?? 0) + 1);
       const shadowed = [...names.values()].some((n) => n > 1);
-      // Also run poisoning on every advertised tool.
-      const poison = (input.servers ?? [])
-        .flatMap((s) => s.tools ?? [])
-        .flatMap((t) => scanTool(t) ?? []);
-      if (shadowed || poison.length)
+      const allTools = (input.servers ?? []).flatMap((s) => s.tools ?? []);
+      // Poisoning on every advertised tool, plus cross-tool correlation (split-payload poisoning).
+      const poison = allTools.flatMap((t) => scanTool(t) ?? []);
+      const cross = scanToolSet(allTools) ?? [];
+      if (shadowed || poison.length || cross.length)
         return {
           detect: true,
           enforce: false,
-          signal: shadowed ? "duplicate tool name across servers" : `poisoning: ${poison.map((f) => f.rule).join(", ")}`,
+          signal: shadowed
+            ? "duplicate tool name across servers"
+            : cross.length
+              ? `cross-tool: ${cross.map((f) => f.rule).join(", ")}`
+              : `poisoning: ${poison.map((f) => f.rule).join(", ")}`,
         };
       return { detect: false, enforce: false };
     }
