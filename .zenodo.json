@@ -1,7 +1,7 @@
 {
   "title": "mcp-defense-bench: A Layer-Aware, Framework-Mapped Benchmark for Model Context Protocol Security Proxies",
   "upload_type": "software",
-  "description": "<p>A vendor-neutral benchmark that measures how much of the Model Context Protocol (MCP) attack surface a defensive proxy or gateway actually covers, driving each tool through its real code. It contributes: (1) a threat–control crosswalk of 22 MCP attack vectors mapped to architectural layer, STRIDE, the NIST AI Risk Management Framework, and the OWASP Top 10 for LLM and Agentic Applications; (2) a matched malicious/benign test corpus; (3) adapters, a runner, and a scorer; and (4) an accompanying whitepaper. This deposit includes the rubric, corpus, adapters, harness, and the whitepaper (Markdown, LaTeX, and PDF).</p><p>Rubric data and the whitepaper are licensed CC-BY-4.0; the harness code is Apache-2.0.</p>",
+  "description": "<p>A vendor-neutral benchmark that measures how much of the Model Context Protocol (MCP) attack surface a defensive proxy or gateway actually covers, driving each tool through its real code. It contributes: (1) a threat&ndash;control crosswalk of 24 MCP attack vectors mapped to architectural layer, STRIDE, the NIST AI Risk Management Framework, the NSA MCP Security guidance, and the OWASP Top 10 for LLM and Agentic Applications; (2) a matched malicious/benign test corpus; (3) adapters, a runner, and a scorer; and (4) an accompanying whitepaper. Across three evaluated open-source proxies plus a null baseline over 35 test cases, the strongest proxy reaches 63% weighted coverage (15.0 of 24 vectors; 11 enforced) at zero false positives, and 19 of 24 vectors are covered by at least one tool while 5 are covered by none. This deposit includes the rubric, corpus, adapters, harness, and the whitepaper (Markdown, LaTeX, and PDF).</p><p>Rubric data and the whitepaper are licensed CC-BY-4.0; the harness code is Apache-2.0.</p>",
   "creators": [
     {
       "name": "Arumugam, Gowthaman",
@@ -10,6 +10,16 @@
   ],
   "license": "Apache-2.0",
   "access_right": "open",
+  "related_identifiers": [
+    {
+      "relation": "isDocumentedBy",
+      "identifier": "https://doi.org/10.6084/m9.figshare.32978657"
+    },
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/Gowthaman90/mcp-bastion"
+    }
+  ],
   "keywords": [
     "Model Context Protocol",
     "MCP",
@@ -19,7 +29,11 @@
     "security benchmark",
     "tool poisoning",
     "prompt injection",
+    "mid-session tool injection",
+    "split poisoning",
+    "defense-in-depth",
     "NIST AI RMF",
+    "NSA MCP Security",
     "OWASP LLM Top 10",
     "OWASP Agentic Top 10"
   ]
