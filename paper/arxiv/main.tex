@@ -1,0 +1,319 @@
+\documentclass[11pt]{article}
+
+% ---- packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{caption}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\emergencystretch=2em
+\hypersetup{colorlinks=true, linkcolor=blue!55!black, citecolor=blue!55!black, urlcolor=blue!55!black}
+\usepackage{titlesec}
+\titleformat*{\section}{\large\bfseries}
+\titleformat*{\subsection}{\normalsize\bfseries}
+
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\cov}[1]{\textbf{#1}}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\title{\textbf{Measuring the Defenders: A Layer-Aware, Framework-Mapped\\ Benchmark for Model Context Protocol Security Proxies}}
+\author{%
+  Gowthaman Arumugam\\
+  \normalsize Independent Researcher\\
+  \normalsize \texttt{agowthaman90@gmail.com}
+}
+\date{Version 0.4 \textperiodcentered\ July 2026 \\ \small\emph{Preprint. Code, data, and a public leaderboard are openly available (see \S\ref{sec:availability}).}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+The Model Context Protocol (MCP) has become a common way to connect large-language-model (LLM) agents to external tools and data, and a substantial 2025--2026 literature now documents its attack surface. Existing security benchmarks for MCP measure how well an \emph{LLM agent resists} attacks. None, to our knowledge, measure how well a \emph{defensive proxy or gateway covers} that attack surface, and none map their results to the governance frameworks organizations actually use --- the NIST AI Risk Management Framework (AI RMF), the NSA MCP Security guidance, and the OWASP Top~10 for LLM and Agentic Applications. We present two artifacts to fill this gap: (1)~a \textbf{threat--control crosswalk} of 24 MCP attack vectors mapped to architectural layer, STRIDE class, NIST AI RMF function, NSA recommendation area, and OWASP category; and (2)~an open, vendor-neutral \textbf{defense-side benchmark} that runs a candidate MCP security proxy against a corpus of attack fixtures with matched benign controls, and scores its coverage using the crosswalk as a rubric. Each tool is driven through its \emph{real} code, not a mock. We evaluate three open-source proxies (\code{mcp-bastion}, \code{mcp-firewall}, \code{pipelock}) plus a null baseline over 35 test cases. The strongest proxy reaches \textbf{63\% weighted coverage (15.0 of 24 vectors; 11 enforced)}, and across all three tools \textbf{19 of 24 vectors are covered by at least one tool while 5 are covered by none} --- the registry/supply-chain surface, OS-isolation-dependent vectors, and several semantic vectors. All results carry \textbf{zero false positives} against matched benign controls. We argue this is direct, quantified evidence that a runtime proxy alone is insufficient and that defense-in-depth spanning \emph{distinct mechanism classes} (proxy, cryptographic attestation, OS isolation) is required. We further show the benchmark can \emph{guide} a defender's development: over the study, \code{mcp-bastion}'s measured coverage rose from 9\% to 63\% as gaps the benchmark surfaced were fixed and re-verified --- including two attacks first published in June~2026, one of which (ShareLock) no measured tool covered until a cross-tool correlation check was added, and an evasion-normalization stage that lifted the reference proxy's robustness to obfuscated payloads from 1/3 to 3/3. A matched benign-control design, a ``measure only what the tool inspects at runtime'' integrity rule, and an automated benchmark-regression gate keep the results honest and reproducible.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Model Context Protocol; MCP security; LLM agents; agentic AI; security benchmark; tool poisoning; prompt injection; defense-in-depth; NIST AI RMF; NSA MCP Security; OWASP LLM Top~10; OWASP Agentic Top~10.
+
+\section{Introduction}
+\label{sec:intro}
+
+MCP standardizes how an LLM agent discovers and calls external ``tools'' exposed by ``servers''~\citep{mcpspec}. Its rapid adoption across consumer and enterprise agents has been accompanied, in 2025--2026, by a dense body of security research: systematization-of-knowledge papers, formal threat taxonomies, attack benchmarks, and cryptographic attestation proposals (\S\ref{sec:related}). This work establishes \emph{what can go wrong}.
+
+A practical question remains under-addressed: \textbf{given a defensive tool that sits in front of MCP servers --- a proxy, gateway, or scanner --- how much of the known attack surface does it actually cover?} Answering it well requires three things that, individually, exist in the literature but have not been combined:
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+  \item a \textbf{shared taxonomy} of MCP attack vectors;
+  \item a mapping from those vectors to the \textbf{governance frameworks} (NIST AI RMF, NSA, OWASP) that security and procurement teams reason in; and
+  \item an \textbf{executable, reproducible} way to test a defender and report coverage.
+\end{enumerate}
+
+We contribute all three, plus an empirical study. Concretely:
+
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+  \item \textbf{A threat--control crosswalk} (\S\ref{sec:crosswalk}): 24 MCP attack vectors, each mapped to one of six architectural layers, a STRIDE class, NIST AI RMF functions, NSA MCP Security recommendation areas, and OWASP LLM-2025 and Agentic-2026 categories. Published as open, versioned, machine-readable data.
+  \item \textbf{A defense-side benchmark} (\S\ref{sec:method}): for each vector, one or more attack \emph{fixtures} paired with a near-identical \emph{benign control}; a small \emph{adapter} per tool that drives the tool's real detection code; and a scorer that reports coverage per layer and per framework.
+  \item \textbf{An empirical evaluation} (\S\ref{sec:setup}--\ref{sec:results}) of three open-source proxies and a null baseline, yielding a complementarity finding: no single tool suffices.
+  \item \textbf{A benchmark-guided development study} (\S\ref{sec:discussion}): using the benchmark's own gap reports to drive a reference proxy from 9\% to 63\% coverage at zero false positives, and an automated regression gate that keeps the loop honest.
+\end{itemize}
+
+Our aim is not to rank products but to map coverage, expose gaps, and provide reusable infrastructure that tracks a fast-moving threat surface.
+
+\section{Related Work}
+\label{sec:related}
+
+The recent MCP-security preprints below propose taxonomies that are their authors' own constructs; we cite them as \emph{proposed by}, not as established consensus, and coverage statistics quoted from any single paper reflect that paper's surveyed set.
+
+\paragraph{Threat taxonomies.} Recent work systematizes MCP threats through several lenses: an SoK separating adversarial security threats (indirect prompt injection, tool poisoning) from epistemic safety hazards across the Resources/Prompts/Tools primitives~\citep{sok2512}; a formal framework of seven threat categories and 23 attack vectors grounded in a large tool corpus~\citep{formal2604}; a STRIDE/DREAD model over five MCP components that identifies tool poisoning as the most impactful client-side vulnerability~\citep{stride2603}; and a defense-placement taxonomy classifying defenses by the layer that enforces them, which finds protection ``uneven and predominantly tool-centric'' with weak transport, host-orchestration, and supply-chain coverage~\citep{mcpdpt2604}. Our crosswalk reuses these vector families but adds the framework mapping none of them provides.
+
+\paragraph{Attack-side benchmarks.} MSB~\citep{msb2510} (12 attacks, $\sim$2{,}000 instances, real MCP execution) measures the resistance of the \emph{LLM agent} across the tool-use pipeline; MCPTox~\citep{mcptox2508} scopes to tool poisoning; AgentDefense-Bench~\citep{agentdefense} aggregates datasets into MCP JSON-RPC test cases; MCP-Bench~\citep{mcpbench2508} measures agent \emph{capability}, not security. All measure the agent (or the model), not a \emph{defensive proxy}. Ours measures the defender, on the full mapped surface, and reports coverage crosswalked to NIST/NSA/OWASP --- which we could not find in any surveyed benchmark.
+
+\paragraph{Attestation and provenance.} ETDI~\citep{etdi2506} proposes signed, versioned tool definitions; a Trustworthy MCP Registry blueprint~\citep{trustreg2026} composes existing standards (well-known URIs, Sigstore, JSON Canonicalization + JWS) for provenance and runtime integrity, noting the official MCP registry remains an unverified pointer architecture. These are complementary to our benchmark; a future attestation-conformance suite (\S\ref{sec:future}) would test them.
+
+\paragraph{New attacks (June 2026).} Two attacks published after our v0.2 rubric was frozen are incorporated here: mid-session tool injection (MSTI), in which malicious tools are injected into an active session --- through tool hijacking (modifying visible tools) or tool framing (manipulating tool metadata)~\citep{webmcp2606}; and ShareLock, a stealthy multi-tool threshold poisoning attack that uses a threshold-sharing scheme to split a payload across several tools so no single description looks malicious~\citep{sharelock2606}.
+
+\paragraph{Scanners and gateways.} Practitioner tools include Invariant Labs' MCP-Scan (since acquired by Snyk and now a cloud-gated scanner~\citep{snyk}), gateway products, and the proxies we evaluate here. Our benchmark scores locally-deterministic defenders and treats cloud-model defenders as observable-but-not-reproducibly-scoreable (\S\ref{sec:repro}).
+
+\section{The Threat--Control Crosswalk}
+\label{sec:crosswalk}
+
+The crosswalk is the benchmark's rubric and a standalone artifact. It enumerates 24 MCP attack vectors consolidated from the taxonomies in \S\ref{sec:related}, and maps each to: an \textbf{architectural layer} (host-orchestration, client, transport, server, tool, registry-supply-chain), following the defense-placement view of~\citet{mcpdpt2604}; a \textbf{STRIDE} class~\citep{stridemodel}; \textbf{NIST AI RMF} function(s) (Govern, Map, Measure, Manage)~\citep{nistairmf}; an \textbf{NSA MCP Security} recommendation area (Authentication \& Access Control, Monitoring \& Logging, Data Classification \& Segmentation, Runtime Controls)~\citep{nsamcp2026}; and \textbf{OWASP Top~10} categories for LLM (2025, LLM01--LLM10)~\citep{owaspllm2025} and Agentic (2026, ASI01--ASI10)~\citep{owaspasi2026} applications. Table~\ref{tab:vectors} lists the vectors and their primary layer; the full mapping, including STRIDE and all framework codes, is published as machine-readable data (\code{rubric/crosswalk.json}, CC-BY-4.0).
+
+\begin{table}[t]
+\centering
+\caption{The 24 MCP attack vectors and their primary architectural layer.}
+\label{tab:vectors}
+\small
+\begin{tabularx}{\linewidth}{@{}r>{\raggedright\arraybackslash}Xl@{\hspace{2em}}r>{\raggedright\arraybackslash}Xl@{}}
+\toprule
+\# & Vector & Layer & \# & Vector & Layer \\
+\midrule
+1 & Tool poisoning & tool & 13 & Sandbox escape & server \\
+2 & Tool shadowing / name collision & client & 14 & Schema / validation bypass & server \\
+3 & Rug pull (definition mutation) & tool & 15 & Man-in-the-middle (transport) & transport \\
+4 & Out-of-scope parameter injection & tool & 16 & DNS rebinding (local servers) & transport \\
+5 & Prompt injection via tool results & tool & 17 & Server impersonation & reg.-supply \\
+6 & Indirect / retrieval injection & tool & 18 & Excessive permission / escalation & host-orch. \\
+7 & Cross-tool exfiltration & client & 19 & Credential / token theft & host-orch. \\
+8 & Tool-transfer / cross-server chaining & host-orch. & 20 & Consent fatigue / over-broad grants & client \\
+9 & False-error escalation & tool & 21 & Command injection & server \\
+10 & Package / name squatting & reg.-supply & 22 & System-prompt / context leakage & client \\
+11 & Supply-chain poisoning & reg.-supply & 23 & Mid-session tool injection (MSTI) & client \\
+12 & Configuration drift & server & 24 & Multi-tool split poisoning (ShareLock) & tool \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The mappings are indicative and reviewable, not a certification --- we invite community correction, which is itself a goal of publishing the rubric openly.
+
+\section{Benchmark Methodology}
+\label{sec:method}
+
+\subsection{Design}
+For each vector the corpus contains one or more \textbf{test cases}. A test case is a static JSON object with: a \emph{malicious fixture} (the attack, as data --- a tool definition, tool call, tool result, registry entry, call sequence, or scenario), a near-identical \emph{benign control}, the \emph{expected} defender behavior (\code{detect}/\code{enforce}), and a \emph{provenance} note. Fixtures are static data, never live exploits; attacker hosts use reserved names (\code{attacker.example}; the cloud-metadata address \code{169.254.169.254} appears only as an SSRF \emph{target} in data, never contacted).
+
+\subsection{Adapters and the runtime-integrity rule}
+Each evaluated tool provides a thin \textbf{adapter} exposing \code{assess(input)}~$\rightarrow$~\code{\{detect, enforce\}}. The runner calls it once on the malicious fixture and once on the benign control. Adapters drive the tool's \emph{real} code (importing the proxy's detection functions, or invoking its CLI/SDK with a committed configuration). A central rule keeps scores honest:
+\begin{quote}
+\emph{Report only what the tool actually inspects at runtime --- never what its rules could match if pointed at data the tool never sees.}
+\end{quote}
+For example, a proxy that inspects tool \emph{definitions} but not tool \emph{results} returns ``not detected'' for result-borne attacks, even if its text rules would match the result string in isolation. This measures deployed behavior, not theoretical capability.
+
+\subsection{Scoring}
+Per test case: if the malicious fixture is not flagged, the vector scores \textbf{none}; if it is flagged but the benign control is \emph{also} flagged, the vector scores \textbf{none} and is marked a \textbf{false positive}; if the malicious fixture is flagged and the benign control is clean, the vector scores \textbf{detect} (warn) or \textbf{enforce} (block). A vector's level is the best across its test cases. Weighted coverage assigns $\text{enforce}=1.0$, $\text{detect}=0.5$, $\text{none}=0$, over 24 vectors. The matched benign control is essential: without it, a tool that flags everything would score perfectly while being useless.
+
+\subsection{Reproducibility rule}
+\label{sec:repro}
+A defender is \textbf{scored} only if its detection logic runs \emph{locally and deterministically}. Tools that delegate detection to a proprietary cloud model can be \emph{observed} but not reproducibly \emph{scored}, since their verdicts depend on a black box that can change between runs. This excludes, e.g., the cloud-gated Snyk agent-scan; it includes the three proxies below.
+
+\section{Experimental Setup}
+\label{sec:setup}
+
+We evaluate four adapters over a 35-case corpus (24 base cases $+$ 6 realistic ``v2'' cases for fairness $+$ 3 ``v3'' evasion-robustness cases $+$ 2 added with new vectors; see \S\ref{sec:discussion}).
+
+\begin{table}[h]
+\centering
+\caption{Evaluated tools. Each is pinned to a released version and configured with its own committed recommended policy for reproducibility.}
+\label{tab:tools}
+\small
+\begin{tabularx}{\linewidth}{@{}llX@{}}
+\toprule
+Tool & Class / License & How driven \\
+\midrule
+\code{null-baseline} & control / --- & returns ``not detected'' for all inputs \\
+\code{mcp-bastion} & runtime proxy / Apache-2.0 & imports real detection: \code{scanTool}, \code{scanText} (with evasion normalization), \code{scanToolSet}, \code{scanCallSequence} (cross-server taint), \code{validateArguments}, \code{checkCommandInjection}, \code{checkConfigDrift}, \code{checkServerIdentity}, \code{redactSecrets}, transport/origin checks; run under its default \code{balanced} enforcement profile \\
+\code{mcp-firewall} & runtime proxy (Python) / AGPL-3.0 & real SDK (\code{Gateway.check} / \code{scan\_response}) with a committed config \\
+\code{pipelock} & egress firewall (Go) / Apache-2.0 core & real scanners via \code{explain --json} (URL/egress) and \code{mcp scan} (response injection), offline and deterministic \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+For AGPL/other licensed tools we \emph{run} the tool to benchmark it and report scores; we do not redistribute their code.
+
+\section{Results}
+\label{sec:results}
+
+\begin{table}[h]
+\centering
+\caption{Verified coverage (35 cases; weighted over 24 vectors). $\text{Weighted}=\text{enforce}+0.5\cdot\text{detect}$.}
+\label{tab:coverage}
+\small
+\begin{tabular}{@{}llcccccc@{}}
+\toprule
+Tool & Class & Weighted & enforce & detect & none & False pos. \\
+\midrule
+\code{mcp-bastion}  & runtime proxy   & \cov{63\% (15.0/24)} & 11 & 8 & 5  & 0 / 35 \\
+\code{mcp-firewall} & runtime proxy   & \cov{13\% (3.0/24)}  & 3  & 0 & 21 & 0 / 35 \\
+\code{pipelock}     & egress firewall & \cov{10\% (2.5/24)}  & 1  & 3 & 20 & 0 / 35 \\
+\code{null-baseline}& control         & 0\%                  & 0  & 0 & 24 & 0 / 35 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{A proxy can cover most of, but not all, the surface.} \code{mcp-bastion}, the broadest tool, spans the definition, response, argument, transport, egress/least-privilege, cross-server, and server-identity layers. Under its default \code{balanced} enforcement profile, the deterministic, low-false-positive checks (rug-pull, server-identity change, argument/schema and command-injection, cross-server data flow) \emph{block} rather than merely warn, giving 11 enforced vectors. \code{mcp-firewall} and \code{pipelock} add \emph{enforcement} on the call and egress layers (deny/redact/SSRF-block); \code{pipelock} additionally detects response-borne prompt injection via its MCP-response scanner. The full per-vector picture is in Table~\ref{tab:matrix}.
+
+\begin{table}[t]
+\centering
+\caption{Per-vector coverage. \textbf{E}=enforce (blocks), \textbf{D}=detect (warns), $\cdot$=not covered.}
+\label{tab:matrix}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}Xcccc@{}}
+\toprule
+Vector (primary layer) & bastion & firewall & pipelock & null \\
+\midrule
+Tool poisoning (tool) & D & $\cdot$ & $\cdot$ & $\cdot$ \\
+Tool shadowing / name collision (client) & D & $\cdot$ & $\cdot$ & $\cdot$ \\
+Rug pull / definition mutation (tool) & E & $\cdot$ & $\cdot$ & $\cdot$ \\
+Out-of-scope parameter injection (tool) & E & $\cdot$ & $\cdot$ & $\cdot$ \\
+Prompt injection via tool results (tool) & D & $\cdot$ & D & $\cdot$ \\
+Indirect / retrieval injection (tool) & E & E & D & $\cdot$ \\
+Cross-tool exfiltration / confused deputy (client) & E & E & E & $\cdot$ \\
+Tool-transfer / cross-server chaining (host-orch.) & E & $\cdot$ & $\cdot$ & $\cdot$ \\
+False-error escalation (tool) & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+Package / name squatting (reg.-supply) & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+Supply-chain poisoning / provenance gap (reg.-supply) & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+Configuration drift (server) & D & $\cdot$ & $\cdot$ & $\cdot$ \\
+Sandbox escape (server) & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+Schema / validation bypass (server) & E & $\cdot$ & $\cdot$ & $\cdot$ \\
+Man-in-the-middle / transport (transport) & D & $\cdot$ & $\cdot$ & $\cdot$ \\
+DNS rebinding, local servers (transport) & E & $\cdot$ & $\cdot$ & $\cdot$ \\
+Server impersonation / identity spoofing (reg.-supply) & E & $\cdot$ & $\cdot$ & $\cdot$ \\
+Excessive permission / escalation (host-orch.) & D & $\cdot$ & $\cdot$ & $\cdot$ \\
+Credential / token theft via passthrough (host-orch.) & E & E & $\cdot$ & $\cdot$ \\
+Consent fatigue / over-broad grants (client) & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+Command injection in tool execution (server) & E & $\cdot$ & $\cdot$ & $\cdot$ \\
+System-prompt / context leakage (client) & D & $\cdot$ & D & $\cdot$ \\
+Mid-session tool injection --- MSTI (client) & E & $\cdot$ & $\cdot$ & $\cdot$ \\
+Multi-tool split poisoning --- ShareLock (tool) & D & $\cdot$ & $\cdot$ & $\cdot$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Defense-in-depth across mechanism classes is required.} Even with the strongest proxy at 63\%, and across all three tools, \textbf{19 of 24 vectors are covered by at least one tool; 5 are covered by none}: false-error escalation, package/name squatting, provenance-gap supply-chain poisoning, sandbox escape, and consent fatigue. These are not addressable by \emph{any} content-scanning runtime proxy; they require different mechanisms --- cryptographic attestation and a verified registry, OS sandboxing, and client-side consent controls. A proxy is necessary but not sufficient. Nineteen vectors are caught by some tool yet missed by others, direct evidence that no single defender suffices.
+
+\paragraph{Two June-2026 attacks.} MSTI is caught by \code{mcp-bastion}'s definition pinning, which re-hashes a tool on each use and \emph{enforces} on a post-approval change; neither other tool covers it. ShareLock --- a payload split across several tools --- was covered by \emph{no} measured tool until we added \textbf{cross-tool correlation}: because a proxy sees a server's whole tool set, it scans the combined descriptions and flags coordinated \code{share}/\code{checksum}-style staging metadata across tools. It now detects ShareLock; the other tools, which scan one tool at a time, still miss it. This is a staging-signal heuristic, not a cryptographic defeat of threshold secret-sharing (\S\ref{sec:limits}).
+
+\paragraph{Evasion robustness.} The corpus includes three obfuscated variants of known attacks (Table~\ref{tab:evasion}). Before this study's evasion-normalization work, the reference proxy caught only the zero-width variant. After adding a normalization stage (Unicode NFKC, homoglyph folding, and base64 decode-and-rescan), \code{mcp-bastion} catches all three; \code{pipelock} catches the homoglyph and base64 variants via its own normalization but misses zero-width; \code{mcp-firewall} catches none. No single tool other than the normalized reference proxy survives all three.
+
+\begin{table}[h]
+\centering
+\caption{Evasion robustness: which tools still detect an obfuscated variant of a known attack.}
+\label{tab:evasion}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Attack (encoding) & bastion & firewall & pipelock & null \\
+\midrule
+Zero-width / bidi-control characters & D & $\cdot$ & $\cdot$ & $\cdot$ \\
+Cyrillic homoglyph substitution & D & $\cdot$ & D & $\cdot$ \\
+Base64-wrapped payload & D & $\cdot$ & D & $\cdot$ \\
+\midrule
+\textbf{Robustness (detected / 3)} & \textbf{3/3} & 0/3 & 2/3 & 0/3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Zero false positives.} No tool flagged any benign control, across all 35 cases and every feature iteration. Enforcement level (block vs.\ warn) does not change \emph{whether} a control is flagged, so promoting deterministic checks to blocking preserves the zero-false-positive property.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Benchmark-guided improvement (9\%$\rightarrow$63\%).} The benchmark did more than measure the reference proxy; it drove its development. Starting from tool-definition scanning only (9\%), each round of proxy-native hardening was re-measured at zero false positives (Table~\ref{tab:arc}). The benchmark identified concrete, layer-specific gaps, verified each fix, and then defined the proxy's ceiling: the five remaining vectors are architecturally outside a content-scanning proxy's reach.
+
+\begin{table}[h]
+\centering
+\caption{Benchmark-guided development of the reference proxy. The rubric expanded from 22 to 24 vectors when the two June-2026 attacks were added, so early and late percentages are over slightly different denominators; all steps were re-verified at zero false positives.}
+\label{tab:arc}
+\small
+\begin{tabularx}{\linewidth}{@{}lXc@{}}
+\toprule
+Stage & Capability added & Coverage \\
+\midrule
+baseline & tool-definition scanning only & 9\% \\
+response scanning & result-borne injection, retrieval injection, leakage & 18\% \\
+argument/schema & parameter smuggling, validation bypass & 23\% \\
+transport hardening & plaintext-transport warning; DNS-rebinding origin \emph{enforce} & 30\% \\
+sensitive-arg + least-privilege & cross-tool exfiltration, over-broad scopes & 34\% \\
+cross-tool correlation & ShareLock split poisoning; MSTI via pinning & 38\% \\
+new proxy-native checks & command-injection, config-drift, server-identity \emph{enforce}, cross-server taint & 48\% \\
+depth cycle & evasion normalization; inline DLP redaction; confidence-tiered enforcement & \textbf{63\%} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{A living benchmark tracks new attacks.} Vectors 23--24 were published \emph{after} the rubric was frozen; adding them exercised the benchmark's intended lifecycle. Each was verified against its primary source, encoded as a matched malicious/benign pair, and re-run against every tool --- which immediately exposed that ShareLock was covered by none, driving the cross-tool-correlation fix. A benchmark that only measured a fixed attack set would have missed the gap; the value is in re-measuring as the threat surface moves.
+
+\paragraph{From detection to enforcement, and depth over breadth.} The last development round did not add vectors but deepened defense of covered ones. Three changes, all re-verified at zero false positives, lifted coverage 48\%$\rightarrow$63\%: (i)~\emph{evasion normalization}, running heuristics over NFKC / homoglyph-folded / base64-decoded views so obfuscated payloads are caught the same as plain ones (robustness 1/3$\rightarrow$3/3); (ii)~\emph{inline DLP redaction}, which strips credential-shaped secret values out of tool results, turning credential-theft and secret-in-fetched-document from detect into an enforcing mitigation; and (iii)~a \emph{confidence-tiered enforcement profile} whose default (\code{balanced}) blocks the deterministic, near-zero-false-positive checks while leaving heuristics as warnings. The result is a proxy that \emph{blocks} 11 of the 19 vectors it covers, not merely warns.
+
+\paragraph{Tool-class taxonomy (what we score vs.\ what we track).} Not every MCP defense is a content-scanning proxy, and scoring all of them on this rubric would mislead. \emph{Content-scanning proxies} (the three we evaluate) inspect tool definitions, calls, or results at runtime; the rubric measures exactly what they inspect, so we \textbf{score} them. \emph{Access-control and isolation gateways} enforce identity, policy, and sandboxing rather than scanning content; the rubric's content-borne vectors would score them near zero not because they are weak but because they operate on a different axis. We \textbf{track} these in the landscape without assigning a score, and note that a class-appropriate enforcement-and-isolation rubric is future work.
+
+\paragraph{Corpus-encoding sensitivity (a fairness hazard).} Scores are sensitive to how an attack is \emph{encoded}. An early corpus expressed exfiltration with sanitized placeholder text; against it, \code{mcp-firewall} scored 5\%. Adding realistic encodings (an AWS-key-shaped secret in a tool result; an exfiltration POST to the cloud-metadata address) raised it to 13\% --- not by changing the tool, but by probing capabilities the first corpus never exercised. We therefore treat \emph{tool-neutral, realistic, multi-encoding} fixtures as a fairness requirement, and caution that absolute totals are corpus-dependent; the per-vector matrix (Table~\ref{tab:matrix}) is the more reliable read.
+
+\paragraph{Adapter faithfulness and an automated regression gate.} The matched benign control guards against adapter over-reach: while wiring \code{pipelock} (an egress firewall), an initial adapter synthesized an egress URL from an \emph{inbound} local host, causing it to ``block'' both cases --- surfaced immediately as a false positive and corrected. To keep the benchmark-guided loop honest over time, the reference proxy's continuous-integration pipeline runs this benchmark on every change and fails the build if measured coverage drops below a floor or any false positive appears. Measurement is thus not a one-off but a standing regression test on the defense.
+
+\section{Limitations and Threats to Validity}
+\label{sec:limits}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+  \item \textbf{Taxonomy is a synthesis, not a standard.} The 24-vector set consolidates several proposed taxonomies; it is one reviewable synthesis. Framework mappings are indicative, single-author, and pending a second-reviewer pass; OWASP Agentic ASI05--ASI10 labels are unconfirmed.
+  \item \textbf{Small, seeded corpus.} Most vectors have 1--2 fixtures. Absolute coverage numbers should be read as lower bounds and are corpus-dependent.
+  \item \textbf{Heuristics, not proofs.} The ShareLock check flags the \emph{staging signal} (coordinated \code{share}/\code{checksum}-style metadata), not the cryptographic split itself; cross-server taint uses exact-token propagation; inline DLP targets known credential shapes. A sufficiently disguised variant can evade each.
+  \item \textbf{Partial tool interfaces.} For \code{pipelock} we drive its offline URL/egress and response-injection scanners but not its poisoned-description check or full DLP endpoint; its number is a lower bound on total capability.
+  \item \textbf{Configuration dependence.} Results depend on each tool's committed policy; different policies would yield different numbers. The reference proxy's promoted-to-enforce results reflect its default \code{balanced} profile.
+  \item \textbf{Scope and tool class.} We score locally-deterministic content-scanning proxies; cloud-model defenders and access-control/isolation gateways are out of scope for scoring and are tracked, not scored.
+  \item \textbf{Self-evaluation.} The author develops one of the evaluated tools (\code{mcp-bastion}). The benchmark is vendor-neutral, drives each tool through its real code, and scores the author's tool alongside competitors and a null baseline; all code, data, and configurations are public for independent re-measurement.
+\end{itemize}
+
+\section{Future Work}
+\label{sec:future}
+Expand the corpus to multiple tool-neutral fixtures per vector and deepen the evasion set; drive the remaining interfaces of evaluated tools and add further defenders (including local modes of cloud-gated gateways, if exposed); complete a second-reviewer pass on framework mappings and confirm ASI labels; define a class-appropriate enforcement-and-isolation rubric for access-control gateways; and build an \textbf{attestation-conformance} suite to test tool-integrity/provenance schemes (ETDI, the Trustworthy Registry composition) as a coupled bench-plus-attestation artifact addressing the supply-chain vectors no runtime proxy can reach.
+
+\section{Conclusion}
+\label{sec:conclusion}
+We introduced a layer-aware, framework-mapped crosswalk of 24 MCP attack vectors --- mapped to the NIST AI RMF, the NSA MCP Security guidance, the OWASP LLM and Agentic Top~10s, and STRIDE --- and an open, vendor-neutral benchmark that measures how much of that surface a defensive proxy actually covers, driving each tool through its real code. The strongest of three open-source proxies reaches 63\% weighted coverage with 11 vectors enforced, and 5 of 24 vectors are undefended by any measured tool --- the registry/supply-chain, OS-isolation, and semantic vectors that lie outside a content-scanning proxy's reach. The evidence argues for layered defense across distinct mechanism classes, and the benchmark demonstrably guided one proxy from 9\% to 63\% at zero false positives, tracked two attacks published mid-study, lifted its evasion robustness to 3/3, and is now enforced as a standing regression gate. It provides a reusable, honest instrument --- with matched benign controls, a runtime-integrity rule, a reproducibility rule, and automated regression --- for the community to measure MCP defenders and track their progress as the threat surface evolves.
+
+\section*{Availability}
+\label{sec:availability}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+  \item \textbf{Benchmark (\code{mcp-defense-bench}):} rubric, corpus, adapters, runner, leaderboard. Rubric/data CC-BY-4.0; harness Apache-2.0. \url{https://github.com/Gowthaman90/mcp-defense-bench}; archived on Zenodo, DOI \href{https://doi.org/10.5281/zenodo.21346206}{10.5281/zenodo.21346206}~\citep{mcpdefensebench}.
+  \item \textbf{Reference proxy (\code{mcp-bastion}):} Apache-2.0; published on npm. \url{https://github.com/Gowthaman90/mcp-bastion}~\citep{mcpbastion}.
+  \item \textbf{Preprint:} Figshare DOI \href{https://doi.org/10.6084/m9.figshare.32978657}{10.6084/m9.figshare.32978657}.
+  \item Evaluated third-party tools are used under their own licenses and are not redistributed here.
+\end{itemize}
+
+\section*{Reproducibility}
+All fixtures are static data with reserved, non-routable hosts; no live exploits and no real systems are attacked. Each tool is pinned to a released version with a committed configuration. The runner, scorer, and per-tool coverage outputs are in the repository, and the reference proxy's CI re-runs the benchmark on every change.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

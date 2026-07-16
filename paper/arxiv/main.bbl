@@ -1,0 +1,159 @@
+\begin{thebibliography}{21}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Acharya and Gupta(2026)]{formal2604}
+Nirajan Acharya and Gaurav~Kumar Gupta.
+\newblock A formal security framework for {MCP}-based {AI} agents: Threat
+  taxonomy, verification models, and defense mechanisms.
+\newblock \emph{arXiv preprint arXiv:2604.05969}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2604.05969}.
+
+\bibitem[{Anthropic and the MCP community}(2025)]{mcpspec}
+{Anthropic and the MCP community}.
+\newblock Model context protocol specification.
+\newblock \url{https://modelcontextprotocol.io/specification}, 2025.
+
+\bibitem[Arumugam(2026{\natexlab{a}})]{mcpbastion}
+Gowthaman Arumugam.
+\newblock mcp-bastion: A reliability and security proxy for the model context
+  protocol.
+\newblock \url{https://github.com/Gowthaman90/mcp-bastion}, npm: mcp-bastion,
+  2026{\natexlab{a}}.
+
+\bibitem[Arumugam(2026{\natexlab{b}})]{mcpdefensebench}
+Gowthaman Arumugam.
+\newblock mcp-defense-bench: A layer-aware, framework-mapped benchmark for
+  model context protocol security proxies.
+\newblock \url{https://github.com/Gowthaman90/mcp-defense-bench},
+  2026{\natexlab{b}}.
+
+\bibitem[Bhatt et~al.(2025)Bhatt, Narajala, and Habler]{etdi2506}
+Manish Bhatt, Vineeth~Sai Narajala, and Idan Habler.
+\newblock {ETDI}: Mitigating tool squatting and rug pull attacks in model
+  context protocol ({MCP}) by using {OAuth}-enhanced tool definitions and
+  policy-based access control.
+\newblock \emph{arXiv preprint arXiv:2506.01333}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2506.01333}.
+
+\bibitem[Gaire et~al.(2025)Gaire, Gyawali, Mishra, Niroula, Thakur, and
+  Yadav]{sok2512}
+Shiva Gaire, Srijan Gyawali, Saroj Mishra, Suman Niroula, Dilip Thakur, and
+  Umesh Yadav.
+\newblock Systematization of knowledge: Security and safety in the model
+  context protocol ecosystem.
+\newblock \emph{arXiv preprint arXiv:2512.08290}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2512.08290}.
+
+\bibitem[Huang et~al.(2026)Huang, Huang, Tran, and Milani~Fard]{stride2603}
+Charoes Huang, Xin Huang, Ngoc~Phu Tran, and Amin Milani~Fard.
+\newblock Model context protocol threat modeling and analyzing vulnerabilities
+  to prompt injection with tool poisoning.
+\newblock \emph{arXiv preprint arXiv:2603.22489}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2603.22489}.
+
+\bibitem[Lee et~al.(2026)Lee, Chang, Yu, and Yeh]{webmcp2606}
+Lin-Fa Lee, Yi-Yu Chang, Chia-Mu Yu, and Kuo-Hui Yeh.
+\newblock {WebMCP} tool surface poisoning: Runtime manipulation attacks on
+  {LLM} agents.
+\newblock \emph{arXiv preprint arXiv:2606.06387}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.06387}.
+
+\bibitem[Liu et~al.(2026)Liu, Han, Liu, Dong, and Ruan]{sharelock2606}
+Liwei Liu, Tianzhu Han, Zijian Liu, Zishu Dong, and Na~Ruan.
+\newblock {ShareLock}: A stealthy multi-tool threshold poisoning attack against
+  {MCP}.
+\newblock \emph{arXiv preprint arXiv:2606.27027}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.27027}.
+
+\bibitem[Mas et~al.(2026)Mas, Vilaplana, Rius, Spaimoc, and
+  Mateo]{trustreg2026}
+L.~Mas, J.~Vilaplana, J.~Rius, R.~Spaimoc, and J.~Mateo.
+\newblock The trustworthy model context protocol ({MCP}) registry: An
+  architectural blueprint for cryptographic provenance and runtime integrity.
+\newblock \emph{Future Internet}, 18\penalty0 (5):\penalty0 243, 2026.
+\newblock \doi{10.3390/fi18050243}.
+
+\bibitem[{Microsoft}(2009)]{stridemodel}
+{Microsoft}.
+\newblock {STRIDE} threat modeling.
+\newblock
+  \url{https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats},
+  2009.
+
+\bibitem[{National Institute of Standards and Technology}(2023)]{nistairmf}
+{National Institute of Standards and Technology}.
+\newblock Artificial intelligence risk management framework ({AI RMF 1.0}).
+\newblock Technical Report NIST AI 100-1, U.S. Department of Commerce, 2023.
+\newblock URL \url{https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf}.
+
+\bibitem[{National Security Agency, AI Security Center}(2026)]{nsamcp2026}
+{National Security Agency, AI Security Center}.
+\newblock {MCP} security: Security design considerations for {AI}-driven
+  automation.
+\newblock Technical Report U/OO/6030316-26, NSA Cybersecurity Information
+  Sheet, 2026.
+\newblock URL
+  \url{https://www.nsa.gov/Portals/75/documents/Cybersecurity/CSI_MCP_SECURITY.pdf}.
+
+\bibitem[{OWASP GenAI Security Project}(2025{\natexlab{a}})]{owaspasi2026}
+{OWASP GenAI Security Project}.
+\newblock {OWASP} top 10 for agentic applications, 2026.
+\newblock
+  \url{https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/},
+  2025{\natexlab{a}}.
+\newblock Published Dec. 9, 2025; categories ASI01--ASI10.
+
+\bibitem[{OWASP GenAI Security Project}(2025{\natexlab{b}})]{owaspllm2025}
+{OWASP GenAI Security Project}.
+\newblock {OWASP} top 10 for {LLM} applications, 2025 edition.
+\newblock \url{https://genai.owasp.org/llm-top-10/}, 2025{\natexlab{b}}.
+
+\bibitem[Rostamzadeh et~al.(2026)Rostamzadeh, Narula, Birhan, Ghasemigol, and
+  Takabi]{mcpdpt2604}
+Mehrdad Rostamzadeh, Sidhant Narula, Nahom Birhan, Mohammad Ghasemigol, and
+  Daniel Takabi.
+\newblock {MCP-DPT}: A defense-placement taxonomy and coverage analysis for
+  model context protocol security.
+\newblock \emph{arXiv preprint arXiv:2604.07551}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2604.07551}.
+
+\bibitem[Sanna(2025)]{agentdefense}
+A.~Sanna.
+\newblock {AgentDefense-Bench}.
+\newblock open-source dataset, GitHub, 2025.
+
+\bibitem[{Snyk}(2026)]{snyk}
+{Snyk}.
+\newblock agent-scan (formerly invariant labs {MCP}-scan).
+\newblock vendor tooling / GitHub, 2026.
+
+\bibitem[Wang et~al.(2025{\natexlab{a}})Wang, Chang, Patel, Biju, Wu, Liu,
+  Ding, Rezazadeh, Shah, Bao, and Siow]{mcpbench2508}
+Z.~Wang, Q.~Chang, H.~Patel, S.~Biju, C.-E. Wu, Q.~Liu, A.~Ding, A.~Rezazadeh,
+  A.~Shah, Y.~Bao, and E.~Siow.
+\newblock {MCP-Bench}: Benchmarking tool-using {LLM} agents with complex
+  real-world tasks via {MCP} servers.
+\newblock \emph{arXiv preprint arXiv:2508.20453}, 2025{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2508.20453}.
+
+\bibitem[Wang et~al.(2025{\natexlab{b}})Wang, Gao, Wang, Liu, Sun, Cheng, Shi,
+  Du, and Li]{mcptox2508}
+Z.~Wang, Y.~Gao, Y.~Wang, S.~Liu, H.~Sun, H.~Cheng, G.~Shi, H.~Du, and X.~Li.
+\newblock {MCPTox}: A benchmark for tool poisoning attack on real-world {MCP}
+  servers.
+\newblock \emph{arXiv preprint arXiv:2508.14925}, 2025{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2508.14925}.
+
+\bibitem[Zhang et~al.(2025)Zhang, Li, Luo, Liu, Li, and Xu]{msb2510}
+D.~Zhang, Z.~Li, X.~Luo, X.~Liu, P.~Li, and W.~Xu.
+\newblock {MCP} security bench ({MSB}): Benchmarking attacks against model
+  context protocol in {LLM} agents.
+\newblock \emph{arXiv preprint arXiv:2510.15994}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.15994}.
+\newblock ICLR 2026.
+
+\end{thebibliography}
