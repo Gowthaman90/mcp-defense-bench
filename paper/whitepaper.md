@@ -1,9 +1,10 @@
 # Measuring the Defenders: A Layer-Aware, Framework-Mapped Benchmark for Model Context Protocol Security Proxies
 
 **Author:** Gowthaman Arumugam, Independent Researcher (agowthaman90@gmail.com)
-**Version:** 0.3 · 2026-07-14 · _preprint, not peer-reviewed_
+**Version:** 0.4 · 2026-07-16 · _preprint, not peer-reviewed_
 **Artifacts:** mcp-defense-bench (benchmark) · mcp-bastion (reference proxy) — see [Availability](#availability)
-**Changes in v0.3:** two newly-published (June 2026) attacks added as vectors — mid-session tool injection (MSTI) and multi-tool split poisoning (ShareLock) — bringing the rubric to 24 vectors / 33 cases; the crosswalk gains a third U.S.-government framework column, the NSA MCP Security guidance (May 2026); mcp-bastion adds cross-tool correlation and now detects ShareLock (coverage 34% → 38%); and we add a tool-class taxonomy separating content-scanning proxies (scored) from access-control/isolation gateways (tracked).
+**Canonical formatted version:** an arXiv-formatted LaTeX build of this paper (`paper/arxiv/`) is the version of record for citation.
+**Changes in v0.4:** the reference proxy's benchmark-guided development is extended through two further release cycles — four new proxy-native checks (command-injection, configuration-drift, server-identity pinning, cross-server data-flow/taint) closing vectors no measured tool covered, and a "depth" cycle (evasion normalization, inline DLP redaction, and a confidence-tiered enforcement profile that blocks the deterministic checks by default). Measured coverage rises 38% → **63% (15.0/24, 11 vectors enforced)**; vectors covered by some tool rise 15/24 → **19/24** and those covered by none fall 9/24 → **5/24**; evasion robustness rises 1/3 → **3/3**; the corpus grows to 35 cases; all at zero false positives. An automated CI regression gate now re-runs the benchmark on every change.
 
 ---
 
@@ -21,22 +22,20 @@ guidance; and (2) an open,
 vendor-neutral **defense-side benchmark** that runs a candidate MCP security proxy against a corpus of
 attack fixtures with matched benign controls, and scores its coverage using the crosswalk as a rubric.
 Each tool is driven through its *real* code, not a mock. We evaluate three open-source proxies
-(mcp-bastion, mcp-firewall, pipelock) plus a null baseline over 33 test cases. The strongest proxy
-reaches **38% weighted coverage (15 of 24 vectors)** — a proxy's realistic ceiling — and even the
-union of all three tools leaves **9 of 24 vectors covered by none**: the entire registry/supply-chain
-surface, OS-isolation-dependent vectors, and several semantic vectors. All results carry zero false
-positives against matched benign controls. We argue this is direct, quantified evidence that a runtime
-proxy alone is insufficient and that defense-in-depth spanning *distinct mechanism classes* (proxy,
-cryptographic attestation, OS isolation) is required. We also report two methodological findings we
-observed first-hand: benchmark scores are sensitive to how attack fixtures are encoded (a fairness
-hazard), and the benchmark can *guide* a defender's development — over the study, mcp-bastion's
-coverage rose from 9% to 38% as gaps it surfaced were fixed and re-verified — including two attacks
-first published in June 2026, one of which (ShareLock) no measured tool covered until a cross-tool
-correlation check was added. An evasion-robustness
-dimension makes the encoding-sensitivity point concrete: obfuscated variants (zero-width, homoglyph,
-base64) of known attacks are caught by *different* tools, and no single tool survives all three. A
-matched benign-control design and a "measure only what the tool inspects at runtime" integrity rule
-keep the results honest.
+(mcp-bastion, mcp-firewall, pipelock) plus a null baseline over 35 test cases. The strongest proxy
+reaches **63% weighted coverage (15.0 of 24 vectors; 11 enforced)**, and across all three tools
+**19 of 24 vectors are covered by at least one tool while 5 are covered by none**: the entire
+registry/supply-chain surface, OS-isolation-dependent vectors, and several semantic vectors. All
+results carry zero false positives against matched benign controls. We argue this is direct, quantified
+evidence that a runtime proxy alone is insufficient and that defense-in-depth spanning *distinct
+mechanism classes* (proxy, cryptographic attestation, OS isolation) is required. We further show the
+benchmark can *guide* a defender's development — over the study, mcp-bastion's coverage rose from 9% to
+63% as gaps it surfaced were fixed and re-verified — including two attacks first published in June 2026,
+one of which (ShareLock) no measured tool covered until a cross-tool correlation check was added, and an
+evasion-normalization stage that lifted the reference proxy's robustness to obfuscated payloads
+(zero-width, homoglyph, base64) from 1/3 to 3/3. A matched benign-control design, a "measure only what
+the tool inspects at runtime" integrity rule, and an automated benchmark-regression gate keep the
+results honest and reproducible.
 
 ---
 
@@ -194,13 +193,13 @@ cloud-gated Snyk agent-scan; it includes the three proxies below.
 
 ## 5. Experimental Setup
 
-We evaluate four adapters over a 33-case corpus (24 base cases + 6 realistic "v2" cases for fairness +
-3 "v3" evasion-robustness cases; see Section 7):
+We evaluate four adapters over a 35-case corpus (24 base cases + 6 realistic "v2" cases for fairness +
+3 "v3" evasion-robustness cases + 2 added with new vectors; see Section 7):
 
 | Tool | Class | License | How driven |
 |---|---|---|---|
 | **null-baseline** | control | — | returns "not detected" for all inputs |
-| **mcp-bastion** | runtime proxy | Apache-2.0 | imports real detection: `scanTool`, `scanText`, `scanToolSet` (cross-tool correlation), `validateArguments`, `checkRequestedScopes`, `checkTransportSecurity`, `checkRequestOrigin`, `hashToolDefinition` |
+| **mcp-bastion** | runtime proxy | Apache-2.0 | imports real detection: `scanTool`, `scanText` (with evasion normalization), `scanToolSet` (cross-tool correlation), `scanCallSequence` (cross-server taint), `validateArguments`, `checkCommandInjection`, `checkConfigDrift`, `checkServerIdentity`, `redactSecrets` (inline DLP), `checkRequestedScopes`, `checkTransportSecurity`, `checkRequestOrigin`, `hashToolDefinition`; run under its default `balanced` enforcement profile |
 | **mcp-firewall** | runtime proxy (Python) | AGPL-3.0 | real SDK (`Gateway.check` / `scan_response`) with a committed config |
 | **pipelock** | egress firewall (Go) | Apache-2.0 core | real scanners via `explain --json` (URL/egress) and `mcp scan` (MCP-response injection), both offline and deterministic |
 
@@ -210,14 +209,14 @@ recommended/starter policy, committed to the repository for reproducibility.
 
 ## 6. Results
 
-**Table 2. Verified coverage (33 cases; weighted over 24 vectors).**
+**Table 2. Verified coverage (35 cases; weighted over 24 vectors).**
 
 | Tool | Class | Weighted coverage | enforce | detect | none | False positives |
 |---|---|--:|--:|--:|--:|--:|
-| mcp-bastion | runtime proxy | **38% (9.0/24)** | 3 | 12 | 9 | 0 / 33 |
-| mcp-firewall | runtime proxy | **13% (3.0/24)** | 3 | 0 | 21 | 0 / 33 |
-| pipelock | egress firewall | **10% (2.5/24)** | 1 | 3 | 20 | 0 / 33 |
-| null-baseline | control | 0% | 0 | 0 | 24 | 0 / 33 |
+| mcp-bastion | runtime proxy | **63% (15.0/24)** | 11 | 8 | 5 | 0 / 35 |
+| mcp-firewall | runtime proxy | **13% (3.0/24)** | 3 | 0 | 21 | 0 / 35 |
+| pipelock | egress firewall | **10% (2.5/24)** | 1 | 3 | 20 | 0 / 35 |
+| null-baseline | control | 0% | 0 | 0 | 24 | 0 / 35 |
 
 **A proxy's ceiling is partial.** mcp-bastion, the broadest tool, spans the definition, response,
 argument, transport, and egress/least-privilege layers (poisoning, shadowing, rug-pull; response and
@@ -237,36 +236,43 @@ combined descriptions and flags coordinated `share`/`checksum`-style staging met
 now *detects* ShareLock; the other two tools, which scan one tool at a time, still miss it. This is a
 staging-signal heuristic, not a cryptographic defeat of threshold secret-sharing (Section 8).
 
-**Defense-in-depth across mechanism classes is required.** Even with the strongest proxy at 38%, and
-across all three tools, **15 of 24 vectors are covered by at least one tool; 9 are covered by none** —
-the registry/supply-chain surface (package squatting, provenance-gap supply-chain poisoning, server
-impersonation), OS-isolation-dependent vectors (sandbox escape), and semantic vectors (tool-transfer,
-false-error escalation, configuration drift, command injection, consent fatigue). These are not
-addressable by *any* runtime proxy; they require different mechanisms — cryptographic attestation, OS
-sandboxing, and client-side controls. A proxy is necessary but not sufficient.
+**Defense-in-depth across mechanism classes is required.** Even with the strongest proxy at 63%, and
+across all three tools, **19 of 24 vectors are covered by at least one tool; 5 are covered by none** —
+false-error escalation, package/name squatting, provenance-gap supply-chain poisoning, sandbox escape,
+and consent fatigue. These are not addressable by *any* content-scanning runtime proxy; they require
+different mechanisms — cryptographic attestation and a verified registry, OS sandboxing, and
+client-side consent controls. A proxy is necessary but not sufficient.
 
 **Evasion robustness.** The corpus includes three obfuscated variants of known attacks — zero-width /
-bidirectional-control characters, Cyrillic homoglyph substitution, and base64-wrapped payloads. The
-tools resist *different* evasions: mcp-bastion catches the zero-width/bidi variant (via a
-hidden-character rule) but misses the others; pipelock catches the homoglyph and base64 variants (via
-a normalization pipeline) but misses zero-width; mcp-firewall catches none. No single tool survives
-all three, so the defense-in-depth conclusion holds at the evasion layer as well as the vector layer.
+bidirectional-control characters, Cyrillic homoglyph substitution, and base64-wrapped payloads. Before
+this study's evasion-normalization work the reference proxy caught only the zero-width variant; after
+adding a normalization stage (Unicode NFKC, homoglyph folding, and base64 decode-and-rescan),
+mcp-bastion catches all three (**3/3**). pipelock catches the homoglyph and base64 variants via its own
+normalization but misses zero-width (2/3); mcp-firewall catches none. No single tool other than the
+normalized reference proxy survives all three.
 
-**Zero false positives.** No tool flagged any benign control, across all 33 cases and every feature
-iteration.
+**Zero false positives.** No tool flagged any benign control, across all 35 cases and every feature
+iteration. Enforcement level (block vs. warn) does not change *whether* a control is flagged, so
+promoting deterministic checks to blocking preserves the zero-false-positive property.
 
 ## 7. Discussion
 
-**Benchmark-guided improvement.** The benchmark initially scored mcp-bastion at 9%, covering only the
-tool-definition layer. It then guided five rounds of proxy-native hardening, each re-measured at zero
-false positives: response scanning (9%→18%: response/retrieval injection, result-borne leakage),
-argument/schema validation (18%→23%: parameter smuggling, validation bypass), transport hardening
-(23%→30%: plaintext-transport warning and a DNS-rebinding Origin check that *enforces* by rejecting
-cross-origin requests to a loopback listener), sensitive-argument plus least-privilege scanning
-(30%→34%: cross-tool exfiltration, over-broad scopes), and cross-tool correlation (34%→38%: ShareLock
-split poisoning, plus MSTI caught by existing pinning). The benchmark did not just measure the tool; it
-identified concrete, layer-specific gaps and verified each fix — and then defined the proxy's ceiling,
-since the remaining 9 vectors are architecturally outside a proxy's reach.
+**Benchmark-guided improvement (9%→63%).** The benchmark initially scored mcp-bastion at 9%, covering
+only the tool-definition layer. It then guided several rounds of proxy-native hardening, each re-measured
+at zero false positives: response scanning (9%→18%), argument/schema validation (18%→23%), transport
+hardening (23%→30%: including a DNS-rebinding Origin check that *enforces*), sensitive-argument plus
+least-privilege scanning (30%→34%), and cross-tool correlation (34%→38%: ShareLock split poisoning, plus
+MSTI caught by existing pinning). Two further release cycles took it to 63%: four new proxy-native checks
+— command-injection, configuration-drift, server-identity pinning (which *enforces* on an endpoint/TLS
+change), and cross-server data-flow (taint) tracking — each closing a vector no measured tool covered
+(38%→48%); and a "depth" cycle (48%→63%) that deepened defense of covered vectors rather than adding new
+ones: evasion normalization (robustness 1/3→3/3), inline DLP redaction (which strips credential values
+from tool results, turning credential-theft and secret-in-fetched-document into an enforcing
+mitigation), and a confidence-tiered enforcement profile whose default (`balanced`) *blocks* the
+deterministic, near-zero-false-positive checks while leaving heuristics as warnings — so the proxy now
+**blocks 11 of the 19 vectors it covers**. The benchmark did not just measure the tool; it identified
+concrete, layer-specific gaps, verified each fix, and then defined the proxy's ceiling, since the
+remaining 5 vectors are architecturally outside a content-scanning proxy's reach.
 
 **A living benchmark tracks new attacks.** Vectors 23–24 were published (June 2026) *after* the v0.2
 rubric was frozen; adding them exercised the benchmark's intended lifecycle. Each was verified against
@@ -333,14 +339,15 @@ Trustworthy Registry composition) as a coupled bench-plus-attestation artifact.
 We introduced a layer-aware, framework-mapped crosswalk of 24 MCP attack vectors — mapped to NIST AI
 RMF, the OWASP LLM and Agentic Top 10s, STRIDE, and the NSA MCP Security guidance — and an open,
 vendor-neutral benchmark that measures how much of that surface a defensive proxy actually covers,
-driving each tool through its real code. The strongest of three open-source proxies reaches 38%
-coverage, and 9 of 24 vectors are undefended by any measured tool — the registry/supply-chain,
-OS-isolation, and semantic vectors that lie outside a proxy's reach. The evidence argues for layered
-defense across distinct mechanism classes, and the benchmark demonstrably guided one proxy from 9% to
-38% at zero false positives — including a cross-tool-correlation check added in response to a
-June-2026 attack that no measured tool had covered. It provides a reusable, honest instrument — with
-matched benign controls, a runtime-integrity rule, and a reproducibility rule — for the community to
-measure MCP defenders and track their progress.
+driving each tool through its real code. The strongest of three open-source proxies reaches 63%
+weighted coverage with 11 vectors enforced, and 5 of 24 vectors are undefended by any measured tool —
+the registry/supply-chain, OS-isolation, and semantic vectors that lie outside a content-scanning
+proxy's reach. The evidence argues for layered defense across distinct mechanism classes, and the
+benchmark demonstrably guided one proxy from 9% to 63% at zero false positives — tracking two attacks
+published mid-study, lifting its evasion robustness to 3/3, and now enforced as a standing CI regression
+gate. It provides a reusable, honest instrument — with matched benign controls, a runtime-integrity
+rule, a reproducibility rule, and automated regression — for the community to measure MCP defenders and
+track their progress as the threat surface evolves.
 
 ## Availability
 
@@ -388,10 +395,10 @@ at camera-ready time._
 - [TrustReg-FI2026] L. Mas, J. Vilaplana, J. Rius, R. Spaimoc, J. Mateo. "The Trustworthy Model
   Context Protocol (MCP) Registry: An Architectural Blueprint for Cryptographic Provenance and Runtime
   Integrity." Future Internet, vol. 18, no. 5, art. 243, 2026. doi:10.3390/fi18050243.
-- [WebMCP-MSTI-2606.06387] "WebMCP: Tool-Surface Poisoning and Mid-Session Tool Injection in
-  Browser-Hosted Model Context Protocol." arXiv:2606.06387, Jun. 2026. (Vector 23.)
-- [ShareLock-2606.27027] "ShareLock: A Stealthy Multi-Tool Threshold Poisoning Attack Against the Model
-  Context Protocol." arXiv:2606.27027, Jun. 2026. (Vector 24.)
+- [WebMCP-MSTI-2606.06387] L.-F. Lee, Y.-Y. Chang, C.-M. Yu, K.-H. Yeh. "WebMCP Tool Surface Poisoning:
+  Runtime Manipulation Attacks on LLM Agents." arXiv:2606.06387, Jun. 2026. (Vector 23.)
+- [ShareLock-2606.27027] L. Liu, T. Han, Z. Liu, Z. Dong, N. Ruan. "ShareLock: A Stealthy Multi-Tool
+  Threshold Poisoning Attack Against MCP." arXiv:2606.27027, Jun. 2026. (Vector 24.)
 - [NIST-AI-RMF] National Institute of Standards and Technology (U.S. Dept. of Commerce). "AI Risk
   Management Framework (AI RMF 1.0)." NIST AI 100-1, 2023 (functions: Govern, Map, Measure, Manage).
   https://www.nist.gov/itl/ai-risk-management-framework ·
