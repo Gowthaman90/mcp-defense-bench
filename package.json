@@ -9,6 +9,7 @@
   },
   "scripts": {
     "score:bastion": "node bin/score.mjs adapters/mcp-bastion/coverage.json",
+    "bench:bastion": "node scripts/gen-testcases.mjs && node bin/run.mjs mcp-bastion && node bin/assert-floor.mjs mcp-bastion",
     "gen:rubric-md": "node docs/gen-crosswalk-md.mjs > docs/CROSSWALK.md",
     "validate": "node -e \"JSON.parse(require('fs').readFileSync('rubric/crosswalk.json'))\" && echo ok"
   },

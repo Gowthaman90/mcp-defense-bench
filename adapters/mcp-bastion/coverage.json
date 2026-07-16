@@ -23,7 +23,7 @@
       "verified": true
     },
     "out-of-scope-params": {
-      "level": "detect",
+      "level": "enforce",
       "evidence": "out-of-scope-params/001-argument-smuggling",
       "verified": true
     },
@@ -33,17 +33,17 @@
       "verified": true
     },
     "indirect-retrieval-injection": {
-      "level": "detect",
-      "evidence": "indirect-retrieval-injection/001-document-borne-payload",
+      "level": "enforce",
+      "evidence": "indirect-retrieval-injection/002-secret-in-fetched-doc",
       "verified": true
     },
     "cross-tool-exfiltration": {
-      "level": "detect",
+      "level": "enforce",
       "evidence": "cross-tool-exfiltration/001-confused-deputy-chain",
       "verified": true
     },
     "tool-transfer": {
-      "level": "detect",
+      "level": "enforce",
       "evidence": "tool-transfer/002-cross-server-data-exfil",
       "verified": true
     },
@@ -73,7 +73,7 @@
       "verified": true
     },
     "schema-bypass": {
-      "level": "detect",
+      "level": "enforce",
       "evidence": "schema-bypass/001-validation-bypass",
       "verified": true
     },
@@ -98,8 +98,8 @@
       "verified": true
     },
     "credential-token-theft": {
-      "level": "detect",
-      "evidence": "credential-token-theft/001-token-passthrough-leak",
+      "level": "enforce",
+      "evidence": "credential-token-theft/002-aws-key-in-response",
       "verified": true
     },
     "consent-fatigue": {
@@ -108,7 +108,7 @@
       "verified": true
     },
     "command-injection": {
-      "level": "detect",
+      "level": "enforce",
       "evidence": "command-injection/001-shell-metacharacter",
       "verified": true
     },

@@ -37,6 +37,7 @@ const {
   checkServerIdentity,
   hashServerIdentity,
   scanCallSequence,
+  redactSecrets,
   hashToolDefinition,
 } = bastion;
 
@@ -73,12 +74,14 @@ export async function assess(input, _testcase) {
 
     case "tool-call": {
       // Argument inspection (v0.4 schema + v0.6 content scanning of argument values).
+      // Under the committed default profile (`balanced`), onSchemaViolation is `block`, so these
+      // deterministic argument findings are enforced (the call is denied before reaching the server).
       const findings = inspectArgs(input.tool?.inputSchema, input.call?.arguments);
       if (findings.length === 0) return { detect: false, enforce: false };
       return {
         detect: true,
-        enforce: false, // onSchemaViolation defaults to warn
-        signal: `arg rules: ${findings.map((f) => f.rule).join(", ")}`,
+        enforce: true, // balanced profile: onSchemaViolation = block
+        signal: `arg rules (blocked under 'balanced'): ${findings.map((f) => f.rule).join(", ")}`,
       };
     }
 
@@ -88,16 +91,18 @@ export async function assess(input, _testcase) {
       //          content scanning on that call (cross-tool exfiltration); and
       //   (v0.5) cross-server taint tracking — a credential returned by one server reappearing in an
       //          argument to a *different* server (tool-transfer / cross-server exfiltration).
+      // Under `balanced`, arg findings block (onSchemaViolation) and cross-server exact-token flow
+      // blocks (onDataFlow) — both enforce.
       const argFindings = (input.calls ?? []).flatMap((c) => inspectArgs(undefined, c.arguments));
       const crossServer = scanCallSequence(input.calls ?? []) ?? [];
       const findings = [...argFindings, ...crossServer];
       if (findings.length === 0) return { detect: false, enforce: false };
       return {
         detect: true,
-        enforce: false,
+        enforce: true, // balanced profile: onSchemaViolation = block, onDataFlow = block
         signal: crossServer.length
-          ? `cross-server: ${crossServer.map((f) => f.rule).join(", ")}`
-          : `arg rules: ${argFindings.map((f) => f.rule).join(", ")}`,
+          ? `cross-server (blocked under 'balanced'): ${crossServer.map((f) => f.rule).join(", ")}`
+          : `arg rules (blocked under 'balanced'): ${argFindings.map((f) => f.rule).join(", ")}`,
       };
     }
 
@@ -115,16 +120,25 @@ export async function assess(input, _testcase) {
     case "malicious-tool-result":
     case "benign-tool-result": {
       // Response scanning (v0.3): bastion runs scanText over the result's text; warns by default.
+      // Inline DLP (v0.6): bastion also *redacts* credential-shaped secret values out of the result
+      // — an enforcing mitigation that strips the secret before the agent or a log can see it.
       const text = (input.result?.content ?? [])
         .filter((c) => c && c.type === "text" && typeof c.text === "string")
         .map((c) => c.text)
         .join("\n");
       const findings = scanText(text) ?? [];
-      if (findings.length === 0) return { detect: false, enforce: false };
+      const redaction = redactSecrets(text) ?? { redactions: 0 };
+      if (findings.length === 0 && redaction.redactions === 0) {
+        return { detect: false, enforce: false };
+      }
       return {
         detect: true,
-        enforce: false, // onResponse defaults to warn (blocking is opt-in)
-        signal: `response rules: ${findings.map((f) => f.rule).join(", ")}`,
+        enforce: redaction.redactions > 0, // inline DLP strips the secret → mitigation
+        signal:
+          redaction.redactions > 0
+            ? `inline DLP redacted ${redaction.redactions} secret(s)` +
+              (findings.length ? `; ${findings.map((f) => f.rule).join(", ")}` : "")
+            : `response rules: ${findings.map((f) => f.rule).join(", ")}`,
       };
     }
 

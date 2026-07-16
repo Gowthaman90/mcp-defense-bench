@@ -74,8 +74,8 @@
   <div class="card scroll"><table>
     <thead><tr><th>Tool</th><th>Class</th><th class="num">Weighted coverage</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
     <tbody><tr><td class="tool">mcp-bastion</td><td class="cls">runtime-proxy</td>
-      <td class="num"><b>48%</b> <span class="muted">(11.5/24)</span></td>
-      <td class="num en">4</td><td class="num de">15</td><td class="num">5</td>
+      <td class="num"><b>63%</b> <span class="muted">(15.0/24)</span></td>
+      <td class="num en">11</td><td class="num de">8</td><td class="num">5</td>
       <td class="num">0 / 35</td></tr>
 <tr><td class="tool">mcp-firewall</td><td class="cls">runtime-proxy</td>
       <td class="num"><b>13%</b> <span class="muted">(3.0/24)</span></td>
@@ -98,24 +98,24 @@
     <tbody><tr><td class="vec">Tool poisoning</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Tool name collision / shadowing</td><td class="layer">client</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Rug pull / dynamic capability mutation</td><td class="layer">tool</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Out-of-scope parameter injection</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Out-of-scope parameter injection</td><td class="layer">tool</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Prompt injection via tool results</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Indirect / retrieval injection</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c enforce" title="enforce">●</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Cross-tool data exfiltration / confused deputy</td><td class="layer">client</td><td class="c detect" title="detect">◐</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Tool-transfer / cross-server chaining</td><td class="layer">host-orchestration</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Indirect / retrieval injection</td><td class="layer">tool</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Cross-tool data exfiltration / confused deputy</td><td class="layer">client</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Tool-transfer / cross-server chaining</td><td class="layer">host-orchestration</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">False-error escalation</td><td class="layer">tool</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Package / name squatting in registry</td><td class="layer">registry-supply-chain</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Supply-chain poisoning (unverified provenance)</td><td class="layer">registry-supply-chain</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Configuration drift</td><td class="layer">server</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Sandbox escape</td><td class="layer">server</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Schema / validation bypass</td><td class="layer">server</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Schema / validation bypass</td><td class="layer">server</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Man-in-the-middle (transport)</td><td class="layer">transport</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">DNS rebinding (local servers)</td><td class="layer">transport</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Server impersonation / identity spoofing</td><td class="layer">registry-supply-chain</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Excessive permission / privilege escalation</td><td class="layer">host-orchestration</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Credential / token theft via passthrough</td><td class="layer">host-orchestration</td><td class="c detect" title="detect">◐</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Credential / token theft via passthrough</td><td class="layer">host-orchestration</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Consent fatigue / over-broad grants</td><td class="layer">client</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Command injection in tool execution</td><td class="layer">server</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Command injection in tool execution</td><td class="layer">server</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">System-prompt / context leakage via tools</td><td class="layer">client</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Mid-session tool injection (MSTI)</td><td class="layer">client</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Multi-tool split poisoning (ShareLock)</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr></tbody>
@@ -130,11 +130,11 @@
   <h2>Evasion robustness</h2>
   <div class="card scroll"><table class="mx">
     <thead><tr><th>Attack</th><th>Encoding</th><th class="rot"><span>mcp-bastion</span></th><th class="rot"><span>mcp-firewall</span></th><th class="rot"><span>pipelock</span></th><th class="rot"><span>null-baseline</span></th></tr></thead>
-    <tbody><tr><td class="vec">response-injection</td><td class="layer">homoglyph substitution</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">response-injection</td><td class="layer">base64-wrapped payload</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
+    <tbody><tr><td class="vec">response-injection</td><td class="layer">homoglyph substitution</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">response-injection</td><td class="layer">base64-wrapped payload</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">tool-poisoning</td><td class="layer">zero-width / bidi-control characters</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr></tbody>
   </table></div>
-  <p class="note"><b>Robustness (evasion fixtures detected):</b> mcp-bastion 1/3 · mcp-firewall 0/3 · pipelock 2/3 · null-baseline 0/3. The tools are robust to <em>different</em> obfuscations — no single tool survives all of them.</p>
+  <p class="note"><b>Robustness (evasion fixtures detected):</b> mcp-bastion 3/3 · mcp-firewall 0/3 · pipelock 2/3 · null-baseline 0/3. The tools are robust to <em>different</em> obfuscations — no single tool survives all of them.</p>
 
   <h2>Framework mapping</h2>
   <p class="note">Every attack vector is crosswalked to the frameworks security and compliance teams govern by. NIST AI RMF is a U.S. federal framework (NIST, Dept. of Commerce); OWASP is an international open standard; STRIDE is the classic threat-modeling taxonomy.</p>
