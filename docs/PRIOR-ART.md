@@ -61,14 +61,15 @@ Each of these was surfaced *and adversarially verified* in the sweep:
 1. **Coverage is thin.** No benchmark covers the full vector space (best: MCPTox 5/23 fully).
 2. **Defenses are lopsided by layer.** Transport ≈ **0%** across nearly all tools; host-orchestration peaks at **38%**; supply-chain weak. Protection is "predominantly tool-centric."
 3. **No framework crosswalk.** *No surveyed benchmark maps MCP threats to NIST AI RMF or the OWASP LLM/Agentic Top 10.* ← **Artifact 1 (this crosswalk).**
-4. **Nobody scores the defenders.** MSB and every attack-side benchmark measure the **LLM agent's** resistance. None score **defensive proxies/gateways** on attack-vector coverage. ← **Artifact 2 (defense-side leaderboard).**
+4. **Nobody scores the defenders on coverage.** MSB and the attack-side benchmarks measure the **LLM agent's** resistance. AgentDefense-Bench *does* score defenses — but on **detection accuracy** (detection rate / false-positive rate) over a 35k-case corpus repackaged from general LLM-safety datasets (WMDP, CySecBench), **not** on framework-crosswalked attack-vector coverage. None score **defensive proxies/gateways** on *which* MCP vectors they cover at all, mapped to NIST AI RMF / OWASP. ← **Artifact 2 (defense-side leaderboard).**
 5. **Bench and attestation never couple.** Executable benchmarks and cryptographic attestation live in separate artifacts; the official registry still lacks artifact-provenance verification. ← future Artifact 3.
 
 ## How our two lead artifacts avoid collision
 
 | Their work | Our work | Why it doesn't collide |
 |---|---|---|
-| MSB, MCPTox, AgentDefense-Bench score **agent resistance** | We score **defensive gateway/proxy coverage** | Different unit under test (defender, not agent) |
+| MSB, MCPTox score the **LLM agent's resistance** | We score the **defender's** coverage | Different unit under test (defender, not agent) |
+| AgentDefense-Bench scores a **defender's detection accuracy** (detection rate / FPR) on a 35k-case corpus repackaged from general LLM-safety datasets | We score a **defender's vector-coverage completeness** — which of the 22–24 framework-crosswalked MCP vectors it addresses *at all* | Different **axis** (coverage vs. accuracy) *and* MCP-native, framework-mapped vectors vs. a repackaged corpus; neither benchmark subsumes the other |
 | 2512.08290 / 2604.05969 taxonomize **threats** | We **crosswalk** threats → NIST AI RMF + OWASP LLM + OWASP Agentic | Mapping to national/industry frameworks is the confirmed gap, not the taxonomy itself |
 | ETDI / Trustworthy Registry propose **signing** | We (later) provide an **executable conformance suite** for attestation, not a new scheme | We test conformance; we don't claim "first to sign" |
 
