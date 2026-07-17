@@ -14,5 +14,6 @@
     "validate": "node -e \"JSON.parse(require('fs').readFileSync('rubric/crosswalk.json'))\" && echo ok"
   },
   "license": "Apache-2.0",
+  "author": "Gowthaman Arumugam <agowthaman90@gmail.com> (https://github.com/Gowthaman90)",
   "keywords": ["mcp", "model-context-protocol", "security", "benchmark", "nist-ai-rmf", "owasp"]
 }

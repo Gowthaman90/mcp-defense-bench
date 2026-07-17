@@ -9,7 +9,7 @@ surface they actually defend — mapped to NIST AI RMF and the OWASP Top 10s.**
 
 📊 **Live leaderboard: [gowthaman90.github.io/mcp-defense-bench](https://gowthaman90.github.io/mcp-defense-bench/)**
 
-_Working name — pre-publication, freely renameable._
+**Created & maintained by [Gowthaman Arumugam](https://github.com/Gowthaman90) · Independent Researcher**
 
 </div>
 
