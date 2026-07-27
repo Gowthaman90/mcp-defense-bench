@@ -9,121 +9,241 @@
   "coverage": {
     "tool-poisoning": {
       "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.5,
+      "guaranteed": 0.5,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "tool-poisoning/001-instruction-override",
       "verified": true
     },
     "tool-shadowing": {
       "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.5,
+      "guaranteed": 0.5,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "tool-shadowing/001-name-collision-override",
       "verified": true
     },
     "rug-pull": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "rug-pull/001-post-trust-mutation",
       "verified": true
     },
     "out-of-scope-params": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "out-of-scope-params/001-argument-smuggling",
       "verified": true
     },
     "response-injection": {
       "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.5,
+      "guaranteed": 0.5,
+      "fixtures": 3,
+      "fpCount": 0,
       "evidence": "response-injection/001-result-borne-instruction",
       "verified": true
     },
     "indirect-retrieval-injection": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.75,
+      "guaranteed": 0.5,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "indirect-retrieval-injection/002-secret-in-fetched-doc",
       "verified": true
     },
     "cross-tool-exfiltration": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "cross-tool-exfiltration/001-confused-deputy-chain",
       "verified": true
     },
     "tool-transfer": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.5,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "tool-transfer/002-cross-server-data-exfil",
       "verified": true
     },
     "false-error-escalation": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "false-error-escalation/001-fake-failure-retry",
       "verified": true
     },
     "package-squatting": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "package-squatting/001-typosquat-server-name",
       "verified": true
     },
     "supply-chain-poisoning": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "supply-chain-poisoning/001-unverified-artifact-swap",
       "verified": true
     },
     "config-drift": {
       "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.5,
+      "guaranteed": 0.5,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "config-drift/001-silent-baseline-drift",
       "verified": true
     },
     "sandbox-escape": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "sandbox-escape/001-host-path-breakout",
       "verified": true
     },
     "schema-bypass": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "schema-bypass/001-validation-bypass",
       "verified": true
     },
     "mitm-transport": {
       "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.25,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "mitm-transport/002-plaintext-remote-endpoint",
       "verified": true
     },
     "dns-rebinding": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "dns-rebinding/001-local-server-rebind",
       "verified": true
     },
     "server-impersonation": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.75,
+      "guaranteed": 0.5,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "server-impersonation/002-pinned-identity-change",
       "verified": true
     },
     "excessive-permission": {
       "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.5,
+      "guaranteed": 0.5,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "excessive-permission/001-over-broad-scope",
       "verified": true
     },
     "credential-token-theft": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.75,
+      "guaranteed": 0.5,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "credential-token-theft/002-aws-key-in-response",
       "verified": true
     },
     "consent-fatigue": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "consent-fatigue/001-broad-standing-grant",
       "verified": true
     },
     "command-injection": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "command-injection/001-shell-metacharacter",
       "verified": true
     },
     "system-prompt-leakage": {
       "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.25,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "system-prompt-leakage/002-result-solicits-prompt",
       "verified": true
     },
     "mid-session-tool-injection": {
       "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "mid-session-tool-injection/001-tool-framing-metadata",
       "verified": true
     },
     "multi-tool-split-poisoning": {
       "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.5,
+      "guaranteed": 0.5,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "multi-tool-split-poisoning/001-threshold-shares",
       "verified": true
     }

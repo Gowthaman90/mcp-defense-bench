@@ -72,25 +72,29 @@
 
   <h2>Coverage of the full attack surface</h2>
   <div class="card scroll"><table>
-    <thead><tr><th>Tool</th><th>Class</th><th class="num">Weighted coverage</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
+    <thead><tr><th>Tool</th><th>Class</th><th class="num">RobustCoverage</th><th class="num">Capability</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
     <tbody><tr><td class="tool">mcp-bastion</td><td class="cls">runtime-proxy</td>
-      <td class="num"><b>63%</b> <span class="muted">(15.0/24)</span></td>
+      <td class="num"><b>55%</b> <span class="muted">(13.3/24)</span></td>
+      <td class="num"><span class="muted">63% (15.0)</span></td>
       <td class="num en">11</td><td class="num de">8</td><td class="num">5</td>
       <td class="num">0 / 35</td></tr>
 <tr><td class="tool">mcp-firewall</td><td class="cls">runtime-proxy</td>
-      <td class="num"><b>13%</b> <span class="muted">(3.0/24)</span></td>
+      <td class="num"><b>8%</b> <span class="muted">(2.0/24)</span></td>
+      <td class="num"><span class="muted">13% (3.0)</span></td>
       <td class="num en">3</td><td class="num de">0</td><td class="num">21</td>
-      <td class="num">0 / 33</td></tr>
+      <td class="num">0 / 35</td></tr>
 <tr><td class="tool">pipelock</td><td class="cls">egress-firewall</td>
-      <td class="num"><b>10%</b> <span class="muted">(2.5/24)</span></td>
+      <td class="num"><b>6%</b> <span class="muted">(1.3/24)</span></td>
+      <td class="num"><span class="muted">10% (2.5)</span></td>
       <td class="num en">1</td><td class="num de">3</td><td class="num">20</td>
-      <td class="num">0 / 33</td></tr>
+      <td class="num">0 / 35</td></tr>
 <tr><td class="tool">null-baseline</td><td class="cls">none</td>
       <td class="num"><b>0%</b> <span class="muted">(0.0/24)</span></td>
+      <td class="num"><span class="muted">0% (0.0)</span></td>
       <td class="num en">0</td><td class="num de">0</td><td class="num">24</td>
-      <td class="num">0 / 33</td></tr></tbody>
+      <td class="num">0 / 35</td></tr></tbody>
   </table></div>
-  <p class="note"><b>Weighting:</b> enforce = 1.0, detect = 0.5, none = 0, over 24 vectors. A vector counts only if the tool flags the attack <em>and</em> stays clean on the matched benign control (else it's a false positive). Zero false positives across all tools.</p>
+  <p class="note"><b>Weighting:</b> enforce = 1.0, detect = 0.5, none = 0, over 24 vectors. <b>RobustCoverage</b> (headline) is the <em>mean</em> across all fixtures of a vector, including evasion variants; <b>Capability</b> is best-case (detects ≥ 1 fixture). Where the two diverge, the tool is brittle to evasion. A vector counts only if the tool flags the attack <em>and</em> stays clean on the matched benign control (else it's a false positive); a false positive on any benign variant scores that vector 0. Zero false positives across all tools. <em>Scoring-metric fix credited to M. Brighindi (2026-07-24); see <a href="https://github.com/Gowthaman90/mcp-defense-bench/blob/main/docs/CHANGELOG-scoring.md">CHANGELOG-scoring</a>.</em></p>
 
   <h2>Per-vector coverage matrix</h2>
   <div class="card scroll"><table class="mx">

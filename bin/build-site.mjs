@@ -33,9 +33,12 @@ for (const d of readdirSync(join(root, "adapters"))) {
   }
   tools.push({ id: d, tool: c.tool, class: c.class || "?", coverage: c.coverage || {}, fp, cases, byId });
 }
-tools.sort((a, b) => weighted(b) - weighted(a));
+tools.sort((a, b) => robustCov(b) - robustCov(a));
 function lvl(t, id) { return t.coverage[id]?.level ?? "unknown"; }
-function weighted(t) { return rubric.vectors.reduce((a, v) => a + (WEIGHT[lvl(t, v.id)] ?? 0), 0); }
+// RobustCoverage (mean over a vector's fixtures) is the headline; Capability (best-case) is secondary.
+// Fall back to the level weight for any self-reported adapter predating the per-fixture metrics.
+function robustCov(t) { return rubric.vectors.reduce((a, v) => a + (typeof t.coverage[v.id]?.robustCoverage === "number" ? t.coverage[v.id].robustCoverage : (WEIGHT[lvl(t, v.id)] ?? 0)), 0); }
+function capability(t) { return rubric.vectors.reduce((a, v) => a + (typeof t.coverage[v.id]?.capability === "number" ? t.coverage[v.id].capability : (WEIGHT[lvl(t, v.id)] ?? 0)), 0); }
 
 // --- evasion fixtures for the robustness table ---
 const evasion = [];
@@ -54,7 +57,8 @@ const anyCovers = (id) => tools.some((t) => ["enforce", "detect"].includes(lvl(t
 const coveredAny = rubric.vectors.filter((v) => anyCovers(v.id)).length;
 const totalCases = tools.reduce((m, t) => Math.max(m, t.cases), 0);
 const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
-const pct = (t) => Math.round((weighted(t) / N) * 100);
+const pct = (t) => Math.round((robustCov(t) / N) * 100);
+const capPct = (t) => Math.round((capability(t) / N) * 100);
 const cell = (level) => `<td class="c ${level}" title="${level}">${{ enforce: "●", detect: "◐", none: "", unknown: "?" }[level] || ""}</td>`;
 
 // --- render ---
@@ -63,7 +67,8 @@ const rows = tools
     const n = { enforce: 0, detect: 0, none: 0, unknown: 0 };
     for (const v of rubric.vectors) n[lvl(t, v.id)]++;
     return `<tr><td class="tool">${esc(t.tool)}</td><td class="cls">${esc(t.class)}</td>
-      <td class="num"><b>${pct(t)}%</b> <span class="muted">(${weighted(t).toFixed(1)}/${N})</span></td>
+      <td class="num"><b>${pct(t)}%</b> <span class="muted">(${robustCov(t).toFixed(1)}/${N})</span></td>
+      <td class="num"><span class="muted">${capPct(t)}% (${capability(t).toFixed(1)})</span></td>
       <td class="num en">${n.enforce}</td><td class="num de">${n.detect}</td><td class="num">${n.none}</td>
       <td class="num">${t.fp} / ${t.cases}</td></tr>`;
   })
@@ -159,10 +164,10 @@ const html = `<!doctype html>
 
   <h2>Coverage of the full attack surface</h2>
   <div class="card scroll"><table>
-    <thead><tr><th>Tool</th><th>Class</th><th class="num">Weighted coverage</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
+    <thead><tr><th>Tool</th><th>Class</th><th class="num">RobustCoverage</th><th class="num">Capability</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
     <tbody>${rows}</tbody>
   </table></div>
-  <p class="note"><b>Weighting:</b> enforce = 1.0, detect = 0.5, none = 0, over ${N} vectors. A vector counts only if the tool flags the attack <em>and</em> stays clean on the matched benign control (else it's a false positive). Zero false positives across all tools.</p>
+  <p class="note"><b>Weighting:</b> enforce = 1.0, detect = 0.5, none = 0, over ${N} vectors. <b>RobustCoverage</b> (headline) is the <em>mean</em> across all fixtures of a vector, including evasion variants; <b>Capability</b> is best-case (detects ≥ 1 fixture). Where the two diverge, the tool is brittle to evasion. A vector counts only if the tool flags the attack <em>and</em> stays clean on the matched benign control (else it's a false positive); a false positive on any benign variant scores that vector 0. Zero false positives across all tools. <em>Scoring-metric fix credited to M. Brighindi (2026-07-24); see <a href="https://github.com/Gowthaman90/mcp-defense-bench/blob/main/docs/CHANGELOG-scoring.md">CHANGELOG-scoring</a>.</em></p>
 
   <h2>Per-vector coverage matrix</h2>
   <div class="card scroll"><table class="mx">

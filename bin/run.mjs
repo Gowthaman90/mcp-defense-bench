@@ -51,25 +51,67 @@ const levelFrom = (mal, benign) => {
   return { level: mal.enforce ? "enforce" : "detect", falsePositive: false };
 };
 
+const WEIGHT = { enforce: 1, detect: 0.5, observe: 0.1, none: 0, unknown: 0 };
+const rank = { none: 0, detect: 1, enforce: 2 };
+
 const perCase = [];
-const byVector = {}; // vector -> best result seen
+const byVector = {}; // vector -> { fixtures: [ per-fixture result ] }  (ALL fixtures, not just the best)
 for (const tc of cases) {
   const mal = await adapter.assess(tc.fixture, tc);
   const benign = await adapter.assess(tc.benignControl, tc);
-  const { level, falsePositive } = levelFrom(mal, benign);
-  const rank = { none: 0, detect: 1, enforce: 2 };
+  const { level, falsePositive } = levelFrom(mal, benign); // levelFrom already forces level→none on an FP
   const rec = { id: tc.id, level, falsePositive, mal, benign, expected: tc.expected };
   perCase.push(rec);
-  if (!byVector[tc.vector] || rank[level] > rank[byVector[tc.vector].level])
-    byVector[tc.vector] = { level, evidence: tc.id, falsePositive };
+  (byVector[tc.vector] ||= { fixtures: [] }).fixtures.push({
+    id: tc.id,
+    level,
+    weight: WEIGHT[level] ?? 0, // FP → level none → weight 0, so it drags mean/min down (see #scoring-fix)
+    falsePositive,
+    evasion: tc.evasion ?? null,
+  });
+}
+
+/**
+ * Per-vector metrics (fix for the max-aggregation defect reported by M. Brighindi, 2026-07-24):
+ *   Capability     = max_i w_i   — best-case; "detects ≥1 fixture" (the OLD headline; kept as secondary)
+ *   RobustCoverage = mean_i w_i  — reliability across ALL fixtures incl. evasion variants (NEW headline)
+ *   Guaranteed     = min_i w_i   — worst-case floor
+ * A false positive on any benign variant contributes weight 0, so it penalises this vector's mean and
+ * zeroes its guaranteed floor — it can no longer be masked by a clean pass on another variant.
+ */
+function vectorMetrics(fx) {
+  const ws = fx.map((f) => f.weight);
+  const best = fx.reduce((a, b) => (rank[b.level] > rank[a.level] ? b : a));
+  return {
+    level: best.level, // capability level, for glyphs / backward compat
+    evidence: best.id,
+    capability: Math.max(...ws),
+    robustCoverage: Number((ws.reduce((a, b) => a + b, 0) / ws.length).toFixed(4)),
+    guaranteed: Math.min(...ws),
+    fixtures: fx.length,
+    fpCount: fx.filter((f) => f.falsePositive).length,
+  };
 }
 
 // Build verified coverage across ALL rubric vectors (untested → unknown).
 const coverage = {};
 for (const id of rubricIds) {
-  coverage[id] = byVector[id]
-    ? { level: byVector[id].level, evidence: byVector[id].evidence, verified: true, ...(byVector[id].falsePositive ? { falsePositive: true } : {}) }
-    : { level: "unknown", evidence: null, verified: false };
+  if (!byVector[id]) {
+    coverage[id] = { level: "unknown", capability: 0, robustCoverage: 0, guaranteed: 0, fixtures: 0, fpCount: 0, evidence: null, verified: false };
+    continue;
+  }
+  const m = vectorMetrics(byVector[id].fixtures);
+  coverage[id] = {
+    level: m.level,
+    capability: m.capability,
+    robustCoverage: m.robustCoverage,
+    guaranteed: m.guaranteed,
+    fixtures: m.fixtures,
+    fpCount: m.fpCount,
+    evidence: m.evidence,
+    verified: true,
+    ...(m.fpCount ? { falsePositive: true } : {}),
+  };
 }
 
 // Persist verified coverage.json (preserve adapter metadata).
@@ -94,8 +136,9 @@ writeFileSync(covPath, JSON.stringify(covOut, null, 2) + "\n");
 
 // Detailed results.
 mkdirSync(join(root, "results"), { recursive: true });
-const WEIGHT = { enforce: 1, detect: 0.5, observe: 0.1, none: 0, unknown: 0 };
-const weighted = rubricIds.reduce((a, id) => a + (WEIGHT[coverage[id].level] ?? 0), 0);
+const robustWeighted = rubricIds.reduce((a, id) => a + (coverage[id].robustCoverage ?? 0), 0);
+const capabilityWeighted = rubricIds.reduce((a, id) => a + (coverage[id].capability ?? 0), 0);
+const guaranteedWeighted = rubricIds.reduce((a, id) => a + (coverage[id].guaranteed ?? 0), 0);
 const summary = {
   tool: covOut.tool,
   rubricVersion: rubric.version,
@@ -103,11 +146,18 @@ const summary = {
   verifiedVectors: Object.values(coverage).filter((c) => c.verified).length,
   falsePositives: perCase.filter((c) => c.falsePositive).length,
   covered: { enforce: 0, detect: 0, none: 0, unknown: 0 },
-  overall: `${((weighted / rubricIds.length) * 100).toFixed(0)}% (${weighted.toFixed(1)}/${rubricIds.length} weighted)`,
+  // Headline = RobustCoverage (mean over a vector's fixtures). Capability (best-case) kept as secondary.
+  overall: `${((robustWeighted / rubricIds.length) * 100).toFixed(0)}% (${robustWeighted.toFixed(1)}/${rubricIds.length} RobustCoverage)`,
+  robustCoverage: Number(robustWeighted.toFixed(2)),
+  capability: Number(capabilityWeighted.toFixed(2)),
+  guaranteed: Number(guaranteedWeighted.toFixed(2)),
 };
 for (const id of rubricIds) summary.covered[coverage[id].level] = (summary.covered[coverage[id].level] ?? 0) + 1;
 writeFileSync(join(root, "results", `${tool}.json`), JSON.stringify({ summary, cases: perCase }, null, 2) + "\n");
 
 console.log(JSON.stringify(summary, null, 2));
+const brittle = rubricIds.filter((id) => coverage[id].verified && coverage[id].robustCoverage < coverage[id].capability);
+if (brittle.length)
+  console.log(`  ⚠ evasion-brittle (RobustCoverage < Capability): ${brittle.join(", ")}`);
 for (const c of perCase.filter((c) => c.level !== "none" || c.falsePositive))
   console.log(`  ${c.falsePositive ? "⚠ FP" : "✓"} ${c.id} → ${c.level}${c.mal.signal ? "  [" + c.mal.signal + "]" : ""}`);

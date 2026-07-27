@@ -9,121 +9,241 @@
   "coverage": {
     "tool-poisoning": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "tool-poisoning/001-instruction-override",
       "verified": true
     },
     "tool-shadowing": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "tool-shadowing/001-name-collision-override",
       "verified": true
     },
     "rug-pull": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "rug-pull/001-post-trust-mutation",
       "verified": true
     },
     "out-of-scope-params": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "out-of-scope-params/001-argument-smuggling",
       "verified": true
     },
     "response-injection": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
       "evidence": "response-injection/001-result-borne-instruction",
       "verified": true
     },
     "indirect-retrieval-injection": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "indirect-retrieval-injection/001-document-borne-payload",
       "verified": true
     },
     "cross-tool-exfiltration": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "cross-tool-exfiltration/001-confused-deputy-chain",
       "verified": true
     },
     "tool-transfer": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "tool-transfer/001-cross-server-chaining",
       "verified": true
     },
     "false-error-escalation": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "false-error-escalation/001-fake-failure-retry",
       "verified": true
     },
     "package-squatting": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "package-squatting/001-typosquat-server-name",
       "verified": true
     },
     "supply-chain-poisoning": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "supply-chain-poisoning/001-unverified-artifact-swap",
       "verified": true
     },
     "config-drift": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "config-drift/001-silent-baseline-drift",
       "verified": true
     },
     "sandbox-escape": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "sandbox-escape/001-host-path-breakout",
       "verified": true
     },
     "schema-bypass": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "schema-bypass/001-validation-bypass",
       "verified": true
     },
     "mitm-transport": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "mitm-transport/001-downgraded-transport",
       "verified": true
     },
     "dns-rebinding": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "dns-rebinding/001-local-server-rebind",
       "verified": true
     },
     "server-impersonation": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "server-impersonation/001-unverified-identity",
       "verified": true
     },
     "excessive-permission": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "excessive-permission/001-over-broad-scope",
       "verified": true
     },
     "credential-token-theft": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "credential-token-theft/001-token-passthrough-leak",
       "verified": true
     },
     "consent-fatigue": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "consent-fatigue/001-broad-standing-grant",
       "verified": true
     },
     "command-injection": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "command-injection/001-shell-metacharacter",
       "verified": true
     },
     "system-prompt-leakage": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
       "evidence": "system-prompt-leakage/001-context-exfil-request",
       "verified": true
     },
     "mid-session-tool-injection": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "mid-session-tool-injection/001-tool-framing-metadata",
       "verified": true
     },
     "multi-tool-split-poisoning": {
       "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
       "evidence": "multi-tool-split-poisoning/001-threshold-shares",
       "verified": true
     }

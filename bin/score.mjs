@@ -48,14 +48,19 @@ const byLayer = {},
   byNist = {},
   byOwaspLlm = {},
   byOwaspAgentic = {};
-let covered = 0;
+let covered = 0; // headline = RobustCoverage (mean over a vector's fixtures)
+let coveredCapability = 0; // secondary = Capability (best-case)
 let unknown = 0;
 
 for (const v of rubric.vectors) {
-  const level = adapter.coverage?.[v.id]?.level ?? "none";
+  const cov = adapter.coverage?.[v.id];
+  const level = cov?.level ?? "none";
   if (level === "unknown") unknown += 1;
-  const w = WEIGHT[level] ?? 0;
+  // RobustCoverage when available (verified runs); fall back to capability weight for self-reported claims.
+  const w = typeof cov?.robustCoverage === "number" ? cov.robustCoverage : (WEIGHT[level] ?? 0);
+  const capW = typeof cov?.capability === "number" ? cov.capability : (WEIGHT[level] ?? 0);
   covered += w;
+  coveredCapability += capW;
   for (const l of v.mcpLayer) add(byLayer, l, w);
   for (const n of v.nistAiRmf) add(byNist, n, w);
   for (const o of v.owaspLlm2025) add(byOwaspLlm, o, w);
@@ -78,7 +83,9 @@ const report = {
   rubricVersion: rubric.version,
   verified: false, // flips true once testcases gate the levels
   unassessedVectors: unknown, // 'unknown' levels — scored as 0 until a testcase assesses them
-  overall: `${((covered / rubric.vectors.length) * 100).toFixed(0)}% (${covered.toFixed(1)}/${rubric.vectors.length} weighted)`,
+  metric: "RobustCoverage = mean detection across all fixtures of a vector; Capability = best-case (≥1 fixture)",
+  overall: `${((covered / rubric.vectors.length) * 100).toFixed(0)}% (${covered.toFixed(1)}/${rubric.vectors.length} RobustCoverage)`,
+  overallCapability: `${((coveredCapability / rubric.vectors.length) * 100).toFixed(0)}% (${coveredCapability.toFixed(1)}/${rubric.vectors.length} best-case)`,
   byLayer: pct(byLayer),
   byNistAiRmf: pct(byNist),
   byOwaspLlm2025: pct(byOwaspLlm),
