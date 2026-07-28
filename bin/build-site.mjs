@@ -164,10 +164,11 @@ const html = `<!doctype html>
 
   <h2>Coverage of the full attack surface</h2>
   <div class="card scroll"><table>
-    <thead><tr><th>Tool</th><th>Class</th><th class="num">RobustCoverage</th><th class="num">Capability</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
+    <thead><tr><th>Tool</th><th>Class</th><th class="num">CorpusRobustCoverage</th><th class="num">Capability</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
     <tbody>${rows}</tbody>
   </table></div>
-  <p class="note"><b>Weighting:</b> enforce = 1.0, detect = 0.5, none = 0, over ${N} vectors. <b>RobustCoverage</b> (headline) is the <em>mean</em> across all fixtures of a vector, including evasion variants; <b>Capability</b> is best-case (detects ≥ 1 fixture). Where the two diverge, the tool is brittle to evasion. A vector counts only if the tool flags the attack <em>and</em> stays clean on the matched benign control (else it's a false positive); a false positive on any benign variant scores that vector 0. Zero false positives across all tools. <em>Scoring-metric fix credited to M. Brighindi (2026-07-24); see <a href="https://github.com/Gowthaman90/mcp-defense-bench/blob/main/docs/CHANGELOG-scoring.md">CHANGELOG-scoring</a>.</em></p>
+  <p class="note"><b>Weighting:</b> enforce = 1.0, detect = 0.5, none = 0, over ${N} vectors. <b>CorpusRobustCoverage</b> (headline) is the <em>mean</em> across all fixtures of a vector, including evasion variants; <b>Capability</b> is best-case (detects ≥ 1 fixture). Where the two diverge, the tool is brittle to evasion. A vector counts only if the tool flags the attack <em>and</em> stays clean on the matched benign control (else it's a false positive); a false positive on any benign variant scores that vector 0. Zero false positives across all tools.</p>
+  <p class="note"><b>Scope of this number:</b> CorpusRobustCoverage is a <b>descriptive coverage measure over a fixed, non-exhaustive corpus — not a procurement or substitutability ranking</b>. A higher score does not mean a tool better closes <em>your</em> deployment's gap, and tools at different architectural layers (e.g. a runtime proxy vs. an egress firewall) are not substitutable. Read the per-vector matrix and the defense-in-depth view for decisions. <em>Scoping clarified and the original metric fix credited to M. Brighindi; a decision-indexed <b>RequiredGapClosure</b> metric is planned — see <a href="https://github.com/Gowthaman90/mcp-defense-bench/blob/main/docs/CHANGELOG-scoring.md">CHANGELOG-scoring</a>.</em></p>
 
   <h2>Per-vector coverage matrix</h2>
   <div class="card scroll"><table class="mx">

@@ -83,8 +83,8 @@ const report = {
   rubricVersion: rubric.version,
   verified: false, // flips true once testcases gate the levels
   unassessedVectors: unknown, // 'unknown' levels — scored as 0 until a testcase assesses them
-  metric: "RobustCoverage = mean detection across all fixtures of a vector; Capability = best-case (≥1 fixture)",
-  overall: `${((covered / rubric.vectors.length) * 100).toFixed(0)}% (${covered.toFixed(1)}/${rubric.vectors.length} RobustCoverage)`,
+  metric: "CorpusRobustCoverage = mean detection across all fixtures of a fixed non-exhaustive corpus; NOT a procurement/substitutability ranking. Capability = best-case (≥1 fixture)",
+  overall: `${((covered / rubric.vectors.length) * 100).toFixed(0)}% (${covered.toFixed(1)}/${rubric.vectors.length} CorpusRobustCoverage)`,
   overallCapability: `${((coveredCapability / rubric.vectors.length) * 100).toFixed(0)}% (${coveredCapability.toFixed(1)}/${rubric.vectors.length} best-case)`,
   byLayer: pct(byLayer),
   byNistAiRmf: pct(byNist),

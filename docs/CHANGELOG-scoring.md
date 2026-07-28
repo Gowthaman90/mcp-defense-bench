@@ -1,5 +1,32 @@
 # Scoring changelog
 
+## 2026-07-26 — Headline renamed CorpusRobustCoverage; scope made explicit (not a procurement ranking)
+
+**Credit:** Massimiliano Brighindi (independent researcher), blind-test structural audit, 2026-07-26.
+
+**What changed.** The headline metric (RobustCoverage) is renamed **CorpusRobustCoverage**, and the
+leaderboard now states its scope explicitly: it is a **descriptive coverage measure over a fixed,
+non-exhaustive corpus — not a procurement or substitutability ranking.** No numbers changed; this is a
+naming + claim-boundary clarification.
+
+**Why.** A blind structural audit showed the single full-corpus aggregate is valid only for the narrow
+descriptive claim ("mean verified coverage over this versioned 24-vector corpus"), not as a universal basis
+for comparing one vendor tool against another. Falsifying case: a broad tool that adds coverage where a
+deployment's existing stack is already sufficient can outrank the narrow tool that closes the only
+*mandatory* uncovered requirement — reversing the correct procurement decision. The aggregate conflates
+(a) architectural breadth, (b) effectiveness within a tool's control point, and (c) the sampled corpus
+composition, and it assumes all vectors are equally decision-relevant and that partial successes can
+compensate for a mandatory miss.
+
+**Planned (roadmap, not yet implemented): `RequiredGapClosure`.** A decision-indexed companion metric that,
+for a **frozen deployment profile** (required vectors, mandatory set, public weights, existing baseline
+stack, protected layers), reports the fraction of the *still-required* protection that adding a tool
+actually closes — with a **mandatory-vector eligibility gate** (a high aggregate must never compensate for
+failing a mandatory requirement) and three preregistered falsification tests (irrelevant-expansion
+invariance, required-vector sensitivity, non-substitutable-tool ranking). Because it requires a frozen
+profile, it will ship as a per-profile calculator / worked examples, not a single leaderboard figure.
+CorpusRobustCoverage remains the reproducible descriptive result for research use.
+
 ## 2026-07-24 — RobustCoverage headline (fix: per-vector max-aggregation defect)
 
 **Reported by:** Massimiliano Brighindi (independent researcher), via LinkedIn on the "Measuring the

@@ -146,8 +146,8 @@ const summary = {
   verifiedVectors: Object.values(coverage).filter((c) => c.verified).length,
   falsePositives: perCase.filter((c) => c.falsePositive).length,
   covered: { enforce: 0, detect: 0, none: 0, unknown: 0 },
-  // Headline = RobustCoverage (mean over a vector's fixtures). Capability (best-case) kept as secondary.
-  overall: `${((robustWeighted / rubricIds.length) * 100).toFixed(0)}% (${robustWeighted.toFixed(1)}/${rubricIds.length} RobustCoverage)`,
+  // Headline = CorpusRobustCoverage (mean over a vector's fixtures). Capability (best-case) kept as secondary.
+  overall: `${((robustWeighted / rubricIds.length) * 100).toFixed(0)}% (${robustWeighted.toFixed(1)}/${rubricIds.length} CorpusRobustCoverage)`,
   robustCoverage: Number(robustWeighted.toFixed(2)),
   capability: Number(capabilityWeighted.toFixed(2)),
   guaranteed: Number(guaranteedWeighted.toFixed(2)),
