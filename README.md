@@ -22,9 +22,11 @@ surface they actually defend — mapped to NIST AI RMF and the OWASP Top 10s.**
 
 ## What this is (and what it is not)
 
-Existing MCP security benchmarks — **MSB** (ICLR 2026), **MCPTox**, **AgentDefense-Bench** — all
-measure the same thing: **how well an LLM agent resists an attack.** None of them measure **how much
-a defensive tool covers.** That is the gap this project fills.
+Existing MCP security benchmarks measure one of two things. **MSB** (ICLR 2026) and **MCPTox**
+measure **how well an LLM agent resists an attack**. **AgentDefense-Bench** does score defenses, but
+on a different axis from ours — **detection accuracy** (detection rate / false-positive rate) over a
+35k-case corpus. None of them measure **how much of the known attack surface a defensive tool covers
+at all**. That is the gap this project fills.
 
 - ✅ **This is** a *defense-side* benchmark. The unit under test is a **proxy/gateway/scanner**
   (mcp-bastion, MCP-Scan, MCP-Gateway, …). It asks: _against each known MCP attack vector, does this
@@ -32,7 +34,8 @@ a defensive tool covers.** That is the gap this project fills.
 - ✅ **This is** the first MCP benchmark whose results are **crosswalked to NIST AI RMF and the OWASP
   LLM 2025 + Agentic 2026 Top 10s** — the language compliance and procurement teams actually use.
 - ❌ **This is not** another agent-resistance benchmark (that's MSB's job — we cite it, we don't
-  duplicate it).
+  duplicate it), nor a detection-accuracy benchmark (that's AgentDefense-Bench's — see the
+  [taxonomy mapping](docs/CROSSWALK-agentdefense.md); the two are complementary).
 - ❌ **This is not** owned by any tool it scores. mcp-bastion is just one `adapters/` entry.
 
 See [`docs/PRIOR-ART.md`](docs/PRIOR-ART.md) for the full verified related-work map and the exact

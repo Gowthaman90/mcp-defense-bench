@@ -2,9 +2,9 @@
   "$schema": "./rubric.schema.json",
   "artifact": "MCP Threat–Control Crosswalk (rubric)",
   "version": "0.1.0-draft",
-  "date": "2026-07-13",
+  "date": "2026-08-23",
   "license": "CC-BY-4.0",
-  "description": "Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, and OWASP Agentic 2026. Per-tool coverage lives in adapters/*, NOT here, so the rubric stays neutral.",
+  "description": "Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, OWASP Agentic 2026, and NSA MCP Security guidance (May 2026). Per-tool coverage lives in adapters/*, NOT here, so the rubric stays neutral.",
   "_frameworks": {
     "mcpLayer": [
       "host-orchestration",
@@ -207,7 +207,8 @@
         "ASI02"
       ],
       "priorArtCoverage": [
-        "MSB"
+        "MSB",
+        "AgentDefense-Bench"
       ],
       "nsaGuidance": [
         "RT",
@@ -242,7 +243,8 @@
       ],
       "priorArtCoverage": [
         "MSB",
-        "MCP-Scan"
+        "MCP-Scan",
+        "AgentDefense-Bench"
       ],
       "nsaGuidance": [
         "RT"
@@ -274,7 +276,8 @@
         "ASI01"
       ],
       "priorArtCoverage": [
-        "MSB"
+        "MSB",
+        "AgentDefense-Bench"
       ],
       "nsaGuidance": [
         "RT"
@@ -571,7 +574,9 @@
       "owaspAgentic2026": [
         "ASI03"
       ],
-      "priorArtCoverage": [],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ],
       "nsaGuidance": [
         "RT",
         "AUTH"
@@ -667,7 +672,8 @@
         "ASI03"
       ],
       "priorArtCoverage": [
-        "MSB"
+        "MSB",
+        "AgentDefense-Bench"
       ],
       "nsaGuidance": [
         "AUTH"
@@ -700,7 +706,9 @@
       "owaspAgentic2026": [
         "ASI03"
       ],
-      "priorArtCoverage": [],
+      "priorArtCoverage": [
+        "AgentDefense-Bench"
+      ],
       "nsaGuidance": [
         "RT",
         "SEG",
@@ -794,7 +802,8 @@
         "ASI01"
       ],
       "priorArtCoverage": [
-        "MSB"
+        "MSB",
+        "AgentDefense-Bench"
       ],
       "nsaGuidance": [
         "RT",

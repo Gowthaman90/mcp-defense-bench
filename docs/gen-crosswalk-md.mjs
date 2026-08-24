@@ -10,10 +10,10 @@ const L = [];
 L.push(`# ${c.artifact} — v${c.version}`, "");
 L.push(`_Generated from \`rubric/crosswalk.json\` on ${c.date}. Edit the JSON, not this file._`, "");
 L.push(c.description, "", `**${c.vectors.length} vectors** · **${c.license}**`, "");
-L.push("| # | Vector | Layer | STRIDE | NIST AI RMF | OWASP LLM 2025 | OWASP Agentic 2026 | Prior-art benchmarks |");
-L.push("|---|---|---|---|---|---|---|---|");
+L.push("| # | Vector | Layer | STRIDE | NIST AI RMF | OWASP LLM 2025 | OWASP Agentic 2026 | NSA (May 2026) | Prior-art benchmarks |");
+L.push("|---|---|---|---|---|---|---|---|---|");
 c.vectors.forEach((v, i) =>
-  L.push(`| ${i + 1} | **${v.name}** | ${j(v.mcpLayer)} | ${j(v.stride)} | ${j(v.nistAiRmf)} | ${j(v.owaspLlm2025)} | ${j(v.owaspAgentic2026)} | ${v.priorArtCoverage.length ? j(v.priorArtCoverage) : "—"} |`),
+  L.push(`| ${i + 1} | **${v.name}** | ${j(v.mcpLayer)} | ${j(v.stride)} | ${j(v.nistAiRmf)} | ${j(v.owaspLlm2025)} | ${j(v.owaspAgentic2026)} | ${j(v.nsaGuidance)} | ${v.priorArtCoverage.length ? j(v.priorArtCoverage) : "—"} |`),
 );
 L.push("", "_Mappings are indicative and reviewable, not a certification. See `docs/PRIOR-ART.md`._");
 process.stdout.write(L.join("\n") + "\n");

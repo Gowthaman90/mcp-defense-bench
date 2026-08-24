@@ -28,7 +28,7 @@ examiner's expert — who knows the field._
 |---|---|---|
 | **MSB (MCP Security Bench)** — [arXiv:2510.15994](https://arxiv.org/abs/2510.15994), **ICLR 2026**, [code](https://github.com/dongsenzhang/MSB) | 12-attack taxonomy, ~2,000 attack instances, 10 scenarios, 65 tasks, 405 tools (304 benign + 101 malicious), ~10 LLM agents, **real MCP execution** | Resistance of the **LLM agent** across the full tool-use pipeline (planning → invocation → response handling) |
 | **MCPTox** — arXiv:2508.14925 | Tool-poisoning-scoped | Covers **only 5 of 23** attack vectors fully (+2 partial) per 2604.05969 Table I |
-| **AgentDefense-Bench** — [GitHub](https://github.com/arunsanna/AgentDefense-Bench) | 17 vectors / 6 domains; 35,546 attack + 443 benign cases in MCP JSON-RPC, aggregated from 13 sources | Solo-authored, ~14★, not peer-reviewed; **repackages general LLM-safety datasets** (WMDP, CySecBench) as MCP wrappers, not MCP-native attacks |
+| **AgentDefense-Bench** — [GitHub](https://github.com/arunsanna/AgentDefense-Bench) | 17 vectors / 6 domains; 35,546 attack + 443 benign cases in MCP JSON-RPC, aggregated from 13 sources | A defender's **detection accuracy** (detection rate / FPR). Not peer-reviewed; corpus **repackages general LLM-safety datasets** (WMDP, CySecBench) as MCP JSON-RPC wrappers rather than MCP-native attacks. Complementary axis to ours — see [taxonomy mapping](CROSSWALK-agentdefense.md) |
 | **MCP-Bench (Accenture)** — arXiv:2508.20453, [code](https://github.com/Accenture/mcp-bench) | 28 servers, ~250 tools | **Capability only** — tool discovery/selection/use. **No** attack/security evaluation. |
 
 ### Attestation / tool integrity (specs)
