@@ -1,0 +1,71 @@
+{
+  "vector": "roots-scope-gap",
+  "id": "roots-scope-gap/001-no-enforced-filesystem-boundary",
+  "status": "staged-unscored",
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "severity": "medium",
+  "description": "With Roots deprecated, a file tool's directory boundary is whatever the implementation enforces. This fixture presents a path outside the configured working directory and asks whether anything actually stops it.",
+  "fixture": {
+    "type": "tool-call",
+    "configuredBoundary": "/home/alice/project",
+    "tool": {
+      "name": "read_file",
+      "description": "Reads a file from the project directory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      }
+    },
+    "call": {
+      "name": "read_file",
+      "arguments": {
+        "path": "/home/alice/.env"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "file access outside the configured boundary with no protocol-level roots declaration in force; enforce the boundary at the call",
+    "rationale": "Roots is Deprecated as of 2026-07-28 (SEP-2577), earliest removal a revision on or after 2027-07-28, with the migration path 'pass directories or files via tool parameters, resource URIs, or server configuration'. Enforcement therefore moves into implementations and must be tested there."
+  },
+  "benignControl": {
+    "type": "tool-call",
+    "configuredBoundary": "/home/alice/project",
+    "tool": {
+      "name": "read_file",
+      "description": "Reads a file from the project directory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      }
+    },
+    "call": {
+      "name": "read_file",
+      "arguments": {
+        "path": "/home/alice/project/src/main.ts"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "synthetic — deprecation status and migration path verified against the deprecated-features registry. Distinct in cause from sandbox-escape: the boundary is absent by design change, not escaped."
+}

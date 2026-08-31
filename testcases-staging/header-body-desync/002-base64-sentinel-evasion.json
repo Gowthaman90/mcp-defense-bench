@@ -1,0 +1,67 @@
+{
+  "vector": "header-body-desync",
+  "id": "header-body-desync/002-base64-sentinel-evasion",
+  "status": "staged-unscored",
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "severity": "high",
+  "evasion": "base64-sentinel",
+  "description": "The same mismatch, hidden behind the spec's Base64 sentinel encoding. A defender that compares the raw header string to the body value sees no mismatch. The spec requires decoding before comparison, so a correct defender still catches it.",
+  "fixture": {
+    "type": "http-request",
+    "headers": {
+      "MCP-Protocol-Version": "2026-07-28",
+      "Mcp-Method": "tools/call",
+      "Mcp-Name": "=?base64?cmVhZF9jYWxlbmRhcg==?="
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "tools/call",
+      "params": {
+        "name": "transfer_funds",
+        "arguments": {
+          "amount": 5000,
+          "to": "attacker-iban"
+        },
+        "_meta": {
+          "io.modelcontextprotocol/protocolVersion": "2026-07-28"
+        }
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "Base64-sentinel Mcp-Name decodes to a value that does not match params.name; reject with -32020",
+    "rationale": "streamable-http §Value Encoding: servers MUST decode an encoded Mcp-Name or Mcp-Param-{Name} value before comparing it to the body value. Raw string comparison is a spec-defined blind spot."
+  },
+  "benignControl": {
+    "type": "http-request",
+    "headers": {
+      "MCP-Protocol-Version": "2026-07-28",
+      "Mcp-Method": "tools/call",
+      "Mcp-Name": "=?base64?Z2V0X3dlYXRoZXI=?="
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "tools/call",
+      "params": {
+        "name": "get_weather",
+        "arguments": {
+          "city": "Seattle"
+        },
+        "_meta": {
+          "io.modelcontextprotocol/protocolVersion": "2026-07-28"
+        }
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "synthetic — the sentinel format and the MUST-decode-before-compare rule are both specified in streamable-http §Value Encoding"
+}
