@@ -104,6 +104,12 @@
       "nsaGuidance": [
         "RT",
         "AUTH"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -142,6 +148,12 @@
       "nsaGuidance": [
         "AUTH",
         "RT"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -177,7 +189,14 @@
       "nsaGuidance": [
         "AUTH",
         "RT"
-      ]
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "revisionNotes": "Unchanged as a mechanism, but 2026-07-28 adds a suppression path: a cached tools/list (ttlMs/cacheScope) can hide the definition change that pinning detects. See staged vector list-cache-poisoning."
     },
     {
       "id": "out-of-scope-params",
@@ -213,7 +232,14 @@
       "nsaGuidance": [
         "RT",
         "AUTH"
-      ]
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "revisionNotes": "As for schema-bypass: undeclared or malformed parameters can now also surface as Mcp-Param-* headers."
     },
     {
       "id": "response-injection",
@@ -248,6 +274,12 @@
       ],
       "nsaGuidance": [
         "RT"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -281,6 +313,12 @@
       ],
       "nsaGuidance": [
         "RT"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -319,6 +357,12 @@
       "nsaGuidance": [
         "RT",
         "SEG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -352,6 +396,12 @@
       "nsaGuidance": [
         "AUTH",
         "SEG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -388,6 +438,12 @@
       "nsaGuidance": [
         "RT",
         "LOG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -419,6 +475,12 @@
       ],
       "nsaGuidance": [
         "AUTH"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -452,6 +514,12 @@
       ],
       "nsaGuidance": [
         "AUTH"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -485,6 +553,12 @@
       "nsaGuidance": [
         "LOG",
         "AUTH"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -516,6 +590,12 @@
       ],
       "nsaGuidance": [
         "RT"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -548,7 +628,14 @@
       ],
       "nsaGuidance": [
         "RT"
-      ]
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "revisionNotes": "2026-07-28 adds the x-mcp-header annotation, which mirrors declared parameters into HTTP headers and carries its own normative constraints (token syntax, no CR/LF, primitive types, static reachability)."
     },
     {
       "id": "mitm-transport",
@@ -580,6 +667,12 @@
       "nsaGuidance": [
         "RT",
         "AUTH"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -612,7 +705,14 @@
       "nsaGuidance": [
         "AUTH",
         "RT"
-      ]
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "revisionNotes": "Unchanged: Origin validation with HTTP 403 on an invalid Origin remains a MUST in streamable-http §Security & Endpoint."
     },
     {
       "id": "server-impersonation",
@@ -643,7 +743,14 @@
       "priorArtCoverage": [],
       "nsaGuidance": [
         "AUTH"
-      ]
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "revisionNotes": "2026-07-28 models the MCP server as a standard OAuth 2.0 resource server advertising protected-resource metadata, changing how identity is established."
     },
     {
       "id": "excessive-permission",
@@ -677,6 +784,12 @@
       ],
       "nsaGuidance": [
         "AUTH"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -713,7 +826,14 @@
         "RT",
         "SEG",
         "AUTH"
-      ]
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "revisionNotes": "Authorization was rewritten in 2026-07-28: RFC 9207 issuer validation is mandatory, credentials are bound to the issuer that minted them, and DCR is deprecated in favour of CIMD."
     },
     {
       "id": "consent-fatigue",
@@ -743,6 +863,12 @@
       "priorArtCoverage": [],
       "nsaGuidance": [
         "AUTH"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -774,6 +900,12 @@
       ],
       "nsaGuidance": [
         "RT"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -808,6 +940,12 @@
       "nsaGuidance": [
         "RT",
         "LOG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     },
     {
@@ -844,7 +982,14 @@
       "nsaGuidance": [
         "AUTH",
         "LOG"
-      ]
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "revisionNotes": "2026-07-28 removes protocol-level sessions, so 'mid-session' is no longer a connection property. The equivalent surface is notifications/tools/list_changed plus cached list results."
     },
     {
       "id": "multi-tool-split-poisoning",
@@ -878,7 +1023,27 @@
       "nsaGuidance": [
         "RT",
         "LOG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
       ]
     }
-  ]
+  ],
+  "_specRevisions": {
+    "_comment": "NON-SCORING metadata. `appliesTo` on each vector records the MCP protocol revisions in which that vector's mechanism exists; `revisionNotes` appears only where a revision materially changed the mechanism. No scorer reads these fields. Coverage numbers are only meaningful relative to a revision, and the published v0.3-v0.6 results were measured against the pre-2026-07-28 shape.",
+    "known": [
+      "2025-03-26",
+      "2025-06-18",
+      "2025-11-25",
+      "2026-07-28"
+    ],
+    "measuredAgainst": "2025-11-25",
+    "latest": "2026-07-28",
+    "stagedVectorsFor": {
+      "2026-07-28": "8 candidate vectors drafted in testcases-staging/ and NOT scored; see docs/ROADMAP-2026H2.md and docs/SPEC-VERIFICATION-2026-07-28.md"
+    }
+  }
 }
