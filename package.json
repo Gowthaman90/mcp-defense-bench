@@ -1,6 +1,6 @@
 {
   "name": "mcp-defense-bench",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "private": true,
   "description": "Vendor-neutral benchmark scoring MCP security proxies/gateways on attack-surface coverage, crosswalked to NIST AI RMF and the OWASP LLM/Agentic Top 10s.",
   "type": "module",
@@ -11,9 +11,23 @@
     "score:bastion": "node bin/score.mjs adapters/mcp-bastion/coverage.json",
     "bench:bastion": "node scripts/gen-testcases.mjs && node bin/run.mjs mcp-bastion && node bin/assert-floor.mjs mcp-bastion",
     "gen:rubric-md": "node docs/gen-crosswalk-md.mjs > docs/CROSSWALK.md",
-    "validate": "node -e \"JSON.parse(require('fs').readFileSync('rubric/crosswalk.json'))\" && echo ok"
+    "validate": "node -e \"JSON.parse(require('fs').readFileSync('rubric/crosswalk.json'))\" && echo ok",
+    "bench:all": "for t in null-baseline mcp-bastion mcp-firewall pipelock; do node bin/run.mjs $t; done",
+    "bench:heldout": "for t in null-baseline mcp-bastion mcp-firewall pipelock; do node bin/run.mjs $t --corpus heldout; done",
+    "bench:benign": "for t in null-baseline mcp-bastion mcp-firewall pipelock; do node bin/run.mjs $t --corpus benign; done",
+    "gen:corpora": "node scripts/gen-testcases.mjs && node scripts/gen-heldout.mjs && node scripts/gen-benign.mjs",
+    "leaderboard": "node bin/leaderboard.mjs > docs/LEADERBOARD.md && node bin/robustness.mjs > docs/ROBUSTNESS.md && node bin/build-site.mjs",
+    "agreement": "node bin/agreement.mjs --md > docs/AGREEMENT.md",
+    "anon-mirror": "node scripts/make-anon-mirror.mjs"
   },
   "license": "Apache-2.0",
   "author": "Gowthaman Arumugam <agowthaman90@gmail.com> (https://github.com/Gowthaman90)",
-  "keywords": ["mcp", "model-context-protocol", "security", "benchmark", "nist-ai-rmf", "owasp"]
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "security",
+    "benchmark",
+    "nist-ai-rmf",
+    "owasp"
+  ]
 }

@@ -1,0 +1,104 @@
+{
+  "id": "benign/multi-server-registry/001-fs-github-slack",
+  "kind": "multi-server-registry",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Realistic multi-server deployment assembled from harvested public servers; no name collisions.",
+  "fixture": {
+    "type": "multi-server-registry",
+    "servers": [
+      {
+        "server": "server-filesystem",
+        "tools": [
+          {
+            "name": "read_file",
+            "description": "Read the complete contents of a file as text. DEPRECATED: Use read_text_file instead."
+          },
+          {
+            "name": "read_text_file",
+            "description": "Read the complete contents of a file from the file system as text. Handles various text encodings and provides detailed error messages if the file cannot be read. Use this tool when you need to examine the contents of a single file. Use the 'head' parameter to read only the first N lines of a file, or the 'tail' parameter to read only the last N lines of a file. Operates on the file as text regardless of extension. Only works within allowed directories."
+          },
+          {
+            "name": "read_media_file",
+            "description": "Read a file and return it as a base64-encoded content block with its MIME type. Image and audio files are returned as image/audio content; any other file type is returned as an embedded resource. Only works within allowed directories."
+          },
+          {
+            "name": "read_multiple_files",
+            "description": "Read the contents of multiple files simultaneously. This is more efficient than reading files one by one when you need to analyze or compare multiple files. Each file's content is returned with its path as a reference. Failed reads for individual files won't stop the entire operation. Only works within allowed directories."
+          },
+          {
+            "name": "write_file",
+            "description": "Create a new file or completely overwrite an existing file with new content. Use with caution as it will overwrite existing files without warning. Handles text content with proper encoding. Only works within allowed directories."
+          },
+          {
+            "name": "edit_file",
+            "description": "Make line-based edits to a text file. Each edit replaces exact line sequences with new content. Returns a git-style diff showing the changes made. Only works within allowed directories."
+          }
+        ]
+      },
+      {
+        "server": "server-github",
+        "tools": [
+          {
+            "name": "create_or_update_file",
+            "description": "Create or update a single file in a GitHub repository"
+          },
+          {
+            "name": "search_repositories",
+            "description": "Search for GitHub repositories"
+          },
+          {
+            "name": "create_repository",
+            "description": "Create a new GitHub repository in your account"
+          },
+          {
+            "name": "get_file_contents",
+            "description": "Get the contents of a file or directory from a GitHub repository"
+          },
+          {
+            "name": "push_files",
+            "description": "Push multiple files to a GitHub repository in a single commit"
+          },
+          {
+            "name": "create_issue",
+            "description": "Create a new issue in a GitHub repository"
+          }
+        ]
+      },
+      {
+        "server": "server-slack",
+        "tools": [
+          {
+            "name": "slack_list_channels",
+            "description": "List public or pre-defined channels in the workspace with pagination"
+          },
+          {
+            "name": "slack_post_message",
+            "description": "Post a new message to a Slack channel"
+          },
+          {
+            "name": "slack_reply_to_thread",
+            "description": "Reply to a specific message thread in Slack"
+          },
+          {
+            "name": "slack_add_reaction",
+            "description": "Add a reaction emoji to a message"
+          },
+          {
+            "name": "slack_get_channel_history",
+            "description": "Get recent messages from a channel"
+          },
+          {
+            "name": "slack_get_thread_replies",
+            "description": "Get all replies in a message thread"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

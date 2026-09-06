@@ -1,0 +1,53 @@
+{
+  "id": "benign/tool-definition/110-playwright-mcp--browser_network_requests",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @playwright/mcp.",
+  "source": {
+    "package": "@playwright/mcp",
+    "version": "1.63.0-alpha-2026-08-31",
+    "harvestedAt": "2026-09-06T02:37:48.767Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "browser_network_requests",
+      "description": "Returns a numbered list of network requests since loading the page. Use browser_network_request with the number to get full details.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "static": {
+            "default": false,
+            "description": "Whether to include successful static resources like images, fonts, scripts, etc. Defaults to false.",
+            "type": "boolean"
+          },
+          "filter": {
+            "description": "Only return requests whose URL matches this regexp (e.g. \"/api/.*user\").",
+            "type": "string"
+          },
+          "filename": {
+            "description": "Filename to save the network requests to. If not provided, requests are returned as text.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "static"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List network requests",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @playwright/mcp"
+}

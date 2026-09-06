@@ -1,0 +1,49 @@
+{
+  "id": "benign/tool-definition/120-playwright-mcp--browser_wait_for",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @playwright/mcp.",
+  "source": {
+    "package": "@playwright/mcp",
+    "version": "1.63.0-alpha-2026-08-31",
+    "harvestedAt": "2026-09-06T02:37:48.767Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "browser_wait_for",
+      "description": "Wait for text to appear or disappear or a specified time to pass",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "description": "The time to wait in seconds",
+            "type": "number"
+          },
+          "text": {
+            "description": "The text to wait for",
+            "type": "string"
+          },
+          "textGone": {
+            "description": "The text to wait for to disappear",
+            "type": "string"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Wait for",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @playwright/mcp"
+}

@@ -1,0 +1,60 @@
+{
+  "id": "benign/tool-definition/155-server-filesystem--move_file",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-filesystem.",
+  "source": {
+    "package": "@modelcontextprotocol/server-filesystem",
+    "version": "0.2.0",
+    "harvestedAt": "2026-09-06T02:36:31.724Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "move_file",
+      "description": "Move or rename files and directories. Can move files between directories and rename them in a single operation. If the destination exists, the operation will fail. Works across different directories and can be used for simple renaming within the same directory. Both source and destination must be within allowed directories.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "destination"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "title": "Move File",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-filesystem"
+}

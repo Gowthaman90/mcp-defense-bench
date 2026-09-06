@@ -1,0 +1,176 @@
+%% IEEE SaTML 2027 submission — research paper — ANONYMIZED (double-blind).
+%% Build: node gen-tables.mjs --anon && tectonic main.tex   (numbers/tables are generated, never typed)
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fontspec}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmonofont{texgyrecursor}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic,Scale=MatchLowercase]
+\input{generated/numbers.tex}
+\newcommand{\proxy}{OurProxy}
+\newcommand{\bench}{OurBench}
+\newcommand{\rev}{2026-07-28}
+
+\begin{document}
+\title{Measuring the Defenders, Held Out:\\ A Spec-Versioned, Framework-Mapped Coverage Benchmark for Model Context Protocol Security Proxies}
+\author{\IEEEauthorblockN{Anonymous Author(s)}\IEEEauthorblockA{Submission under double-blind review}}
+\maketitle
+
+\begin{abstract}
+The Model Context Protocol (MCP) connects LLM agents to tools, and a dense 2025--2026 literature documents its attack surface. Existing MCP security benchmarks measure how well an \emph{agent} resists attacks; none measure how much of that surface a \emph{defensive proxy or gateway} covers, and none map results to the governance frameworks organizations use. We present (1)~a threat--control crosswalk of \nVectors{} MCP attack vectors---\nOrig{} pre-existing and \nNew{} introduced by the breaking \rev{} protocol revision---mapped to architectural layer, STRIDE, NIST AI RMF, the OWASP LLM and Agentic Top~10s, and the NSA MCP guidance, with a published rating codebook and a blind second-rater pass (primary-layer $\kappa=\kappaLayer$, STRIDE $\kappa=\kappaStride$); and (2)~an open, vendor-neutral \emph{defense-side} benchmark that drives each proxy through its real code against matched malicious/benign fixtures and reports coverage \emph{per protocol revision}. Because our own proxy was developed against the benchmark, we add what a benchmark of this kind must have: a \emph{pre-registered held-out corpus} (\nHeldout{} fixtures written after every defender was frozen, under domain/lexical/surface/encoding shift rules) and a \nBenign-item \emph{benign-only corpus} (\nHarvested{} verbatim tool definitions harvested from public MCP servers plus \nHardNeg{} hard negatives). The reference proxy covers \bastDevOrig{} of the \nOrig{} pre-existing vectors on the development corpus but \bastHeldout{} held-out---a \bastGap-point generalisation gap that exposes phrase-brittle heuristics---at a benign false-positive rate of \bastBenignRate{} (95\% CI \bastBenignCI). One competing egress firewall's development coverage disappears entirely held-out. \nCoveredNone{} of \nVectors{} vectors are covered by no measured tool. We argue the held-out gap, not the development score, is the number a defender should report, and release everything needed to reproduce and extend the measurement.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Model Context Protocol, LLM agents, agentic AI security, security benchmark, held-out evaluation, NIST AI RMF, OWASP, defense-in-depth
+\end{IEEEkeywords}
+
+\section{Introduction}
+MCP standardizes how an LLM agent discovers and calls external ``tools'' exposed by ``servers.'' Its adoption has been accompanied by systematizations, formal taxonomies, attack benchmarks, and attestation proposals (Section~\ref{sec:related}) that establish \emph{what can go wrong}. A practical question is under-addressed: \textbf{given a defensive tool in front of MCP servers---a proxy, gateway, or scanner---how much of the known attack surface does it actually cover, and does that coverage survive attacks it was not developed against?}
+
+Answering this well requires a shared taxonomy, a mapping to the governance frameworks security and procurement teams reason in, an executable way to test a defender, and---because the benchmark's authors also build one of the defenders---controls that separate ``guided development'' from ``generalisation.'' A first version of this work was reviewed at a 2026 security workshop; the expert reviewer's three objections (co-development of benchmark and tool, a small corpus with an over-general ``zero false positives'' claim, and a single-author framework mapping) shaped everything new here. We contribute:
+\begin{itemize}
+\item \textbf{A spec-versioned threat--control crosswalk} (Section~\ref{sec:crosswalk}): \nVectors{} vectors with an \texttt{appliesTo} protocol-revision axis, so that coverage is never quoted revision-free; the \nNew{} \rev{} vectors were verified against specification text, which corrected two vendor-sourced claims.
+\item \textbf{A rating codebook and agreement measurement} (Section~\ref{sec:agreement}): a second, blind rating pass and open adjudication of every disagreement.
+\item \textbf{A defense-side benchmark with three corpora} (Section~\ref{sec:method}): a development corpus, a \emph{pre-registered held-out corpus} authored after defender freeze, and a large benign-only corpus with confidence intervals on the false-positive rate.
+\item \textbf{An empirical evaluation} (Section~\ref{sec:results}) of three open-source proxies and a null baseline, reporting development and held-out coverage side by side, per revision, with false-positive rates.
+\end{itemize}
+Our aim is not to rank products but to map coverage, expose gaps, and provide reusable, honest infrastructure.
+
+\section{Related Work}\label{sec:related}
+Recent works are preprints whose taxonomies are their authors' constructs; we cite them as \emph{proposed by}, not consensus.
+
+\textbf{Threat taxonomies.} An SoK separates adversarial threats from epistemic hazards across MCP primitives~\cite{sok2512}; a formal framework proposes 7 categories and 23 vectors from a large tool corpus~\cite{formal2604}; a STRIDE/DREAD model finds tool poisoning the most impactful client-side vulnerability~\cite{stride2603}; a defense-placement taxonomy classifies defenses by enforcing layer and finds protection ``uneven and predominantly tool-centric''~\cite{mcpdpt2604}. Our crosswalk reuses these vector families and adds the framework mapping, the protocol-revision axis, and a reliability measurement none provides.
+
+\textbf{Attack-side benchmarks.} MSB~\cite{msb2510} measures LLM-agent resistance with real MCP execution; MCPTox~\cite{mcptox2508} scopes to tool poisoning; AgentDefense-Bench~\cite{agentdefensebench} scores a defender's \emph{detection accuracy} over aggregated datasets; MCP-Bench~\cite{mcpbench2508} measures capability. None measures a defensive proxy's \emph{coverage} of a mapped surface, and none is spec-versioned. All were authored against the pre-\rev{} protocol shape.
+
+\textbf{The \rev{} revision.} The revision removed the \texttt{initialize} handshake and protocol-level sessions, replaced server-initiated requests with in-band ``MRTR'' (\texttt{input\_required} + opaque \texttt{requestState}), mirrored routing metadata into HTTP headers with a normative \texttt{-32020} HeaderMismatch error, made list results cacheable (\texttt{ttlMs}, \texttt{cacheScope}), promoted Tasks to an official extension, and deprecated Roots, Sampling, Logging and DCR~\cite{mcpspec20260728}. The new surface is overwhelmingly a gateway-layer surface---precisely the unit under test here.
+
+\textbf{Attestation and provenance.} ETDI~\cite{etdi2506} and the Trustworthy MCP Registry blueprint~\cite{trustreg2026} are complementary; the vectors they address are, we show, structurally outside any content-scanning proxy's reach.
+
+\textbf{Scanners and gateways.} Practitioner tools include MCP-Scan (now a cloud-gated Snyk scanner~\cite{snykagentscan}), the Lasso and EnkryptAI gateways, Docker's isolation gateway, and the proxies evaluated here. We score locally deterministic defenders and treat cloud-model defenders as observable but not reproducibly scoreable.
+
+\section{The Spec-Versioned Threat--Control Crosswalk}\label{sec:crosswalk}
+The crosswalk is both the benchmark's rubric and a standalone, machine-readable artifact (\texttt{rubric/crosswalk.json}, CC-BY-4.0). It enumerates \nVectors{} vectors, each mapped to architectural layer (host-orchestration, client, transport, server, tool, registry-supply-chain, following~\cite{mcpdpt2604}), STRIDE class, NIST AI RMF function, NSA MCP Security recommendation area~\cite{nsamcp2026}, OWASP LLM Top~10 (2025)~\cite{owaspllm2025} and OWASP Agentic Top~10 (2026)~\cite{owaspasi2026}. Table~\ref{tab:new} lists the \nNew{} vectors added for \rev; the \nOrig{} pre-existing vectors are those of Table~\ref{tab:matrix}.
+
+\textbf{Protocol-revision axis.} Every vector carries \texttt{appliesTo}: the list of protocol revisions in which its mechanism exists. The scorer reports coverage over the vectors applicable to each revision, and separately over the ``new-only'' set. A coverage number quoted without a revision is meaningless once the protocol has moved; to our knowledge no other MCP security benchmark models this.
+
+\textbf{Verification against specification text.} The \rev{} vectors were first drafted from vendor analyses and then checked line-by-line against the specification. Two changed materially: the Tasks extension has \emph{no} \texttt{tasks/list} (removed deliberately, cited by the spec as a security improvement), so the planned enumeration variant does not exist; and MCP Apps (SEP-1865~\cite{sep1865}) mandates a sandboxed iframe under an egress-blocking CSP, so the vendor framing of an ``open XSS surface'' overstates it---the testable property is host \emph{conformance}. A third correction separated \texttt{requestState} (normative MUSTs) from tool state handles (a non-normative section), which are now distinct, differently weighted fixtures.
+
+\begin{table}[t]
+\caption{Vectors introduced by the \rev{} revision (\texttt{appliesTo:[\rev]}).}
+\label{tab:new}
+\centering\scriptsize
+\input{generated/tab-new.tex}
+\end{table}
+
+\subsection{Mapping reliability}\label{sec:agreement}
+Framework mappings are judgments. To make them reviewable we publish a \emph{rating codebook} with a decision rule per dimension, a rating sheet containing only vector id, name, aliases and description, and an agreement tool. A second rater (Rater~B)---a large-language-model rater following the codebook and blind to the primary mapping---rated the \nOrig{} pre-existing vectors. Table~\ref{tab:agreement} reports Cohen's~$\kappa$ on primary labels (layer, STRIDE), mean per-vector Jaccard over the full label sets, and pooled per-label~$\kappa$; interpretation follows~\cite{landiskoch1977}. Agreement is substantial (primary-layer $\kappa=\kappaLayer$, STRIDE $\kappa=\kappaStride$; Jaccard \jacMin--\jacMax). The \nDisagree{} set-level disagreements were adjudicated in the open; 12 mappings changed and one codebook rule was clarified. We report the \emph{pre}-adjudication figures as the headline, since post-adjudication agreement is inflated by construction.
+
+We are explicit about the limit: Rater~B is not an independent human expert. It demonstrates that the codebook is followable by a rater who did not write the crosswalk and it makes every disagreement public. A human third-rater slot is open in the artifact, and the \nNew{} new vectors remain single-rater and are labelled as such.
+
+\begin{table}[t]
+\caption{Inter-rater agreement, Rater A (primary) vs.\ Rater B (blind), \nOrig{} vectors, pre-adjudication.}
+\label{tab:agreement}
+\centering\scriptsize
+\resizebox{\columnwidth}{!}{\input{generated/tab-agreement.tex}}
+\end{table}
+
+\section{Benchmark Methodology}\label{sec:method}
+\subsection{Design}
+Each vector has one or more \emph{test cases}: a static JSON object with a \emph{malicious fixture} (the attack as data---a tool definition, call, result, registry entry, HTTP request, list result, or scenario), a near-identical \emph{benign control}, the expected defender behavior, and a provenance note. Fixtures are static data, never live exploits; hosts are reserved names.
+
+\subsection{Adapters and the runtime-integrity rule}
+Each tool provides a thin adapter exposing \texttt{assess(input)}$\rightarrow$\texttt{\{detect, enforce\}} that drives the tool's real code (imported detection functions, or its CLI/SDK with a committed configuration). One rule keeps scores honest: \textbf{report only what the tool actually inspects at runtime---never what its rules could match if pointed at data the tool never sees.} An unwired check is a miss, however good the function is in isolation.
+
+\subsection{Scoring}
+Per test case: not flagged $\rightarrow$ \textbf{none}; flagged but the benign control is also flagged $\rightarrow$ \textbf{none} and a \textbf{false positive}; flagged with a clean control $\rightarrow$ \textbf{detect} (warn) or \textbf{enforce} (block). Weights are enforce~$=1$, detect~$=0.5$. A vector with several fixtures publishes \emph{Capability} ($\max_i w_i$, best case), \emph{CorpusRobustCoverage} ($\mathrm{mean}_i w_i$, the headline) and \emph{Guaranteed} ($\min_i w_i$). The mean, not the max, is the headline because an independent reviewer of the public artifact showed that max-aggregation let a tool that missed an evasion variant keep full credit; a false positive on any variant zeroes that fixture and drags the vector's mean down. The headline is a descriptive coverage measure over a fixed, non-exhaustive corpus---\emph{not} a procurement or substitutability ranking.
+
+\subsection{Three corpora}\label{sec:corpora}
+\textbf{Development corpus} (\nDev{} cases, \nVectors{} vectors). Used to find and fix gaps in the reference proxy over the study. Coverage on it demonstrates that the benchmark \emph{guides} development; it is a weak generalisation claim.
+
+\textbf{Held-out corpus} (\nHeldout{} cases, \nOrig{} vectors). Governed by a protocol registered \emph{before} any fixture was written: (1)~every defender is frozen at a recorded version/commit; (2)~fixtures are authored from vector descriptions and the attack literature only, without consulting any detector's rules or tests; (3)~each fixture belongs to a named transformation family---\textbf{D}omain shift (no development tool or domain reused), \textbf{L}exical shift (no development trigger phrasing, hosts or example secrets; enforced by the generator), \textbf{S}urface shift (the vector expressed through a different fixture type), or \textbf{E}ncoding shift (a realistic obfuscation absent from development); (4)~every fixture has a matched control; (5)~$\geq2$ fixtures per vector, at least one D or L; (6)~results are published as measured on the first run---a malformed fixture may be removed and logged, never edited to change an outcome; (7)~once published, the set retires into the next development corpus and a fresh held-out set is required for any new claim. The family split is D~23 / L~10 / S~5 / E~10.
+
+\textbf{Benign-only corpus} (\nBenign{} items). Matched controls test discrimination on near-identical pairs; this corpus tests specificity at scale. \nHarvested{} items are \emph{verbatim} tool definitions harvested by starting 21 public MCP servers exactly as a user would and recording \texttt{tools/list} with package/version provenance. \nHardNeg{} are authored hard negatives across every fixture type: legitimate outputs and calls that mention passwords, deletion, shells, base64, the cloud-metadata address, or ``ignore my previous message.'' Every flag is a false positive; we report the rate with a Wilson 95\% interval~\cite{wilson1927}, broken down by input kind.
+
+\subsection{Reproducibility rule}
+A defender is scored only if its detection runs locally and deterministically; cloud-model defenders are observed, not scored.
+
+\section{Experimental Setup}\label{sec:setup}
+We evaluate four adapters. \textbf{null-baseline} returns ``not detected'' for everything. \textbf{\proxy} (runtime proxy, Apache-2.0) is driven by importing its real detection code---definition/text scanning with evasion normalization, cross-tool correlation, cross-server taint, argument and command-injection validation, config-drift and identity checks, inline secret redaction, and, since its \rev-aware release, header/body coherence enforcement on its HTTP listener (\texttt{-32020}) and cache-policy clamping on upstream list results---under its default \texttt{balanced} profile. \textbf{mcp-firewall} (runtime proxy, Python, AGPL-3.0) is driven through its real SDK with a committed configuration. \textbf{pipelock} (egress firewall, Go) is driven through its offline URL/egress and MCP-response scanners. Versions and commits are pinned in the held-out manifest. \proxy{} is developed by the authors; it is scored by the same harness alongside the others and the null baseline, which is exactly why the held-out corpus exists. For the \nOrig{} pre-existing vectors its detection code was frozen before the held-out protocol was registered; its \rev{} release touched only the two new-vector checks.
+
+\section{Results}\label{sec:results}
+\begin{table}[t]
+\caption{Headline: CorpusRobustCoverage on the \nOrig{} pre-existing vectors (development vs.\ held-out, gap in points), on the \nNew{} \rev{}-only vectors, and benign-corpus false positives. Matched-control FP is 0 for every tool on both paired corpora.}
+\label{tab:headline}
+\centering\scriptsize
+\resizebox{\columnwidth}{!}{\input{generated/tab-headline.tex}}
+\end{table}
+
+\begin{table*}[t]
+\caption{Per-vector coverage. E~=~enforce, D~=~detect, --~=~none; the number is the vector's CorpusRobustCoverage in percent. $\Delta$ is held-out minus development for \proxy. $^{\dagger}$Vectors introduced by \rev{} have no held-out set yet (rule~7).}
+\label{tab:matrix}
+\centering\scriptsize
+\input{generated/tab-matrix.tex}
+\end{table*}
+
+\textbf{Development vs.\ held-out (Table~\ref{tab:headline}, Table~\ref{tab:matrix}).} On the \nOrig{} pre-existing vectors \proxy{} covers \bastDevOrig{} (\bastDevOrigFrac) of the development corpus and \bastHeldout{} (\bastHeldoutFrac) of the held-out corpus: a \bastGap-point generalisation gap, with zero held-out false positives. The gap is concentrated: \bastLostVectors{} vectors covered in development are missed entirely held-out---tool poisoning (both the domain-shifted directive and the HTML-comment variant), multi-tool split poisoning (both a base64-shard and a numbered-fragment staging), transport MITM (a plaintext WebSocket and TLS-verification-off), and system-prompt leakage---while four more degrade. Every lost vector is one defended by a \emph{phrase or pattern heuristic}; every vector that held (rug pull, out-of-scope arguments, schema bypass, command injection, cross-tool exfiltration, mid-session injection) is defended by a \emph{structural} check (hash pinning, schema validation, data-flow tracking). That is the benchmark's most useful finding about the tool, and it would have been invisible without the held-out set. mcp-firewall is flat (\fwDevOrig{} $\rightarrow$ \fwHeldout): its checks are narrow but not corpus-fitted. pipelock's development coverage (\plDevOrig) \emph{vanishes} held-out (\plHeldout): its injection-scanner matches were specific to the development fixtures' phrasing and its egress scanner never saw a blockable destination in the held-out hosts---an instance of corpus-encoding sensitivity we had previously only argued about.
+
+\textbf{Per revision.} On all \nVectors{} vectors \proxy{} reaches \bastDevAll{} (\bastDevAllFrac; Capability \bastCapAll; \bastEnf{} enforced, \bastDet{} detected, \bastNone{} none). On the \nNew{} \rev-only vectors it reaches \bastNew{} (\bastNewFrac): header/body desync (all three fixtures, including the base64-sentinel evasion and the task-routing variant) and list-cache poisoning (all three, including the stale-cache-suppresses-rug-pull composition) are enforced; MRTR forgery and phishing, task authorization, MCP Apps conformance and transport downgrade are honest misses because the proxy does not yet speak those surfaces. mcp-firewall catches one new vector (the roots-scope call, via its file-access rule); pipelock none.
+
+\textbf{Benign-corpus false positives (Table~\ref{tab:benign}).} \proxy{} flags \bastBenignFP{} (\bastBenignRate, CI \bastBenignCI). \bastBenignDefChange{} of those are the \emph{by-design} cost of trust-on-first-use pinning flagging benign definition updates; we report them in their own row rather than exclude them. On the \nHarvested{} verbatim third-party definitions it flags \bastBenignHarvestedFP{} (a monitoring tool whose description legitimately mentions webhooks). The remaining flags are on authored hard negatives: a search query for the word ``password,'' a path to \texttt{.env.example}, an e-mail saying ``ignore my earlier note,'' and result text about password resets, shell history and an example environment file. mcp-firewall flags \fwBenignFP{} (\fwBenignRate) and pipelock \plBenignFP{} (\plBenignRate); pipelock's includes a loopback development URL blocked as SSRF. ``Zero false positives'' on matched controls remains true for all tools on both paired corpora, and we now say what it does and does not show.
+
+\begin{table}[t]
+\caption{False positives on the benign-only corpus by input kind.}
+\label{tab:benign}
+\centering\scriptsize
+\resizebox{\columnwidth}{!}{\input{generated/tab-benign.tex}}
+\end{table}
+
+\textbf{Defense in depth.} \nCoveredAny{} of \nVectors{} vectors are covered by at least one tool; \nCoveredNone{} by none---the five pre-existing gaps (false-error escalation, package squatting, provenance-gap supply-chain poisoning, sandbox escape, consent fatigue) plus four \rev{} surfaces (MRTR state forgery, MRTR phishing, MCP Apps conformance, transport downgrade). None is addressable by a content-scanning runtime proxy; they need attestation and a verified registry, OS isolation, client-side consent controls, and protocol-aware gateways. A proxy is necessary but not sufficient.
+
+\textbf{Evasion robustness.} On the development evasion set, \proxy{} catches zero-width/bidi, homoglyph and base64 variants after its normalization stage; the held-out \textbf{E} family shows the limit of that stage: HTML-comment and markdown-comment hiding, JSON-LD embedding, newline-separated command injection and a loopback-lookalike Origin were caught (E: 5/10 for \proxy), while base64 \emph{shards} spread across tools and numbered sentence fragments were not.
+
+\section{Discussion}\label{sec:discussion}
+\textbf{Guided development is not generalisation.} Over the study the benchmark took \proxy{} from 9\% to 63\% Capability on the development corpus by surfacing concrete, layer-specific gaps and verifying each fix. That is what a coverage benchmark is for. But the held-out gap shows how much of that number was the corpus: structural checks generalise; heuristic checks over-fit the phrasing they were built against. A defender that reports only its development score is reporting how well it learned the benchmark.
+
+\textbf{Corpus-encoding sensitivity, measured.} An earlier corpus expressed exfiltration with placeholder text; adding realistic encodings raised one tool from 5\% to 13\% without changing the tool. The held-out set is the systematic version of that observation, and it cut the other way too: pipelock's coverage was an artefact of the development encodings.
+
+\textbf{Adapter faithfulness.} Matched controls and the benign corpus both guard against adapter over-reach. The benign corpus exposed an adapter bug before publication: the \proxy{} adapter reported a cache-policy ``clamp'' on list results carrying no hints, which the runtime never does (it returns early). Without the benign corpus this would have inflated the new-vector score. A pipelock adapter bug found earlier the same way (synthesizing an egress URL from an inbound host) is documented in the artifact.
+
+\textbf{By-design false positives.} A rug-pull pinner flags every definition change, malicious or not. Whether that is a false positive depends on the deployment; reporting it in its own row lets a reader decide, and hiding it would have been the worse choice.
+
+\textbf{Why coverage, not a score.} Totals move with the corpus; the per-vector, per-revision map is the contribution. mcp-firewall and pipelock each \emph{enforce} on vectors where \proxy{} only warns, so a deployment combining classes covers more than any one tool---the practical reading of defense-in-depth the numbers support.
+
+\section{Limitations and Threats to Validity}\label{sec:limits}
+\begin{itemize}
+\item \textbf{Held-out fixtures are still author-written.} Blindness to detector source and the enforced family rules are the controls on that; an externally red-teamed set would be stronger and is an open invitation in the artifact.
+\item \textbf{Rater B is an LLM, not an independent human.} The codebook and disagreement log are published so a human rater can be added and reported.
+\item \textbf{Four defenders, one of them ours.} The board is thin; adapters for AWS AgentCore Gateway, MCP-Scan, Docker MCP Gateway and IBM ContextForge are planned. Access-control/isolation gateways and cloud-model defenders are out of scope for scoring.
+\item \textbf{Corpus size.} \nDev+\nHeldout{} attack fixtures and \nBenign{} benign items are larger than before but still small; per-vector numbers rest on 2--5 fixtures.
+\item \textbf{The \rev{} vectors are new and single-rater}, and their fixtures have no held-out set yet (protocol rule~7).
+\item \textbf{Taxonomy is a synthesis, not a standard}; mappings are indicative even where agreement is high.
+\item \textbf{Configuration dependence.} Results depend on each tool's committed policy.
+\end{itemize}
+
+\section{Future Work}\label{sec:future}
+Externally authored held-out sets; a human third rater; adapters for the gateways above; EU AI Act and ISO/IEC 42001 crosswalk columns; a decision-indexed ``required gap closure'' metric for frozen deployment profiles; and an attestation-conformance suite for the registry/provenance vectors no proxy can reach.
+
+\section{Conclusion}
+We introduced a spec-versioned, framework-mapped crosswalk of \nVectors{} MCP attack vectors with measured mapping reliability, and a defense-side benchmark that reports a proxy's coverage per protocol revision on development and held-out corpora, with false-positive rates at scale. The reference proxy's \bastDevOrig{} development coverage becomes \bastHeldout{} held-out; that gap---and the structural-versus-heuristic pattern behind it---is the result we think defenders should be measured by. \nCoveredNone{} of \nVectors{} vectors remain undefended by any measured tool, arguing for layered defense across distinct mechanism classes. Everything needed to reproduce, audit, and extend these measurements is released.
+
+\section*{Availability}
+The benchmark (rubric, three corpora, adapters, runner, agreement tooling, results, and the held-out manifest) and the reference proxy are released open-source (rubric/data CC-BY-4.0, code Apache-2.0). For double-blind review the artifact is an anonymised mirror generated by a leak-checking script from a history-free export: \url{https://anonymous.4open.science/r/OurBench}. De-anonymised repositories and archival DOIs will be provided at camera-ready. One evaluated tool (\proxy) is developed by the authors, as disclosed above.
+
+\section*{Use of Large Language Models}
+An LLM assistant was used to format the manuscript, edit prose, generate LaTeX tables from measured results via a script, and---as disclosed in Section~\ref{sec:agreement}---to act as the blind second rater (Rater~B) following the published codebook. All benchmark design, fixtures, measurements and conclusions are the authors' own; no experimental result was generated by an LLM, and all citations were verified against primary sources.
+
+\section*{Prior Reviews}
+This paper was previously submitted to a 2026 security workshop and desk-rejected for an artifact-anonymity violation (an author name in the anonymised mirror), with two reviews already filed. The reviews and a point-by-point account of how each was addressed are appended as required by the venue.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+\end{document}

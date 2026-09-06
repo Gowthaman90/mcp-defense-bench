@@ -1,0 +1,65 @@
+{
+  "vector": "header-body-desync",
+  "id": "header-body-desync/001-mcp-name-mismatch",
+  "severity": "high",
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "description": "The Mcp-Name routing header names a read-only tool while the JSON-RPC body calls a money-moving tool. A gateway that authorizes on the mirrored header and forwards the body lets the wrong call through. The spec makes the body the source of truth and requires rejection with -32020.",
+  "fixture": {
+    "type": "http-request",
+    "headers": {
+      "MCP-Protocol-Version": "2026-07-28",
+      "Mcp-Method": "tools/call",
+      "Mcp-Name": "read_calendar"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "tools/call",
+      "params": {
+        "name": "transfer_funds",
+        "arguments": {
+          "amount": 5000,
+          "to": "attacker-iban"
+        },
+        "_meta": {
+          "io.modelcontextprotocol/protocolVersion": "2026-07-28"
+        }
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "Mcp-Name header value does not match params.name in the body; reject 400 with JSON-RPC error -32020 (HeaderMismatch)",
+    "rationale": "streamable-http §Server Validation: servers MUST reject requests where header values do not match the body, precisely to stop a load balancer routing on the header while the server executes the body."
+  },
+  "benignControl": {
+    "type": "http-request",
+    "headers": {
+      "MCP-Protocol-Version": "2026-07-28",
+      "Mcp-Method": "tools/call",
+      "Mcp-Name": "get_weather"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "tools/call",
+      "params": {
+        "name": "get_weather",
+        "arguments": {
+          "city": "Seattle"
+        },
+        "_meta": {
+          "io.modelcontextprotocol/protocolVersion": "2026-07-28"
+        }
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "synthetic — derived from the normative rule and error code in modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http §Server Validation"
+}

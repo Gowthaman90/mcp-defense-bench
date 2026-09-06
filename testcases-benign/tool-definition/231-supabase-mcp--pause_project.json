@@ -1,0 +1,44 @@
+{
+  "id": "benign/tool-definition/231-supabase-mcp--pause_project",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @supabase/mcp-server-supabase.",
+  "source": {
+    "package": "@supabase/mcp-server-supabase",
+    "version": "0.12.0",
+    "harvestedAt": "2026-09-06T02:38:59.399Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "pause_project",
+      "description": "Pauses a Supabase project.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Pause project",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @supabase/mcp-server-supabase"
+}

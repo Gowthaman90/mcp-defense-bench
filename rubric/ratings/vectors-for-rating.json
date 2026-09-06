@@ -1,0 +1,345 @@
+{
+  "_note": "For independent raters. Contains NO framework mappings. See rubric/RATING-CODEBOOK.md.",
+  "_frameworks": {
+    "mcpLayer": [
+      "host-orchestration",
+      "client",
+      "transport",
+      "server",
+      "tool",
+      "registry-supply-chain"
+    ],
+    "stride": [
+      "Spoofing",
+      "Tampering",
+      "Repudiation",
+      "InformationDisclosure",
+      "DenialOfService",
+      "ElevationOfPrivilege"
+    ],
+    "nistAiRmf": [
+      "GOVERN",
+      "MAP",
+      "MEASURE",
+      "MANAGE"
+    ],
+    "owaspLlm2025": {
+      "LLM01": "Prompt Injection",
+      "LLM02": "Sensitive Information Disclosure",
+      "LLM03": "Supply Chain",
+      "LLM04": "Data and Model Poisoning",
+      "LLM05": "Improper Output Handling",
+      "LLM06": "Excessive Agency",
+      "LLM07": "System Prompt Leakage",
+      "LLM08": "Vector and Embedding Weaknesses",
+      "LLM09": "Misinformation",
+      "LLM10": "Unbounded Consumption"
+    },
+    "owaspAgentic2026": {
+      "ASI01": "Agent Goal Hijack",
+      "ASI02": "Tool Misuse and Exploitation",
+      "ASI03": "Identity and Privilege Abuse",
+      "ASI04": "Agentic Supply Chain Vulnerabilities",
+      "ASI05": "Unexpected Code Execution (RCE)",
+      "ASI06": "Memory & Context Poisoning",
+      "ASI07": "Insecure Inter-Agent Communication",
+      "ASI08": "Cascading Failures",
+      "ASI09": "Human-Agent Trust Exploitation",
+      "ASI10": "Rogue Agents"
+    },
+    "nsaGuidance": {
+      "AUTH": "Authentication & Access Control (verify every session; least-privilege tokens per action/tool; signed provenance for discovered servers)",
+      "LOG": "Monitoring & Logging (log all tool/model invocations with parameters, identities, and result hashes)",
+      "SEG": "Data Classification & Segmentation (align tools/models to data-classification zones)",
+      "RT": "Runtime Controls (egress-filtering proxy, DLP, sandboxing, message integrity, output filtering, local MCP scans)"
+    }
+  },
+  "vectors": [
+    {
+      "id": "tool-poisoning",
+      "name": "Tool poisoning",
+      "aliases": [
+        "malicious tool description",
+        "instruction injection via metadata"
+      ],
+      "description": "Malicious instructions embedded in a tool's name/description/schema metadata that the model reads as trusted context. The dominant, most-impactful client-side MCP vulnerability."
+    },
+    {
+      "id": "tool-shadowing",
+      "name": "Tool name collision / shadowing",
+      "aliases": [
+        "name squatting",
+        "tool override"
+      ],
+      "description": "A malicious server exposes a tool whose name collides with a trusted tool, so the agent may route calls to the attacker's implementation."
+    },
+    {
+      "id": "rug-pull",
+      "name": "Rug pull / dynamic capability mutation",
+      "aliases": [
+        "definition mutation after trust",
+        "TOCTOU on tool def"
+      ],
+      "description": "A tool definition changes after it has been approved/trusted, swapping benign behavior for malicious. Time-of-check/time-of-use on the tool schema."
+    },
+    {
+      "id": "out-of-scope-params",
+      "name": "Out-of-scope parameter injection",
+      "aliases": [
+        "parameter expansion",
+        "argument smuggling"
+      ],
+      "description": "Tool invoked with parameters beyond its declared schema, or values that widen its effect past intended scope."
+    },
+    {
+      "id": "response-injection",
+      "name": "Prompt injection via tool results",
+      "aliases": [
+        "response-handling injection",
+        "output injection"
+      ],
+      "description": "Attacker-controlled content in a tool's *return value* injects instructions the agent then acts on during response handling."
+    },
+    {
+      "id": "indirect-retrieval-injection",
+      "name": "Indirect / retrieval injection",
+      "aliases": [
+        "RAG injection",
+        "document-borne injection"
+      ],
+      "description": "A tool fetches external content (web page, doc, record) that carries an embedded payload, injecting indirectly without the attacker touching the tool definition."
+    },
+    {
+      "id": "cross-tool-exfiltration",
+      "name": "Cross-tool data exfiltration / confused deputy",
+      "aliases": [
+        "confused deputy",
+        "data siphoning across tools"
+      ],
+      "description": "Sensitive data obtained via one (trusted) tool is exfiltrated through another tool/channel; the agent is the confused deputy."
+    },
+    {
+      "id": "tool-transfer",
+      "name": "Tool-transfer / cross-server chaining",
+      "aliases": [
+        "cross-server attack chaining"
+      ],
+      "description": "An attack staged on one server manipulates the agent into acting on another server, chaining privileges across trust boundaries."
+    },
+    {
+      "id": "false-error-escalation",
+      "name": "False-error escalation",
+      "aliases": [
+        "fake failure retry",
+        "error-driven privilege bait"
+      ],
+      "description": "A tool returns fabricated errors to bait the agent into retrying with broader permissions or an alternate, attacker-preferred path."
+    },
+    {
+      "id": "package-squatting",
+      "name": "Package / name squatting in registry",
+      "aliases": [
+        "typosquatting",
+        "server-name squatting"
+      ],
+      "description": "A malicious MCP server published under a name confusingly similar to a trusted one, exploiting the registry's pointer architecture."
+    },
+    {
+      "id": "supply-chain-poisoning",
+      "name": "Supply-chain poisoning (unverified provenance)",
+      "aliases": [
+        "artifact provenance gap"
+      ],
+      "description": "The registry indexes metadata pointers with no cryptographic verification of the underlying artifact, so a poisoned binary/endpoint can be served under a trusted name."
+    },
+    {
+      "id": "config-drift",
+      "name": "Configuration drift",
+      "aliases": [
+        "silent config change"
+      ],
+      "description": "Server/tool configuration changes over time away from a reviewed baseline, weakening controls without an explicit rug-pull of the tool schema."
+    },
+    {
+      "id": "sandbox-escape",
+      "name": "Sandbox escape",
+      "aliases": [
+        "host compromise via server"
+      ],
+      "description": "A server exploits weak isolation to execute beyond its sandbox on the host."
+    },
+    {
+      "id": "schema-bypass",
+      "name": "Schema / validation bypass",
+      "aliases": [
+        "input validation bypass"
+      ],
+      "description": "Crafted inputs bypass declared schema/validation to reach unintended server code paths."
+    },
+    {
+      "id": "mitm-transport",
+      "name": "Man-in-the-middle (transport)",
+      "aliases": [
+        "transport interception"
+      ],
+      "description": "Interception/modification of MCP messages in transit on an unauthenticated or downgraded transport."
+    },
+    {
+      "id": "dns-rebinding",
+      "name": "DNS rebinding (local servers)",
+      "aliases": [
+        "local-server rebinding"
+      ],
+      "description": "A malicious web origin rebinds DNS to reach a locally-bound MCP server, crossing the local trust boundary."
+    },
+    {
+      "id": "server-impersonation",
+      "name": "Server impersonation / identity spoofing",
+      "aliases": [
+        "unverified server identity"
+      ],
+      "description": "An endpoint impersonates a trusted server because server identity is unverified (registry proves publisher identity, not artifact/endpoint)."
+    },
+    {
+      "id": "excessive-permission",
+      "name": "Excessive permission / privilege escalation",
+      "aliases": [
+        "over-broad scopes",
+        "privilege creep"
+      ],
+      "description": "A tool/server is granted or acquires more privilege than its task requires, expanding blast radius."
+    },
+    {
+      "id": "credential-token-theft",
+      "name": "Credential / token theft via passthrough",
+      "aliases": [
+        "OAuth token abuse",
+        "token passthrough"
+      ],
+      "description": "Abuse of OAuth/token passthrough to capture or replay credentials the agent holds for downstream services."
+    },
+    {
+      "id": "consent-fatigue",
+      "name": "Consent fatigue / over-broad grants",
+      "aliases": [
+        "click-through consent"
+      ],
+      "description": "Users approve broad scopes under repeated prompts, granting standing access an attacker later abuses."
+    },
+    {
+      "id": "command-injection",
+      "name": "Command injection in tool execution",
+      "aliases": [
+        "OS command injection"
+      ],
+      "description": "Unsanitized arguments reach a shell/OS call inside a server, executing attacker commands."
+    },
+    {
+      "id": "system-prompt-leakage",
+      "name": "System-prompt / context leakage via tools",
+      "aliases": [
+        "context exfiltration"
+      ],
+      "description": "A tool coaxes the agent into revealing its system prompt or privileged context in a tool call or response."
+    },
+    {
+      "id": "mid-session-tool-injection",
+      "name": "Mid-session tool injection (MSTI)",
+      "aliases": [
+        "tool hijacking",
+        "tool framing",
+        "runtime tool-surface poisoning"
+      ],
+      "description": "Tools are injected, or their metadata is altered, during an ACTIVE session (not at registration) — via dynamic tool-lifecycle races (AbortSignal, registration races) or by re-framing metadata (readOnlyHint, description, inputSchema) to mislead the agent. Distinct from definition-time poisoning."
+    },
+    {
+      "id": "multi-tool-split-poisoning",
+      "name": "Multi-tool split poisoning (ShareLock)",
+      "aliases": [
+        "threshold poisoning",
+        "split-payload tool poisoning"
+      ],
+      "description": "A malicious instruction is split across multiple benign-looking tool descriptions (threshold secret-sharing) so each tool passes single-tool scanning; the payload reassembles via a covert trigger. Defeats per-tool detectors."
+    },
+    {
+      "id": "header-body-desync",
+      "name": "Header/body routing desync (HeaderMismatch)",
+      "aliases": [
+        "Mcp-Name mismatch",
+        "routing-header confusion",
+        "-32020 HeaderMismatch"
+      ],
+      "description": "The 2026-07-28 revision mirrors JSON-RPC routing fields into HTTP headers (MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-*). An intermediary that routes or authorizes on the header while the server executes the body lets a call for one tool be authorized as another. The body is the source of truth; servers MUST reject a disagreement with -32020."
+    },
+    {
+      "id": "requeststate-forgery",
+      "name": "MRTR requestState forgery / replay",
+      "aliases": [
+        "state-handle tampering",
+        "cross-principal replay",
+        "forged approval"
+      ],
+      "description": "Server-initiated requests were replaced by MRTR: the server returns input_required with an opaque requestState the client echoes back. requestState now travels as attacker-influenceable data through the model context. Without HMAC/AEAD integrity protection and principal/TTL binding, a caller can edit an approval decision or replay another principal's state."
+    },
+    {
+      "id": "list-cache-poisoning",
+      "name": "List-result cache poisoning / stale-cache defense suppression",
+      "aliases": [
+        "ttlMs pinning",
+        "cacheScope confusion",
+        "stale tools/list"
+      ],
+      "description": "List results are now cacheable (ttlMs, cacheScope). A poisoned tools/list can be pinned with a very long TTL and public scope, shared across authorization contexts, or — the defense-defeating case — kept serving after a list_changed invalidation so a definition change that hash-pinning would catch is never re-fetched."
+    },
+    {
+      "id": "mrtr-input-phishing",
+      "name": "MRTR in-band input phishing / sampling injection",
+      "aliases": [
+        "credential elicitation",
+        "input_required phishing",
+        "server-injected systemPrompt"
+      ],
+      "description": "An input_required result carries server-authored elicitation or sampling requests through the client to the user or to the client's own model. A server can request credentials under an official-looking pretext or inject a systemPrompt that steers the client's LLM, through a channel the user does not recognise as server-originated."
+    },
+    {
+      "id": "task-authz-bypass",
+      "name": "Task authorization bypass",
+      "aliases": [
+        "guessable task IDs",
+        "cross-principal tasks/get",
+        "task routing desync"
+      ],
+      "description": "The Tasks extension keeps long-running state addressable by task ID without protocol sessions. Low-entropy IDs or a missing per-request authorization check let a third party read or substitute another principal's task; on task methods Mcp-Name must equal params.taskId, so header desync applies to task state too. There is deliberately no tasks/list, so no enumeration variant exists."
+    },
+    {
+      "id": "mcp-app-sandbox-bypass",
+      "name": "MCP Apps sandbox non-conformance",
+      "aliases": [
+        "ui:// resource egress",
+        "host iframe sandbox",
+        "UI credential capture"
+      ],
+      "description": "MCP Apps (SEP-1865) lets a server ship HTML rendered inside the host. The specification requires a sandboxed iframe under a CSP that blocks external requests; the risk is a host that renders ui:// content without enforcing that model, allowing off-origin egress, clickjacking, or credential-capturing UI mimicry. The testable property is host conformance, not the extension itself."
+    },
+    {
+      "id": "roots-scope-gap",
+      "name": "Roots deprecation: no enforced filesystem boundary",
+      "aliases": [
+        "missing roots",
+        "path scope gap",
+        "unbounded file tool"
+      ],
+      "description": "Roots — the protocol's only structural filesystem-scope declaration — is deprecated as of 2026-07-28, with the migration path 'pass directories via tool parameters, resource URIs, or server configuration'. Scope enforcement therefore moves into each implementation and is applied inconsistently. Distinct in cause from sandbox-escape: the boundary is absent by design change, not escaped."
+    },
+    {
+      "id": "transport-downgrade",
+      "name": "Transport / revision downgrade",
+      "aliases": [
+        "legacy session acceptance",
+        "HTTP+SSE fallback",
+        "Mcp-Session-Id honoured"
+      ],
+      "description": "A defender that still honours pre-2026-07-28 mechanics — Mcp-Session-Id, GET-opened SSE streams, Last-Event-ID resumption, or an older MCP-Protocol-Version without header validation — silently reverts to the weaker shape and loses the revision's guarantees (stateless core, header validation, MRTR)."
+    }
+  ]
+}

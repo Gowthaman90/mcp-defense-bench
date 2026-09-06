@@ -1,0 +1,267 @@
+{
+  "_rater": {
+    "id": "C",
+    "who": "<name / affiliation>",
+    "date": "<YYYY-MM-DD>",
+    "blind": true,
+    "notes": ""
+  },
+  "ratings": {
+    "tool-poisoning": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "tool-shadowing": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "rug-pull": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "out-of-scope-params": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "response-injection": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "indirect-retrieval-injection": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "cross-tool-exfiltration": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "tool-transfer": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "false-error-escalation": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "package-squatting": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "supply-chain-poisoning": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "config-drift": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "sandbox-escape": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "schema-bypass": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "mitm-transport": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "dns-rebinding": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "server-impersonation": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "excessive-permission": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "credential-token-theft": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "consent-fatigue": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "command-injection": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "system-prompt-leakage": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "mid-session-tool-injection": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "multi-tool-split-poisoning": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "header-body-desync": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "requeststate-forgery": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "list-cache-poisoning": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "mrtr-input-phishing": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "task-authz-bypass": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "mcp-app-sandbox-bypass": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "roots-scope-gap": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    },
+    "transport-downgrade": {
+      "mcpLayer": [],
+      "stride": [],
+      "nistAiRmf": [],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [],
+      "nsaGuidance": []
+    }
+  }
+}

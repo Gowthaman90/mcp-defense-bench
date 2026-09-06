@@ -1,0 +1,81 @@
+{
+  "vector": "transport-downgrade",
+  "id": "transport-downgrade/001-legacy-session-and-get-stream",
+  "severity": "medium",
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "description": "A client presents pre-2026-07-28 traffic: an Mcp-Session-Id header, a GET to the MCP endpoint for a standalone stream, and Last-Event-ID resumption. A defender that honours these has silently reverted to the older, weaker shape.",
+  "fixture": {
+    "type": "http-request-sequence",
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/mcp",
+        "headers": {
+          "Accept": "text/event-stream"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/mcp",
+        "headers": {
+          "Mcp-Session-Id": "sess-abc123",
+          "Last-Event-ID": "42"
+        },
+        "body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "tools/call",
+          "params": {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Seattle"
+            }
+          }
+        }
+      }
+    ],
+    "observedBehavior": "server opens a standalone SSE stream on GET, mints and echoes a session ID, and resumes from Last-Event-ID"
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "legacy session/stream mechanics accepted under a revision that removed them; answer GET and DELETE with 405, ignore Mcp-Session-Id without minting or echoing one, and ignore Last-Event-ID",
+    "rationale": "streamable-http §Earlier Streamable HTTP Revisions gives exactly these three behaviors for a server that supports only this revision. HTTP+SSE itself has been Deprecated since 2025-03-26."
+  },
+  "benignControl": {
+    "type": "http-request-sequence",
+    "requests": [
+      {
+        "method": "POST",
+        "path": "/mcp",
+        "headers": {
+          "MCP-Protocol-Version": "2026-07-28",
+          "Mcp-Method": "tools/call",
+          "Mcp-Name": "get_weather"
+        },
+        "body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "tools/call",
+          "params": {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Seattle"
+            },
+            "_meta": {
+              "io.modelcontextprotocol/protocolVersion": "2026-07-28"
+            }
+          }
+        }
+      }
+    ],
+    "observedBehavior": "server handles a conforming stateless POST",
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "synthetic — behaviors quoted from streamable-http §Backward Compatibility / §Earlier Streamable HTTP Revisions and the deprecated-features registry"
+}

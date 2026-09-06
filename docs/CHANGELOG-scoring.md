@@ -1,5 +1,27 @@
 # Scoring changelog
 
+## 2026-09-05 — v0.7.0: per-revision coverage, held-out coverage, benign-corpus FP rate (no metric change)
+
+**Trigger:** AISec 2026 Review #34A (expert). Three requests — a held-out attack set, more variants and a
+broader benign set, and a second-rater agreement measure — plus the desk-reject lesson on anonymity.
+
+**What changed in what is reported (CorpusRobustCoverage / Capability / Guaranteed are unchanged):**
+
+1. **Corpus grows 35 → 51 development fixtures, 24 → 32 vectors.** The 8 new vectors are the surface
+   introduced by the 2026-07-28 protocol revision and carry `appliesTo: ["2026-07-28"]`; the leaderboard now
+   reports coverage **per protocol revision** and separately on the "new-only" 8. No pre-existing fixture changed.
+2. **Held-out coverage** (`results/heldout/`, `docs/HELD-OUT-PROTOCOL.md`): 48 fixtures authored after the
+   defender freeze under pre-registered rules; reported beside development coverage with the generalisation gap.
+   Held-out runs never write `adapters/*/coverage.json`.
+3. **Benign-corpus false-positive rate** (`results/benign/`): 337 benign-only items; FP rate with Wilson 95%
+   interval, broken down by input kind. Complements (does not replace) matched-control FP on the paired corpora.
+4. **Rater agreement** (`docs/AGREEMENT.md`, `bin/agreement.mjs`): κ / Jaccard between the primary crosswalk and a
+   blind second pass; adjudication log in `rubric/ratings/ADJUDICATION.md` (crosswalk 0.7.0 → 0.7.1, 12 mappings).
+
+**Impact on the reference proxy's numbers:** 24-vector development RobustCoverage 55% (unchanged since the
+2026-07-24 fix); 32-vector 52% (16.8/32); **held-out 43% (10.3/24), a 13-point gap**; benign FP 13/337 (3.9%),
+of which 4 are by-design TOFU flags on benign definition updates. Matched-control FP 0/51 and 0/48.
+
 ## 2026-07-26 — Headline renamed CorpusRobustCoverage; scope made explicit (not a procurement ranking)
 
 **Credit:** Massimiliano Brighindi (independent researcher), blind-test structural audit, 2026-07-26.

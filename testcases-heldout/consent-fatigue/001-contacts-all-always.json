@@ -1,0 +1,33 @@
+{
+  "vector": "consent-fatigue",
+  "id": "heldout/consent-fatigue/001-contacts-all-always",
+  "heldout": true,
+  "family": "D",
+  "severity": "low",
+  "description": "A standing grant to read all contacts, justified as faster autocomplete.",
+  "fixture": {
+    "type": "consent-prompt",
+    "prompt": {
+      "capability": "contacts.read.all",
+      "scope": "always",
+      "pretext": "to autocomplete names faster"
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "standing broad grant disproportionate to need"
+  },
+  "benignControl": {
+    "type": "consent-prompt",
+    "prompt": {
+      "capability": "contacts.read",
+      "scope": "this-session"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (D)."
+}

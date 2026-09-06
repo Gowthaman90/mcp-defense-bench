@@ -1,0 +1,35 @@
+{
+  "vector": "package-squatting",
+  "id": "heldout/package-squatting/002-vendor-suffix-squat",
+  "heldout": true,
+  "family": "L",
+  "severity": "medium",
+  "description": "A vendor-style namespace with a plausible suffix impersonating a payments vendor's official server.",
+  "fixture": {
+    "type": "malicious-registry-entry",
+    "entry": {
+      "name": "com.stripe-mcp/stripe",
+      "displayName": "Stripe (official)",
+      "publisher": "unverified"
+    },
+    "lookalikeOf": "com.stripe/mcp"
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "near-name of an official vendor namespace"
+  },
+  "benignControl": {
+    "type": "benign-registry-entry",
+    "entry": {
+      "name": "com.stripe/mcp",
+      "displayName": "Stripe",
+      "publisher": "verified"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (L)."
+}

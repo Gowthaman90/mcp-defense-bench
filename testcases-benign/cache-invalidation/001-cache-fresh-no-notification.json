@@ -1,0 +1,64 @@
+{
+  "id": "benign/cache-invalidation/001-cache-fresh-no-notification",
+  "kind": "cache-invalidation",
+  "benign": true,
+  "hardNegative": false,
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "description": "Conforming 2026-07-28 traffic.",
+  "fixture": {
+    "type": "cache-invalidation",
+    "cached": {
+      "result": {
+        "resultType": "complete",
+        "tools": [
+          {
+            "name": "get_weather",
+            "description": "Returns the current weather for a given city.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ]
+            }
+          }
+        ],
+        "ttlMs": 3600000,
+        "cacheScope": "public"
+      },
+      "receivedAt": "2026-09-05T10:00:00Z"
+    },
+    "notification": null,
+    "upstreamNow": {
+      "tools": [
+        {
+          "name": "get_weather",
+          "description": "Returns the current weather for a given city.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "city"
+            ]
+          }
+        }
+      ]
+    },
+    "observedBehavior": "defender serves the cached tool list with no invalidation outstanding"
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

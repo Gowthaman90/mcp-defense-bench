@@ -1,36 +1,57 @@
 #!/usr/bin/env node
 /**
- * Live runner: executes the test-case corpus against one adapter, deriving VERIFIED coverage.
+ * Live runner: executes a test-case corpus against one adapter, deriving VERIFIED coverage.
  *
  * For each test case it calls the adapter twice — on the malicious fixture and the benign control —
- * then applies the scoring rule from adapters/CONTRACT.md. Writes:
- *   - results/<tool>.json                    detailed per-testcase log
- *   - adapters/<tool>/coverage.json          coverage updated with verified levels + evidence
+ * then applies the scoring rule from adapters/CONTRACT.md.
  *
- * Usage: node bin/run.mjs <tool>        e.g. node bin/run.mjs mcp-bastion
+ * Corpora (--corpus):
+ *   dev      (default) testcases/          → results/<tool>.json + adapters/<tool>/coverage.json
+ *   heldout            testcases-heldout/  → results/heldout/<tool>.json  (docs/HELD-OUT-PROTOCOL.md;
+ *                                             never touches coverage.json — held-out numbers are
+ *                                             reported beside, not instead of, development coverage)
+ *   benign             testcases-benign/   → results/benign/<tool>.json   (benign-only items: every
+ *                                             flag is a false positive; reports FP rate + 95% CI)
+ *
+ * Usage: node bin/run.mjs <tool> [--corpus dev|heldout|benign]
  */
-import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 
-const tool = process.argv[2];
-if (!tool) {
-  console.error("usage: node bin/run.mjs <tool>   (a directory under adapters/)");
+const argv = process.argv.slice(2);
+const tool = argv.find((a) => !a.startsWith("--"));
+const corpus = argv.includes("--corpus") ? argv[argv.indexOf("--corpus") + 1] : "dev";
+if (!tool || !["dev", "heldout", "benign"].includes(corpus)) {
+  console.error("usage: node bin/run.mjs <tool> [--corpus dev|heldout|benign]   (tool = a directory under adapters/)");
   process.exit(1);
+}
+const CORPUS_DIR = { dev: "testcases", heldout: "testcases-heldout", benign: "testcases-benign" }[corpus];
+
+/** Wilson 95% interval for a proportion — small-sample honest. */
+function wilson(k, n, z = 1.96) {
+  if (!n) return { lo: 0, hi: 0 };
+  const p = k / n, d = 1 + (z * z) / n, c = p + (z * z) / (2 * n), h = z * Math.sqrt((p * (1 - p)) / n + (z * z) / (4 * n * n));
+  return { lo: Math.max(0, (c - h) / d), hi: Math.min(1, (c + h) / d) };
 }
 
 const rubric = JSON.parse(readFileSync(join(root, "rubric", "crosswalk.json"), "utf8"));
 const rubricIds = rubric.vectors.map((v) => v.id);
 
-// Load every test case.
-const tcDir = join(root, "testcases");
+// Load every test case of the selected corpus (subdirectories = vector ids; `_`-prefixed and
+// `harvested/` are raw inputs, not cases).
+const tcDir = join(root, CORPUS_DIR);
+if (!existsSync(tcDir)) {
+  console.error(`corpus directory ${CORPUS_DIR}/ does not exist`);
+  process.exit(1);
+}
 const cases = [];
 for (const vec of readdirSync(tcDir)) {
   const p = join(tcDir, vec);
-  if (!statSync(p).isDirectory() || vec.startsWith("_")) continue;
+  if (!statSync(p).isDirectory() || vec.startsWith("_") || vec === "harvested") continue;
   for (const f of readdirSync(p).filter((x) => x.endsWith(".json")))
     cases.push(JSON.parse(readFileSync(join(p, f), "utf8")));
 }
@@ -42,6 +63,38 @@ try {
 } catch (e) {
   console.error(`No runnable adapter at adapters/${tool}/adapter.mjs — ${e.message}`);
   process.exit(1);
+}
+
+// ── Benign-only corpus: measure the false-positive rate on realistic, non-attack inputs. ──────────
+if (corpus === "benign") {
+  const items = [];
+  let flagged = 0;
+  const byKind = {};
+  for (const tc of cases) {
+    const verdict = await adapter.assess(tc.fixture, tc);
+    const fp = !!verdict.detect;
+    if (fp) flagged++;
+    (byKind[tc.kind ?? "other"] ||= { n: 0, fp: 0 }).n++;
+    if (fp) byKind[tc.kind ?? "other"].fp++;
+    items.push({ id: tc.id, kind: tc.kind ?? null, source: tc.source ?? null, hardNegative: !!tc.hardNegative, falsePositive: fp, verdict });
+  }
+  const ci = wilson(flagged, cases.length);
+  const summary = {
+    tool: adapter.meta?.tool ?? tool,
+    corpus: "benign",
+    rubricVersion: rubric.version,
+    items: cases.length,
+    falsePositives: flagged,
+    fpRate: cases.length ? Number((flagged / cases.length).toFixed(4)) : 0,
+    fpRate95ci: { lo: Number(ci.lo.toFixed(4)), hi: Number(ci.hi.toFixed(4)) },
+    byKind,
+    measuredAt: new Date().toISOString(),
+  };
+  mkdirSync(join(root, "results", "benign"), { recursive: true });
+  writeFileSync(join(root, "results", "benign", `${tool}.json`), JSON.stringify({ summary, items }, null, 2) + "\n");
+  console.log(JSON.stringify(summary, null, 2));
+  for (const it of items.filter((i) => i.falsePositive)) console.log(`  ⚠ FP ${it.id}  [${it.verdict.signal ?? ""}]`);
+  process.exit(0);
 }
 
 const levelFrom = (mal, benign) => {
@@ -68,6 +121,7 @@ for (const tc of cases) {
     weight: WEIGHT[level] ?? 0, // FP → level none → weight 0, so it drags mean/min down (see #scoring-fix)
     falsePositive,
     evasion: tc.evasion ?? null,
+    family: tc.family ?? null,
   });
 }
 
@@ -114,7 +168,8 @@ for (const id of rubricIds) {
   };
 }
 
-// Persist verified coverage.json (preserve adapter metadata).
+// Persist verified coverage.json (preserve adapter metadata) — development corpus only. The
+// held-out corpus must never feed the coverage that the leaderboard's development column reports.
 const covPath = join(root, "adapters", tool, "coverage.json");
 let prev = {};
 try {
@@ -132,15 +187,17 @@ const covOut = {
   measuredBy: "bin/run.mjs",
   coverage,
 };
-writeFileSync(covPath, JSON.stringify(covOut, null, 2) + "\n");
+if (corpus === "dev") writeFileSync(covPath, JSON.stringify(covOut, null, 2) + "\n");
 
 // Detailed results.
-mkdirSync(join(root, "results"), { recursive: true });
+const outDir = corpus === "dev" ? join(root, "results") : join(root, "results", corpus);
+mkdirSync(outDir, { recursive: true });
 const robustWeighted = rubricIds.reduce((a, id) => a + (coverage[id].robustCoverage ?? 0), 0);
 const capabilityWeighted = rubricIds.reduce((a, id) => a + (coverage[id].capability ?? 0), 0);
 const guaranteedWeighted = rubricIds.reduce((a, id) => a + (coverage[id].guaranteed ?? 0), 0);
 const summary = {
   tool: covOut.tool,
+  corpus,
   rubricVersion: rubric.version,
   casesRun: cases.length,
   verifiedVectors: Object.values(coverage).filter((c) => c.verified).length,
@@ -153,7 +210,10 @@ const summary = {
   guaranteed: Number(guaranteedWeighted.toFixed(2)),
 };
 for (const id of rubricIds) summary.covered[coverage[id].level] = (summary.covered[coverage[id].level] ?? 0) + 1;
-writeFileSync(join(root, "results", `${tool}.json`), JSON.stringify({ summary, cases: perCase }, null, 2) + "\n");
+// Per-vector coverage (incl. per-fixture family tags) travels with the results so held-out and
+// development runs can be compared per vector without touching coverage.json.
+const measuredAt = new Date().toISOString();
+writeFileSync(join(outDir, `${tool}.json`), JSON.stringify({ summary: { ...summary, measuredAt }, coverage, cases: perCase }, null, 2) + "\n");
 
 console.log(JSON.stringify(summary, null, 2));
 const brittle = rubricIds.filter((id) => coverage[id].verified && coverage[id].robustCoverage < coverage[id].capability);

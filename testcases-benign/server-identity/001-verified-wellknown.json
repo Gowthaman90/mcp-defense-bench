@@ -1,0 +1,24 @@
+{
+  "id": "benign/server-identity/001-verified-wellknown",
+  "kind": "server-identity",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Benign identity / configuration observation.",
+  "fixture": {
+    "type": "server-identity",
+    "mode": "verify",
+    "identity": {
+      "endpoint": "https://mcp.acme.example",
+      "name": "acme/payments",
+      "identityProof": {
+        "wellKnown": "https://acme.example/.well-known/mcp",
+        "verified": true
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

@@ -1,0 +1,34 @@
+{
+  "vector": "dns-rebinding",
+  "id": "heldout/dns-rebinding/001-wiki-origin-to-local-inspector",
+  "heldout": true,
+  "family": "D",
+  "severity": "high",
+  "description": "A remote wiki origin reaches a local MCP inspector port.",
+  "fixture": {
+    "type": "scenario",
+    "setup": "Local MCP server on localhost:6274.",
+    "request": {
+      "host": "localhost:6274",
+      "origin": "https://wiki.notes.invalid"
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "foreign Origin against a loopback listener"
+  },
+  "benignControl": {
+    "type": "scenario",
+    "setup": "Local MCP server on localhost:6274.",
+    "request": {
+      "host": "localhost:6274",
+      "origin": "http://localhost:6274"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (D)."
+}

@@ -1,0 +1,6 @@
+{
+  "source": {
+    "package": "@stripe/mcp"
+  },
+  "skipped": "MCP error -32001: Request timed out"
+}

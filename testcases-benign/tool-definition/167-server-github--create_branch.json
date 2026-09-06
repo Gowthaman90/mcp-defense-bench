@@ -1,0 +1,52 @@
+{
+  "id": "benign/tool-definition/167-server-github--create_branch",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-github.",
+  "source": {
+    "package": "@modelcontextprotocol/server-github",
+    "version": "0.6.2",
+    "harvestedAt": "2026-09-06T02:37:37.252Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "create_branch",
+      "description": "Create a new branch in a GitHub repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string",
+            "description": "Repository owner (username or organization)"
+          },
+          "repo": {
+            "type": "string",
+            "description": "Repository name"
+          },
+          "branch": {
+            "type": "string",
+            "description": "Name for the new branch"
+          },
+          "from_branch": {
+            "type": "string",
+            "description": "Optional: source branch to create from (defaults to the repository's default branch)"
+          }
+        },
+        "required": [
+          "owner",
+          "repo",
+          "branch"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-github"
+}

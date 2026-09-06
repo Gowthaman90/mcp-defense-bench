@@ -1,0 +1,28 @@
+{
+  "id": "benign/server-identity/002-version-bump-same-identity",
+  "kind": "server-identity",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Benign identity / configuration observation.",
+  "fixture": {
+    "type": "server-identity",
+    "mode": "change",
+    "before": {
+      "endpoint": "https://mcp.acme.example",
+      "name": "acme/payments",
+      "tlsFingerprint": "sha256:AAA",
+      "serverVersion": "1.2.0"
+    },
+    "after": {
+      "endpoint": "https://mcp.acme.example",
+      "name": "acme/payments",
+      "tlsFingerprint": "sha256:AAA",
+      "serverVersion": "1.3.0"
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

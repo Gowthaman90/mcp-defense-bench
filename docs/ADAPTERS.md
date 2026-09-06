@@ -94,6 +94,19 @@ vector only when a fixture confirms it. `unknown` = not yet assessed (scored as 
   standalone `mcp scan` CLI, and the full DLP/tool_call eval endpoint (bearer-token HTTP server) is not
   driven — so this is still a lower bound on pipelock's total capability.
 
+## Wiring status (2026-09-05, v0.7.0)
+
+- **mcp-bastion v0.9.0** — adds `http-request` (header/body coherence → 400/-32020, wired in the HTTP
+  listener), `list-result` (cache-policy clamp, wired on upstream list results) and `cache-invalidation`
+  (immediate re-list on `list_changed` + rug-pull hash, since v0.7.0). MRTR (`mrtr-retry`,
+  `input-required-result`, `tool-state-handle`), Tasks (`task-lifecycle`), MCP Apps (`ui-resource`) and
+  legacy-transport refusal (`http-request-sequence`) are honest misses: bastion is on SDK 1.x.
+  **Adapter-faithfulness fix:** the benign corpus exposed that the adapter reported a cache "clamp" on list
+  results carrying no hints, which the runtime never does (it returns early). Fixed before publication.
+- **mcp-firewall / pipelock** — no runtime path inspects 2026-07-28 surfaces; all new types are honest misses.
+- **Corpora:** every adapter is run on three corpora (`--corpus dev|heldout|benign`); results in `results/`,
+  `results/heldout/`, `results/benign/`. Defender versions frozen in `results/heldout/MANIFEST.json`.
+
 ## Open verification tasks before publishing the leaderboard
 
 - [ ] **Corpus v2**: multiple realistic, tool-neutral fixtures per vector (incl. private-IP egress,

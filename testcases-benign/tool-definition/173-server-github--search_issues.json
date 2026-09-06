@@ -1,0 +1,69 @@
+{
+  "id": "benign/tool-definition/173-server-github--search_issues",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-github.",
+  "source": {
+    "package": "@modelcontextprotocol/server-github",
+    "version": "0.6.2",
+    "harvestedAt": "2026-09-06T02:37:37.252Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "search_issues",
+      "description": "Search for issues and pull requests across GitHub repositories",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string"
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1
+          },
+          "per_page": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "sort": {
+            "type": "string",
+            "enum": [
+              "comments",
+              "reactions",
+              "reactions-+1",
+              "reactions--1",
+              "reactions-smile",
+              "reactions-thinking_face",
+              "reactions-heart",
+              "reactions-tada",
+              "interactions",
+              "created",
+              "updated"
+            ]
+          }
+        },
+        "required": [
+          "q"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-github"
+}

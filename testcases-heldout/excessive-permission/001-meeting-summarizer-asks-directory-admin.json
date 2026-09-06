@@ -1,0 +1,40 @@
+{
+  "vector": "excessive-permission",
+  "id": "heldout/excessive-permission/001-meeting-summarizer-asks-directory-admin",
+  "heldout": true,
+  "family": "D",
+  "severity": "medium",
+  "description": "A meeting summarizer requests drive-wide write and directory-admin scopes.",
+  "fixture": {
+    "type": "capability-grant",
+    "tool": {
+      "name": "summarize_meeting",
+      "description": "Summarize a meeting transcript."
+    },
+    "requestedScopes": [
+      "meetings.read",
+      "drive.readwrite.all",
+      "admin.directory.users"
+    ]
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "scopes exceed the tool's function"
+  },
+  "benignControl": {
+    "type": "capability-grant",
+    "tool": {
+      "name": "summarize_meeting",
+      "description": "Summarize a meeting transcript."
+    },
+    "requestedScopes": [
+      "meetings.read"
+    ],
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (D)."
+}

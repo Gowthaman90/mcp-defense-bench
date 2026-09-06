@@ -1,0 +1,52 @@
+{
+  "id": "benign/tool-definition/182-server-github--update_pull_request_branch",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-github.",
+  "source": {
+    "package": "@modelcontextprotocol/server-github",
+    "version": "0.6.2",
+    "harvestedAt": "2026-09-06T02:37:37.252Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "update_pull_request_branch",
+      "description": "Update a pull request branch with the latest changes from the base branch",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string",
+            "description": "Repository owner (username or organization)"
+          },
+          "repo": {
+            "type": "string",
+            "description": "Repository name"
+          },
+          "pull_number": {
+            "type": "number",
+            "description": "Pull request number"
+          },
+          "expected_head_sha": {
+            "type": "string",
+            "description": "The expected SHA of the pull request's HEAD ref"
+          }
+        },
+        "required": [
+          "owner",
+          "repo",
+          "pull_number"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-github"
+}

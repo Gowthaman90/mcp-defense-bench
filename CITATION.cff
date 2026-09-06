@@ -14,12 +14,15 @@ abstract: >-
   (MCP) attack surface a defensive proxy actually covers, crosswalked to the
   NIST AI RMF, the NSA MCP Security guidance, and the OWASP Top 10 for LLM and
   Agentic Applications. Includes a 24-vector threat-control crosswalk, a matched
-  malicious/benign test corpus, tool adapters, a runner and scorer, and an
-  accompanying whitepaper. The strongest of three evaluated open-source proxies
-  reaches 63% weighted coverage (15.0 of 24 vectors) at zero false positives.
+  malicious/benign development corpus, a pre-registered HELD-OUT corpus authored
+  after the defenders were frozen, a 337-item benign-only corpus (verbatim tool
+  definitions harvested from 20+ public MCP servers plus authored hard negatives),
+  tool adapters, a runner and scorer, an inter-rater agreement protocol, and an
+  accompanying paper. v0.7.0 adds the eight vectors introduced by the 2026-07-28
+  protocol revision (32 vectors total) and reports coverage per revision.
 license: Apache-2.0
-version: 0.4.0
-date-released: "2026-07-16"
+version: 0.7.0
+date-released: "2026-09-05"
 keywords:
   - Model Context Protocol
   - MCP

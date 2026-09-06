@@ -1,0 +1,115 @@
+{
+  "source": {
+    "package": "mcp-server-sqlite-npx",
+    "command": [
+      "npx",
+      "-y",
+      "mcp-server-sqlite-npx",
+      "<scratch>"
+    ],
+    "serverInfo": {
+      "name": "sqlite-manager",
+      "version": "0.8.0"
+    }
+  },
+  "harvestedAt": "2026-09-06T02:37:47.411Z",
+  "note": "Verbatim tools/list output from a public MCP server started as a user would start it. Benign by construction; used only as false-positive controls.",
+  "tools": [
+    {
+      "name": "read_query",
+      "description": "Execute a SELECT query on the SQLite database",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "SELECT SQL query to execute"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "write_query",
+      "description": "Execute an INSERT, UPDATE, or DELETE query on the SQLite database",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "INSERT, UPDATE, or DELETE SQL query to execute"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "create_table",
+      "description": "Create a new table in the SQLite database",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "CREATE TABLE SQL statement"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_tables",
+      "description": "List all tables in the SQLite database",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "describe_table",
+      "description": "Get the schema information for a specific table",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "table_name": {
+            "type": "string",
+            "description": "Name of the table to describe"
+          }
+        },
+        "required": [
+          "table_name"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

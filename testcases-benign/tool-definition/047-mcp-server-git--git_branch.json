@@ -1,0 +1,76 @@
+{
+  "id": "benign/tool-definition/047-mcp-server-git--git_branch",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from mcp-server-git.",
+  "source": {
+    "package": "mcp-server-git",
+    "version": "1.29.1",
+    "harvestedAt": "2026-09-06T02:39:04.036Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "git_branch",
+      "description": "List Git branches",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_path": {
+            "description": "The path to the Git repository.",
+            "title": "Repo Path",
+            "type": "string"
+          },
+          "branch_type": {
+            "description": "Whether to list local branches ('local'), remote branches ('remote') or all branches('all').",
+            "title": "Branch Type",
+            "type": "string"
+          },
+          "contains": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The commit sha that branch should contain. Do not pass anything to this param if no commit sha is specified",
+            "title": "Contains"
+          },
+          "not_contains": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The commit sha that branch should NOT contain. Do not pass anything to this param if no commit sha is specified",
+            "title": "Not Contains"
+          }
+        },
+        "required": [
+          "repo_path",
+          "branch_type"
+        ],
+        "title": "GitBranch"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from mcp-server-git"
+}

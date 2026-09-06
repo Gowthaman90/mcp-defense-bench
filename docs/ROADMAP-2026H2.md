@@ -223,5 +223,9 @@ output against the pre-change baseline (identical).
 | Two zero-FP bastion checks | `mcp_bastion` — `src/security/headers.ts`, `src/security/cache-policy.ts`, 48 new tests | done, 191/191 green |
 | Blog-sourced claims verified against spec text | [`SPEC-VERIFICATION-2026-07-28.md`](SPEC-VERIFICATION-2026-07-28.md) | done — 3 corrections |
 
-**Phase 1 remains blocked on the 2026-09-03 AISec decision.** Do not promote anything out of
-`testcases-staging/` before it.
+**Phase 1 landed 2026-09-05 (v0.7.0)** after the AISec decision (desk reject on artifact anonymity; one
+expert review — see `paper/REVIEWS-AND-RESPONSE.md`). Promoted the 8 vectors (24 → 32), re-measured every
+adapter, published coverage per revision, and — driven by the review — added a pre-registered held-out
+corpus, a 337-item benign-only corpus with FP intervals, and a rater-agreement protocol. bastion v0.9.0
+wires the two Phase-0 checks. Still open from Phase 1: EU AI Act / ISO 42001 crosswalk columns (deferred to
+v0.8). Next: Phase 2 adapters, and the SaTML 2027 resubmission (deadline 2026-09-29).

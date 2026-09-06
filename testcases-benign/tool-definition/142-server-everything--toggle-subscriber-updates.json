@@ -1,0 +1,36 @@
+{
+  "id": "benign/tool-definition/142-server-everything--toggle-subscriber-updates",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-everything.",
+  "source": {
+    "package": "@modelcontextprotocol/server-everything",
+    "version": "2.0.0",
+    "harvestedAt": "2026-09-06T02:36:35.531Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "toggle-subscriber-updates",
+      "description": "Toggles simulated resource subscription updates on or off.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "title": "Toggle Subscriber Updates"
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-everything"
+}

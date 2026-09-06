@@ -1,8 +1,8 @@
 {
   "$schema": "./rubric.schema.json",
   "artifact": "MCP Threat–Control Crosswalk (rubric)",
-  "version": "0.1.0-draft",
-  "date": "2026-08-23",
+  "version": "0.7.1",
+  "date": "2026-09-05",
   "license": "CC-BY-4.0",
   "description": "Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, OWASP Agentic 2026, and NSA MCP Security guidance (May 2026). Per-tool coverage lives in adapters/*, NOT here, so the rubric stays neutral.",
   "_frameworks": {
@@ -63,7 +63,9 @@
     "DONE 2026-07-13: OWASP Agentic ASI01–ASI10 official titles confirmed against the OWASP GenAI Security Project 2026 release.",
     "Add NIST AI RMF subcategory IDs (e.g. MEASURE 2.7) where confident; currently function-level only.",
     "DONE 2026-07-13: second-reviewer pass on all 22 owaspLlm2025 mappings — 20 confirmed, 2 corrected (indirect-retrieval-injection LLM08→LLM01; false-error-escalation +LLM01).",
-    "Populate priorArtCoverage per-benchmark once MSB/MCPTox/AgentDefense-Bench vector lists are reconciled to these IDs."
+    "Populate priorArtCoverage per-benchmark once MSB/MCPTox/AgentDefense-Bench vector lists are reconciled to these IDs.",
+    "2026-09-05: second-rater agreement pass over the 24 original vectors (rubric/RATING-CODEBOOK.md, bin/agreement.mjs). The 8 promoted 2026-07-28 vectors are single-rater until Rater C exists.",
+    "2026-09-05: adjudicated 62 A/B disagreements (rubric/ratings/ADJUDICATION.md): 12 mappings changed, codebook GOVERN rule clarified."
   ],
   "vectors": [
     {
@@ -207,8 +209,8 @@
       ],
       "description": "Tool invoked with parameters beyond its declared schema, or values that widen its effect past intended scope.",
       "mcpLayer": [
-        "tool",
-        "server"
+        "server",
+        "tool"
       ],
       "stride": [
         "Tampering",
@@ -254,7 +256,8 @@
         "client"
       ],
       "stride": [
-        "Tampering"
+        "Tampering",
+        "ElevationOfPrivilege"
       ],
       "nistAiRmf": [
         "MEASURE",
@@ -302,7 +305,8 @@
         "MANAGE"
       ],
       "owaspLlm2025": [
-        "LLM01"
+        "LLM01",
+        "LLM08"
       ],
       "owaspAgentic2026": [
         "ASI01"
@@ -395,7 +399,8 @@
       ],
       "nsaGuidance": [
         "AUTH",
-        "SEG"
+        "SEG",
+        "RT"
       ],
       "appliesTo": [
         "2025-03-26",
@@ -576,14 +581,16 @@
         "ElevationOfPrivilege"
       ],
       "nistAiRmf": [
-        "MANAGE"
+        "MANAGE",
+        "MEASURE"
       ],
       "owaspLlm2025": [
         "LLM06"
       ],
       "owaspAgentic2026": [
         "ASI02",
-        "ASI03"
+        "ASI03",
+        "ASI05"
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
@@ -653,13 +660,15 @@
         "Spoofing"
       ],
       "nistAiRmf": [
-        "MANAGE"
+        "MANAGE",
+        "MEASURE"
       ],
       "owaspLlm2025": [
         "LLM02"
       ],
       "owaspAgentic2026": [
-        "ASI03"
+        "ASI03",
+        "ASI07"
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
@@ -684,20 +693,22 @@
       "description": "A malicious web origin rebinds DNS to reach a locally-bound MCP server, crossing the local trust boundary.",
       "mcpLayer": [
         "transport",
-        "host-orchestration"
+        "server"
       ],
       "stride": [
         "Spoofing",
         "ElevationOfPrivilege"
       ],
       "nistAiRmf": [
-        "MANAGE"
+        "MANAGE",
+        "MEASURE"
       ],
       "owaspLlm2025": [
         "LLM06"
       ],
       "owaspAgentic2026": [
-        "ASI03"
+        "ASI03",
+        "ASI07"
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
@@ -712,7 +723,8 @@
         "2025-11-25",
         "2026-07-28"
       ],
-      "revisionNotes": "Unchanged: Origin validation with HTTP 403 on an invalid Origin remains a MUST in streamable-http §Security & Endpoint."
+      "revisionNotes": "Unchanged: Origin validation with HTTP 403 on an invalid Origin remains a MUST in streamable-http §Security & Endpoint.",
+      "mappingNotes": "OWASP LLM 2025 LLM06 is indicative only (no LLM category describes DNS rebinding); flagged during adjudication."
     },
     {
       "id": "server-impersonation",
@@ -893,7 +905,8 @@
         "LLM05"
       ],
       "owaspAgentic2026": [
-        "ASI02"
+        "ASI02",
+        "ASI05"
       ],
       "priorArtCoverage": [
         "AgentDefense-Bench"
@@ -1030,6 +1043,322 @@
         "2025-11-25",
         "2026-07-28"
       ]
+    },
+    {
+      "id": "header-body-desync",
+      "name": "Header/body routing desync (HeaderMismatch)",
+      "aliases": [
+        "Mcp-Name mismatch",
+        "routing-header confusion",
+        "-32020 HeaderMismatch"
+      ],
+      "description": "The 2026-07-28 revision mirrors JSON-RPC routing fields into HTTP headers (MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-*). An intermediary that routes or authorizes on the header while the server executes the body lets a call for one tool be authorized as another. The body is the source of truth; servers MUST reject a disagreement with -32020.",
+      "mcpLayer": [
+        "transport",
+        "host-orchestration"
+      ],
+      "stride": [
+        "Tampering",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02",
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
+      ],
+      "provenance": "modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http §Server Validation (normative; error code -32020)",
+      "priorArtCoverage": [],
+      "appliesTo": [
+        "2026-07-28"
+      ],
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+    },
+    {
+      "id": "requeststate-forgery",
+      "name": "MRTR requestState forgery / replay",
+      "aliases": [
+        "state-handle tampering",
+        "cross-principal replay",
+        "forged approval"
+      ],
+      "description": "Server-initiated requests were replaced by MRTR: the server returns input_required with an opaque requestState the client echoes back. requestState now travels as attacker-influenceable data through the model context. Without HMAC/AEAD integrity protection and principal/TTL binding, a caller can edit an approval decision or replay another principal's state.",
+      "mcpLayer": [
+        "server",
+        "host-orchestration"
+      ],
+      "stride": [
+        "Tampering",
+        "Spoofing",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03",
+        "ASI09"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
+      ],
+      "provenance": "specification/2026-07-28/basic/patterns/mrtr §Server Requirements 4–5 (MUST protect integrity; SHOULD bind principal/TTL/origin). Tool state handles are non-normative and scored at lower severity.",
+      "priorArtCoverage": [],
+      "appliesTo": [
+        "2026-07-28"
+      ],
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+    },
+    {
+      "id": "list-cache-poisoning",
+      "name": "List-result cache poisoning / stale-cache defense suppression",
+      "aliases": [
+        "ttlMs pinning",
+        "cacheScope confusion",
+        "stale tools/list"
+      ],
+      "description": "List results are now cacheable (ttlMs, cacheScope). A poisoned tools/list can be pinned with a very long TTL and public scope, shared across authorization contexts, or — the defense-defeating case — kept serving after a list_changed invalidation so a definition change that hash-pinning would catch is never re-fetched.",
+      "mcpLayer": [
+        "client",
+        "tool"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI04",
+        "ASI06"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "LOG"
+      ],
+      "provenance": "specification/2026-07-28/server/utilities/caching (§TTL — no ceiling; §Security Considerations; §Interaction with Notifications). Stale-cache-vs-pinning composition is novel to this benchmark.",
+      "priorArtCoverage": [],
+      "appliesTo": [
+        "2026-07-28"
+      ],
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+    },
+    {
+      "id": "mrtr-input-phishing",
+      "name": "MRTR in-band input phishing / sampling injection",
+      "aliases": [
+        "credential elicitation",
+        "input_required phishing",
+        "server-injected systemPrompt"
+      ],
+      "description": "An input_required result carries server-authored elicitation or sampling requests through the client to the user or to the client's own model. A server can request credentials under an official-looking pretext or inject a systemPrompt that steers the client's LLM, through a channel the user does not recognise as server-originated.",
+      "mcpLayer": [
+        "client",
+        "host-orchestration"
+      ],
+      "stride": [
+        "Spoofing",
+        "InformationDisclosure"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM02"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI03",
+        "ASI09"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
+      ],
+      "provenance": "specification/2026-07-28/basic/patterns/mrtr (permits ElicitRequest / CreateMessageRequest inside inputRequests); ext-tasks trust-model note. Supersedes the pre-revision elicitation/sampling candidates.",
+      "priorArtCoverage": [],
+      "appliesTo": [
+        "2026-07-28"
+      ],
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+    },
+    {
+      "id": "task-authz-bypass",
+      "name": "Task authorization bypass",
+      "aliases": [
+        "guessable task IDs",
+        "cross-principal tasks/get",
+        "task routing desync"
+      ],
+      "description": "The Tasks extension keeps long-running state addressable by task ID without protocol sessions. Low-entropy IDs or a missing per-request authorization check let a third party read or substitute another principal's task; on task methods Mcp-Name must equal params.taskId, so header desync applies to task state too. There is deliberately no tasks/list, so no enumeration variant exists.",
+      "mcpLayer": [
+        "server",
+        "host-orchestration"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "InformationDisclosure",
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "LOG"
+      ],
+      "provenance": "specification/2026-07-28/tasks.md §Security Considerations (MUST: sufficient entropy; authz on each request) and §Streamable HTTP: Routing Headers.",
+      "priorArtCoverage": [],
+      "appliesTo": [
+        "2026-07-28"
+      ],
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+    },
+    {
+      "id": "mcp-app-sandbox-bypass",
+      "name": "MCP Apps sandbox non-conformance",
+      "aliases": [
+        "ui:// resource egress",
+        "host iframe sandbox",
+        "UI credential capture"
+      ],
+      "description": "MCP Apps (SEP-1865) lets a server ship HTML rendered inside the host. The specification requires a sandboxed iframe under a CSP that blocks external requests; the risk is a host that renders ui:// content without enforcing that model, allowing off-origin egress, clickjacking, or credential-capturing UI mimicry. The testable property is host conformance, not the extension itself.",
+      "mcpLayer": [
+        "host-orchestration",
+        "client"
+      ],
+      "stride": [
+        "Tampering",
+        "InformationDisclosure"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM05",
+        "LLM02"
+      ],
+      "owaspAgentic2026": [
+        "ASI05",
+        "ASI09"
+      ],
+      "nsaGuidance": [
+        "RT"
+      ],
+      "provenance": "SEP-1865 MCP Apps (Final 2026-01-26). Vendor 'open XSS surface' framing corrected during verification; confidence medium.",
+      "priorArtCoverage": [],
+      "appliesTo": [
+        "2026-07-28"
+      ],
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+    },
+    {
+      "id": "roots-scope-gap",
+      "name": "Roots deprecation: no enforced filesystem boundary",
+      "aliases": [
+        "missing roots",
+        "path scope gap",
+        "unbounded file tool"
+      ],
+      "description": "Roots — the protocol's only structural filesystem-scope declaration — is deprecated as of 2026-07-28, with the migration path 'pass directories via tool parameters, resource URIs, or server configuration'. Scope enforcement therefore moves into each implementation and is applied inconsistently. Distinct in cause from sandbox-escape: the boundary is absent by design change, not escaped.",
+      "mcpLayer": [
+        "host-orchestration",
+        "server"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "InformationDisclosure"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06",
+        "LLM02"
+      ],
+      "owaspAgentic2026": [
+        "ASI02",
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "SEG",
+        "AUTH"
+      ],
+      "provenance": "Deprecated-features registry, specification/2026-07-28 (SEP-2577; earliest removal ≥ 2027-07-28).",
+      "priorArtCoverage": [],
+      "appliesTo": [
+        "2026-07-28"
+      ],
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+    },
+    {
+      "id": "transport-downgrade",
+      "name": "Transport / revision downgrade",
+      "aliases": [
+        "legacy session acceptance",
+        "HTTP+SSE fallback",
+        "Mcp-Session-Id honoured"
+      ],
+      "description": "A defender that still honours pre-2026-07-28 mechanics — Mcp-Session-Id, GET-opened SSE streams, Last-Event-ID resumption, or an older MCP-Protocol-Version without header validation — silently reverts to the weaker shape and loses the revision's guarantees (stateless core, header validation, MRTR).",
+      "mcpLayer": [
+        "transport"
+      ],
+      "stride": [
+        "Tampering",
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": [
+        "ASI07"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
+      ],
+      "mappingNotes": "No OWASP LLM 2025 category describes a protocol-transport downgrade; left empty deliberately rather than forced.",
+      "provenance": "specification/2026-07-28/basic/transports/streamable-http §Backward Compatibility / §Earlier Streamable HTTP Revisions; HTTP+SSE deprecated since 2025-03-26.",
+      "priorArtCoverage": [],
+      "appliesTo": [
+        "2026-07-28"
+      ],
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
     }
   ],
   "_specRevisions": {
@@ -1040,10 +1369,13 @@
       "2025-11-25",
       "2026-07-28"
     ],
-    "measuredAgainst": "2025-11-25",
+    "measuredAgainst": [
+      "2025-11-25",
+      "2026-07-28"
+    ],
     "latest": "2026-07-28",
-    "stagedVectorsFor": {
-      "2026-07-28": "8 candidate vectors drafted in testcases-staging/ and NOT scored; see docs/ROADMAP-2026H2.md and docs/SPEC-VERIFICATION-2026-07-28.md"
+    "promoted": {
+      "2026-07-28": "8 vectors promoted from staging on 2026-09-05 (v0.7.0). Use appliesTo to compute coverage per revision."
     }
   }
 }

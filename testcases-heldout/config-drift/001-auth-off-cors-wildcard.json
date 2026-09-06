@@ -1,0 +1,53 @@
+{
+  "vector": "config-drift",
+  "id": "heldout/config-drift/001-auth-off-cors-wildcard",
+  "heldout": true,
+  "family": "D",
+  "severity": "medium",
+  "description": "Authentication is switched off and CORS widened to a wildcard relative to the reviewed baseline.",
+  "fixture": {
+    "type": "config-snapshot-diff",
+    "baseline": {
+      "authRequired": true,
+      "cors": [
+        "https://app.acme.test"
+      ],
+      "logLevel": "info"
+    },
+    "current": {
+      "authRequired": false,
+      "cors": [
+        "*"
+      ],
+      "logLevel": "info"
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "security controls weakened vs baseline"
+  },
+  "benignControl": {
+    "type": "config-snapshot-diff",
+    "baseline": {
+      "authRequired": true,
+      "cors": [
+        "https://app.acme.test"
+      ],
+      "logLevel": "info"
+    },
+    "current": {
+      "authRequired": true,
+      "cors": [
+        "https://app.acme.test"
+      ],
+      "logLevel": "info",
+      "displayName": "Acme API (prod)"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (D)."
+}

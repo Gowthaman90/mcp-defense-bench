@@ -1,0 +1,80 @@
+{
+  "id": "benign/tool-definition/196-server-memory--delete_observations",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-memory.",
+  "source": {
+    "package": "@modelcontextprotocol/server-memory",
+    "version": "0.6.3",
+    "harvestedAt": "2026-09-06T02:36:32.871Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "delete_observations",
+      "description": "Delete specific observations from entities in the knowledge graph",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "deletions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entityName": {
+                  "type": "string",
+                  "description": "The name of the entity containing the observations"
+                },
+                "observations": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "An array of observations to delete"
+                }
+              },
+              "required": [
+                "entityName",
+                "observations"
+              ]
+            }
+          }
+        },
+        "required": [
+          "deletions"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "title": "Delete Observations",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-memory"
+}

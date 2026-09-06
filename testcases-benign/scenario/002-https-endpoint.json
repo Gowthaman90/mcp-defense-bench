@@ -1,0 +1,17 @@
+{
+  "id": "benign/scenario/002-https-endpoint",
+  "kind": "scenario",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Benign transport configuration.",
+  "fixture": {
+    "type": "scenario",
+    "setup": "Remote MCP server over TLS.",
+    "endpoint": "https://mcp.vendor.example/rpc"
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

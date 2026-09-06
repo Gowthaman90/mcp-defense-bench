@@ -1,0 +1,70 @@
+{
+  "vector": "schema-bypass",
+  "id": "heldout/schema-bypass/001-string-where-integer",
+  "heldout": true,
+  "family": "D",
+  "severity": "medium",
+  "description": "A bounded integer field receives a numeric string in exponent notation, evading a naive range check.",
+  "fixture": {
+    "type": "tool-call",
+    "tool": {
+      "name": "set_quantity",
+      "description": "Set an order line quantity.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "quantity"
+        ]
+      }
+    },
+    "call": {
+      "name": "set_quantity",
+      "arguments": {
+        "quantity": "1e9"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "argument type violates declared schema"
+  },
+  "benignControl": {
+    "type": "tool-call",
+    "tool": {
+      "name": "set_quantity",
+      "description": "Set an order line quantity.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "quantity"
+        ]
+      }
+    },
+    "call": {
+      "name": "set_quantity",
+      "arguments": {
+        "quantity": 5
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (D)."
+}

@@ -1,0 +1,34 @@
+{
+  "vector": "consent-fatigue",
+  "id": "heldout/consent-fatigue/002-shell-execute-always",
+  "heldout": true,
+  "family": "L",
+  "severity": "medium",
+  "description": "A standing grant to execute shell commands, justified as speeding up builds.",
+  "fixture": {
+    "type": "consent-prompt",
+    "prompt": {
+      "capability": "shell.execute",
+      "scope": "always",
+      "pretext": "to speed up future builds"
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "standing grant on a dangerous capability"
+  },
+  "benignControl": {
+    "type": "consent-prompt",
+    "prompt": {
+      "capability": "shell.execute",
+      "scope": "once",
+      "command": "npm test"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (L)."
+}

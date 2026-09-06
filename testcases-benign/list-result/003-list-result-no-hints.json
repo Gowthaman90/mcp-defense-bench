@@ -1,0 +1,38 @@
+{
+  "id": "benign/list-result/003-list-result-no-hints",
+  "kind": "list-result",
+  "benign": true,
+  "hardNegative": false,
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "description": "Conforming 2026-07-28 traffic.",
+  "fixture": {
+    "type": "list-result",
+    "method": "tools/list",
+    "result": {
+      "tools": [
+        {
+          "name": "get_weather",
+          "description": "Returns the current weather for a given city.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "city"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

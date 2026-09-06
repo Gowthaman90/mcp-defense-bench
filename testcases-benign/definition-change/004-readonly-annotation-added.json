@@ -1,0 +1,48 @@
+{
+  "id": "benign/definition-change/004-readonly-annotation-added",
+  "kind": "definition-change",
+  "benign": true,
+  "hardNegative": true,
+  "description": "A benign, backwards-compatible definition update. Trust-on-first-use pinning flags any change by design; this row measures that cost.",
+  "fixture": {
+    "type": "definition-change",
+    "before": {
+      "name": "get_weather",
+      "description": "Returns the current weather for a given city.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      }
+    },
+    "after": {
+      "name": "get_weather",
+      "description": "Returns the current weather for a given city.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

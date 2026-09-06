@@ -1,0 +1,19 @@
+{
+  "id": "benign/scenario/004-no-origin-cli-client",
+  "kind": "scenario",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Benign transport configuration.",
+  "fixture": {
+    "type": "scenario",
+    "setup": "Non-browser client, no Origin header.",
+    "request": {
+      "host": "127.0.0.1:7000"
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

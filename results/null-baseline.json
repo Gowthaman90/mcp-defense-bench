@@ -1,0 +1,1381 @@
+{
+  "summary": {
+    "tool": "null-baseline",
+    "corpus": "dev",
+    "rubricVersion": "0.7.0",
+    "casesRun": 51,
+    "verifiedVectors": 32,
+    "falsePositives": 0,
+    "covered": {
+      "enforce": 0,
+      "detect": 0,
+      "none": 32,
+      "unknown": 0
+    },
+    "overall": "0% (0.0/32 CorpusRobustCoverage)",
+    "robustCoverage": 0,
+    "capability": 0,
+    "guaranteed": 0,
+    "measuredAt": "2026-09-06T02:52:11.671Z"
+  },
+  "coverage": {
+    "tool-poisoning": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "tool-poisoning/001-instruction-override",
+      "verified": true
+    },
+    "tool-shadowing": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "tool-shadowing/001-name-collision-override",
+      "verified": true
+    },
+    "rug-pull": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "rug-pull/001-post-trust-mutation",
+      "verified": true
+    },
+    "out-of-scope-params": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "out-of-scope-params/001-argument-smuggling",
+      "verified": true
+    },
+    "response-injection": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "response-injection/001-result-borne-instruction",
+      "verified": true
+    },
+    "indirect-retrieval-injection": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "indirect-retrieval-injection/001-document-borne-payload",
+      "verified": true
+    },
+    "cross-tool-exfiltration": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "cross-tool-exfiltration/001-confused-deputy-chain",
+      "verified": true
+    },
+    "tool-transfer": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "tool-transfer/001-cross-server-chaining",
+      "verified": true
+    },
+    "false-error-escalation": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "false-error-escalation/001-fake-failure-retry",
+      "verified": true
+    },
+    "package-squatting": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "package-squatting/001-typosquat-server-name",
+      "verified": true
+    },
+    "supply-chain-poisoning": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "supply-chain-poisoning/001-unverified-artifact-swap",
+      "verified": true
+    },
+    "config-drift": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "config-drift/001-silent-baseline-drift",
+      "verified": true
+    },
+    "sandbox-escape": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "sandbox-escape/001-host-path-breakout",
+      "verified": true
+    },
+    "schema-bypass": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "schema-bypass/001-validation-bypass",
+      "verified": true
+    },
+    "mitm-transport": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "mitm-transport/001-downgraded-transport",
+      "verified": true
+    },
+    "dns-rebinding": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "dns-rebinding/001-local-server-rebind",
+      "verified": true
+    },
+    "server-impersonation": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "server-impersonation/001-unverified-identity",
+      "verified": true
+    },
+    "excessive-permission": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "excessive-permission/001-over-broad-scope",
+      "verified": true
+    },
+    "credential-token-theft": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "credential-token-theft/001-token-passthrough-leak",
+      "verified": true
+    },
+    "consent-fatigue": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "consent-fatigue/001-broad-standing-grant",
+      "verified": true
+    },
+    "command-injection": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "command-injection/001-shell-metacharacter",
+      "verified": true
+    },
+    "system-prompt-leakage": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "system-prompt-leakage/001-context-exfil-request",
+      "verified": true
+    },
+    "mid-session-tool-injection": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "mid-session-tool-injection/001-tool-framing-metadata",
+      "verified": true
+    },
+    "multi-tool-split-poisoning": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "multi-tool-split-poisoning/001-threshold-shares",
+      "verified": true
+    },
+    "header-body-desync": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "header-body-desync/001-mcp-name-mismatch",
+      "verified": true
+    },
+    "requeststate-forgery": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "requeststate-forgery/001-unprotected-state-tamper",
+      "verified": true
+    },
+    "list-cache-poisoning": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "list-cache-poisoning/001-long-ttl-public-pin",
+      "verified": true
+    },
+    "mrtr-input-phishing": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "mrtr-input-phishing/001-credential-elicitation",
+      "verified": true
+    },
+    "task-authz-bypass": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "task-authz-bypass/001-guessable-task-id",
+      "verified": true
+    },
+    "mcp-app-sandbox-bypass": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "mcp-app-sandbox-bypass/001-ui-resource-egress-attempt",
+      "verified": true
+    },
+    "roots-scope-gap": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "roots-scope-gap/001-no-enforced-filesystem-boundary",
+      "verified": true
+    },
+    "transport-downgrade": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "transport-downgrade/001-legacy-session-and-get-stream",
+      "verified": true
+    }
+  },
+  "cases": [
+    {
+      "id": "command-injection/001-shell-metacharacter",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "shell metacharacters (';', '|') in an argument reaching a command"
+      }
+    },
+    {
+      "id": "command-injection/002-subshell-substitution",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "command substitution $() in argument"
+      }
+    },
+    {
+      "id": "config-drift/001-silent-baseline-drift",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "security-relevant config weakened vs baseline (TLS downgraded, host allowlist widened)"
+      }
+    },
+    {
+      "id": "consent-fatigue/001-broad-standing-grant",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "request for standing broad grant disproportionate to the stated need"
+      }
+    },
+    {
+      "id": "credential-token-theft/001-token-passthrough-leak",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "content solicits the agent's access token and an outbound send"
+      }
+    },
+    {
+      "id": "credential-token-theft/002-aws-key-in-response",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "AWS access key + secret in outbound content"
+      }
+    },
+    {
+      "id": "cross-tool-exfiltration/001-confused-deputy-chain",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "sensitive read output flows into an outbound request to an external host"
+      }
+    },
+    {
+      "id": "cross-tool-exfiltration/002-cloud-metadata-egress",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "egress to link-local/cloud-metadata address"
+      }
+    },
+    {
+      "id": "dns-rebinding/001-local-server-rebind",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "request to a loopback MCP server carries a foreign Origin (no allowlist)"
+      }
+    },
+    {
+      "id": "excessive-permission/001-over-broad-scope",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "requested scopes exceed least-privilege for a read-only calendar tool"
+      }
+    },
+    {
+      "id": "false-error-escalation/001-fake-failure-retry",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "error message steers the agent toward a higher-privilege alternate tool"
+      }
+    },
+    {
+      "id": "header-body-desync/001-mcp-name-mismatch",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "Mcp-Name header value does not match params.name in the body; reject 400 with JSON-RPC error -32020 (HeaderMismatch)",
+        "rationale": "streamable-http §Server Validation: servers MUST reject requests where header values do not match the body, precisely to stop a load balancer routing on the header while the server executes the body."
+      }
+    },
+    {
+      "id": "header-body-desync/002-base64-sentinel-evasion",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "Base64-sentinel Mcp-Name decodes to a value that does not match params.name; reject with -32020",
+        "rationale": "streamable-http §Value Encoding: servers MUST decode an encoded Mcp-Name or Mcp-Param-{Name} value before comparing it to the body value. Raw string comparison is a spec-defined blind spot."
+      }
+    },
+    {
+      "id": "header-body-desync/003-version-downgrade-header-trust",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "mirrored routing headers present without a protocol version that mandates header-body validation; reject rather than trust the headers",
+        "rationale": "streamable-http §Server Validation, intermediary note: intermediaries enforcing policy on mirrored headers SHOULD verify MCP-Protocol-Version indicates a version requiring header-body validation, and SHOULD reject if it is older or absent."
+      }
+    },
+    {
+      "id": "indirect-retrieval-injection/001-document-borne-payload",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "injected directive inside fetched third-party content"
+      }
+    },
+    {
+      "id": "indirect-retrieval-injection/002-secret-in-fetched-doc",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "secret + exfil instruction in fetched content"
+      }
+    },
+    {
+      "id": "list-cache-poisoning/001-long-ttl-public-pin",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "implausible cache lifetime (30 days) on a tool list combined with public scope; clamp the TTL and narrow the scope before the definition can be pinned",
+        "rationale": "server/utilities/caching: servers MUST provide ttlMs >= 0 but the spec sets no upper bound, so an unbounded freshness window is legal at the protocol layer and must be policed by policy."
+      }
+    },
+    {
+      "id": "list-cache-poisoning/002-public-scope-across-auth-contexts",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "cacheScope public on an authenticated, authorization-varying list result; downgrade to private so the cache cannot be shared across authorization contexts",
+        "rationale": "server/utilities/caching §Security Considerations: a public cacheScope may be shared between callers even when the result comes from an authenticated endpoint, and implementors MUST NOT rely on cacheScope alone for access control."
+      }
+    },
+    {
+      "id": "list-cache-poisoning/003-stale-cache-suppresses-rug-pull",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "cached list served after a list_changed invalidation signal; re-fetch and re-hash the definitions before use",
+        "rationale": "server/utilities/caching §Interaction with Notifications: when a relevant notification arrives while a cached response is still fresh, the notification invalidates it and it should be considered immediately stale. Ignoring this turns the cache into a bypass for definition pinning."
+      }
+    },
+    {
+      "id": "mcp-app-sandbox-bypass/001-ui-resource-egress-attempt",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "ui:// content rendered without the required iframe sandbox and external-request-blocking CSP, while attempting off-origin egress and credential capture",
+        "rationale": "SEP-1865 (Final 2026-01-26): UI content runs in a sandboxed iframe under a strict CSP that blocks external network requests; host-view communication is auditable MCP JSON-RPC. The failure mode is non-conformant hosting, not the extension itself."
+      }
+    },
+    {
+      "id": "mid-session-tool-injection/001-tool-framing-metadata",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "tool metadata/definition changed mid-session (tool framing)"
+      }
+    },
+    {
+      "id": "mitm-transport/001-downgraded-transport",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "remote transport is not encrypted (http:// to a non-loopback host)"
+      }
+    },
+    {
+      "id": "mitm-transport/002-plaintext-remote-endpoint",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "http:// (plaintext) endpoint to a remote host"
+      }
+    },
+    {
+      "id": "mrtr-input-phishing/001-credential-elicitation",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "server-originated elicitation requesting credentials that are unrelated to the invoked tool's stated purpose; gate on consent and strip before it reaches the user or model",
+        "rationale": "patterns/mrtr: inputRequests carry server-authored elicitation and sampling payloads through the client to the user. The Tasks extension states the trust model plainly — a task is not a higher-trust channel — and the same holds for MRTR."
+      }
+    },
+    {
+      "id": "mrtr-input-phishing/002-sampling-instruction-injection",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "server-supplied systemPrompt in an MRTR sampling request containing exfiltration and concealment instructions; strip or refuse server-injected system content",
+        "rationale": "patterns/mrtr permits CreateMessageRequest inside inputRequests, so a server can now reach the client's model in-band. Sampling is deprecated but supported for at least a year, so this remains live surface."
+      }
+    },
+    {
+      "id": "multi-tool-split-poisoning/001-threshold-shares",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "malicious payload split across multiple benign-looking tool descriptions"
+      }
+    },
+    {
+      "id": "out-of-scope-params/001-argument-smuggling",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "argument '__exec' is not declared in inputSchema.properties"
+      }
+    },
+    {
+      "id": "package-squatting/001-typosquat-server-name",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "server name is a near-edit-distance lookalike of a known-good name"
+      }
+    },
+    {
+      "id": "requeststate-forgery/001-unprotected-state-tamper",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "requestState carries authorization-relevant fields without HMAC/AEAD integrity protection, and the retry presents a modified blob",
+        "rationale": "patterns/mrtr §Server Requirements 4: servers MUST treat requestState as attacker-controlled and, where it influences authorization, MUST protect its integrity and MUST reject state that fails verification."
+      }
+    },
+    {
+      "id": "requeststate-forgery/002-cross-principal-replay",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "requestState presented by a different principal and after its TTL lapsed; reject on principal binding and expiry",
+        "rationale": "patterns/mrtr §Server Requirements 5: servers SHOULD bind the authenticated principal, a short TTL, and an identifier for the originating request inside the integrity-protected payload, and verify each on receipt."
+      }
+    },
+    {
+      "id": "requeststate-forgery/003-tool-state-handle-hygiene",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "sequential, structured state handle accepted from a principal that did not create it; handle treated as a capability rather than a name",
+        "rationale": "server/tools §Stateful Tools (non-normative): a handle is a name, not a capability; servers should validate authorization against the handle on every call, keep handles opaque, and bound their lifetime."
+      }
+    },
+    {
+      "id": "response-injection/001-result-borne-instruction",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "tool result contains role-play/system directives escalating agent behavior"
+      }
+    },
+    {
+      "id": "response-injection/002-homoglyph-evasion",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "homoglyph-obfuscated injection"
+      }
+    },
+    {
+      "id": "response-injection/003-base64-evasion",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "base64-wrapped injection payload"
+      }
+    },
+    {
+      "id": "roots-scope-gap/001-no-enforced-filesystem-boundary",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "file access outside the configured boundary with no protocol-level roots declaration in force; enforce the boundary at the call",
+        "rationale": "Roots is Deprecated as of 2026-07-28 (SEP-2577), earliest removal a revision on or after 2027-07-28, with the migration path 'pass directories or files via tool parameters, resource URIs, or server configuration'. Enforcement therefore moves into implementations and must be tested there."
+      }
+    },
+    {
+      "id": "rug-pull/001-post-trust-mutation",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "tool definition hash changed after trust-on-first-use pinning"
+      }
+    },
+    {
+      "id": "sandbox-escape/001-host-path-breakout",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "path traversal beyond the sandboxed workspace root"
+      }
+    },
+    {
+      "id": "schema-bypass/001-validation-bypass",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "argument type/enum violates declared schema (array smuggling 'admin')"
+      }
+    },
+    {
+      "id": "server-impersonation/001-unverified-identity",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "claimed server identity lacks a verifiable binding (no signed/well-known proof)"
+      }
+    },
+    {
+      "id": "server-impersonation/002-pinned-identity-change",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "pinned server identity (endpoint/TLS) changed after first connect"
+      }
+    },
+    {
+      "id": "supply-chain-poisoning/001-unverified-artifact-swap",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "resolved artifact has no signed provenance / attestation to verify against"
+      }
+    },
+    {
+      "id": "system-prompt-leakage/001-context-exfil-request",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "tool solicits the agent's system prompt / hidden context as an argument"
+      }
+    },
+    {
+      "id": "system-prompt-leakage/002-result-solicits-prompt",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "result solicits system prompt / overrides instructions"
+      }
+    },
+    {
+      "id": "task-authz-bypass/001-guessable-task-id",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "sequential / low-entropy task identifiers, and a tasks/get answered without an authorization check against the caller",
+        "rationale": "ext-tasks §Security Considerations: servers MUST generate task IDs with sufficient entropy that a third party cannot enumerate or guess them, and MUST perform authentication and authorization checks on each task-related request."
+      }
+    },
+    {
+      "id": "task-authz-bypass/002-task-routing-header-desync",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "Mcp-Name does not equal params.taskId on a task method; reject with -32020 rather than routing on the header",
+        "rationale": "ext-tasks §Streamable HTTP: Routing Headers requires Mcp-Name to equal params.taskId on tasks/get, tasks/update and tasks/cancel, and the core header-validation rule then applies."
+      }
+    },
+    {
+      "id": "tool-poisoning/001-instruction-override",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "imperative instructions in tool description unrelated to its stated purpose"
+      }
+    },
+    {
+      "id": "tool-poisoning/002-hidden-char-evasion",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "zero-width / bidi-override characters in description"
+      }
+    },
+    {
+      "id": "tool-shadowing/001-name-collision-override",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "two servers expose the same tool name (read_file); the newcomer solicits redirection"
+      }
+    },
+    {
+      "id": "tool-transfer/001-cross-server-chaining",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "content from one server instructs an action on a different server"
+      }
+    },
+    {
+      "id": "tool-transfer/002-cross-server-data-exfil",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "a credential returned by server 'vault' is sent in an argument to server 'webhook'"
+      }
+    },
+    {
+      "id": "transport-downgrade/001-legacy-session-and-get-stream",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "legacy session/stream mechanics accepted under a revision that removed them; answer GET and DELETE with 405, ignore Mcp-Session-Id without minting or echoing one, and ignore Last-Event-ID",
+        "rationale": "streamable-http §Earlier Streamable HTTP Revisions gives exactly these three behaviors for a server that supports only this revision. HTTP+SSE itself has been Deprecated since 2025-03-26."
+      }
+    }
+  ]
+}

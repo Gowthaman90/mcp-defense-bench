@@ -60,11 +60,11 @@
 <div class="wrap">
   <p class="eyebrow">MCP Security · Defense-Coverage Benchmark</p>
   <h1>How much of the MCP attack surface does each security proxy actually cover?</h1>
-  <p class="lede">A vendor-neutral benchmark. Each tool is driven through its <em>real</em> code against 24 MCP attack vectors, crosswalked to the NIST AI RMF and the OWASP LLM &amp; Agentic Top 10. Results are measured, with matched benign controls — not self-reported.</p>
+  <p class="lede">A vendor-neutral benchmark. Each tool is driven through its <em>real</em> code against 32 MCP attack vectors, crosswalked to the NIST AI RMF and the OWASP LLM &amp; Agentic Top 10. Results are measured, with matched benign controls — not self-reported.</p>
   <div class="meta">
-    <span>Corpus: 35 cases</span>
-    <span>Vectors: 24</span>
-    <span>Covered by ≥ 1 tool: 19/24</span>
+    <span>Corpus: 51 cases</span>
+    <span>Vectors: 32</span>
+    <span>Covered by ≥ 1 tool: 23/32</span>
     <span><a href="https://github.com/Gowthaman90/mcp-defense-bench">Repository</a></span>
     <span><a href="https://doi.org/10.5281/zenodo.21346206">Zenodo DOI</a></span>
     <span><a href="https://doi.org/10.6084/m9.figshare.32978657">Preprint</a></span>
@@ -74,27 +74,27 @@
   <div class="card scroll"><table>
     <thead><tr><th>Tool</th><th>Class</th><th class="num">CorpusRobustCoverage</th><th class="num">Capability</th><th class="num">● enforce</th><th class="num">◐ detect</th><th class="num">none</th><th class="num">False pos.</th></tr></thead>
     <tbody><tr><td class="tool">mcp-bastion</td><td class="cls">runtime-proxy</td>
-      <td class="num"><b>55%</b> <span class="muted">(13.3/24)</span></td>
-      <td class="num"><span class="muted">63% (15.0)</span></td>
-      <td class="num en">11</td><td class="num de">8</td><td class="num">5</td>
-      <td class="num">0 / 35</td></tr>
+      <td class="num"><b>52%</b> <span class="muted">(16.8/32)</span></td>
+      <td class="num"><span class="muted">59% (19.0)</span></td>
+      <td class="num en">15</td><td class="num de">8</td><td class="num">9</td>
+      <td class="num">0 / 51</td></tr>
 <tr><td class="tool">mcp-firewall</td><td class="cls">runtime-proxy</td>
-      <td class="num"><b>8%</b> <span class="muted">(2.0/24)</span></td>
-      <td class="num"><span class="muted">13% (3.0)</span></td>
-      <td class="num en">3</td><td class="num de">0</td><td class="num">21</td>
-      <td class="num">0 / 35</td></tr>
+      <td class="num"><b>9%</b> <span class="muted">(3.0/32)</span></td>
+      <td class="num"><span class="muted">13% (4.0)</span></td>
+      <td class="num en">4</td><td class="num de">0</td><td class="num">28</td>
+      <td class="num">0 / 51</td></tr>
 <tr><td class="tool">pipelock</td><td class="cls">egress-firewall</td>
-      <td class="num"><b>6%</b> <span class="muted">(1.3/24)</span></td>
-      <td class="num"><span class="muted">10% (2.5)</span></td>
-      <td class="num en">1</td><td class="num de">3</td><td class="num">20</td>
-      <td class="num">0 / 35</td></tr>
+      <td class="num"><b>4%</b> <span class="muted">(1.3/32)</span></td>
+      <td class="num"><span class="muted">8% (2.5)</span></td>
+      <td class="num en">1</td><td class="num de">3</td><td class="num">28</td>
+      <td class="num">0 / 51</td></tr>
 <tr><td class="tool">null-baseline</td><td class="cls">none</td>
-      <td class="num"><b>0%</b> <span class="muted">(0.0/24)</span></td>
+      <td class="num"><b>0%</b> <span class="muted">(0.0/32)</span></td>
       <td class="num"><span class="muted">0% (0.0)</span></td>
-      <td class="num en">0</td><td class="num de">0</td><td class="num">24</td>
-      <td class="num">0 / 35</td></tr></tbody>
+      <td class="num en">0</td><td class="num de">0</td><td class="num">32</td>
+      <td class="num">0 / 51</td></tr></tbody>
   </table></div>
-  <p class="note"><b>Weighting:</b> enforce = 1.0, detect = 0.5, none = 0, over 24 vectors. <b>CorpusRobustCoverage</b> (headline) is the <em>mean</em> across all fixtures of a vector, including evasion variants; <b>Capability</b> is best-case (detects ≥ 1 fixture). Where the two diverge, the tool is brittle to evasion. A vector counts only if the tool flags the attack <em>and</em> stays clean on the matched benign control (else it's a false positive); a false positive on any benign variant scores that vector 0. Zero false positives across all tools.</p>
+  <p class="note"><b>Weighting:</b> enforce = 1.0, detect = 0.5, none = 0, over 32 vectors. <b>CorpusRobustCoverage</b> (headline) is the <em>mean</em> across all fixtures of a vector, including evasion variants; <b>Capability</b> is best-case (detects ≥ 1 fixture). Where the two diverge, the tool is brittle to evasion. A vector counts only if the tool flags the attack <em>and</em> stays clean on the matched benign control (else it's a false positive); a false positive on any benign variant scores that vector 0. Zero false positives across all tools.</p>
   <p class="note"><b>Scope of this number:</b> CorpusRobustCoverage is a <b>descriptive coverage measure over a fixed, non-exhaustive corpus — not a procurement or substitutability ranking</b>. A higher score does not mean a tool better closes <em>your</em> deployment's gap, and tools at different architectural layers (e.g. a runtime proxy vs. an egress firewall) are not substitutable. Read the per-vector matrix and the defense-in-depth view for decisions. <em>Scoping clarified and the original metric fix credited to M. Brighindi; a decision-indexed <b>RequiredGapClosure</b> metric is planned — see <a href="https://github.com/Gowthaman90/mcp-defense-bench/blob/main/docs/CHANGELOG-scoring.md">CHANGELOG-scoring</a>.</em></p>
 
   <h2>Per-vector coverage matrix</h2>
@@ -103,7 +103,7 @@
     <tbody><tr><td class="vec">Tool poisoning</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Tool name collision / shadowing</td><td class="layer">client</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Rug pull / dynamic capability mutation</td><td class="layer">tool</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Out-of-scope parameter injection</td><td class="layer">tool</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Out-of-scope parameter injection</td><td class="layer">server</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Prompt injection via tool results</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Indirect / retrieval injection</td><td class="layer">tool</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Cross-tool data exfiltration / confused deputy</td><td class="layer">client</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td></tr>
@@ -123,23 +123,32 @@
 <tr><td class="vec">Command injection in tool execution</td><td class="layer">server</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">System-prompt / context leakage via tools</td><td class="layer">client</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">Mid-session tool injection (MSTI)</td><td class="layer">client</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
-<tr><td class="vec">Multi-tool split poisoning (ShareLock)</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr></tbody>
+<tr><td class="vec">Multi-tool split poisoning (ShareLock)</td><td class="layer">tool</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Header/body routing desync (HeaderMismatch)</td><td class="layer">transport</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">MRTR requestState forgery / replay</td><td class="layer">server</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">List-result cache poisoning / stale-cache defense suppression</td><td class="layer">client</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">MRTR in-band input phishing / sampling injection</td><td class="layer">client</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Task authorization bypass</td><td class="layer">server</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">MCP Apps sandbox non-conformance</td><td class="layer">host-orchestration</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Roots deprecation: no enforced filesystem boundary</td><td class="layer">host-orchestration</td><td class="c enforce" title="enforce">●</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">Transport / revision downgrade</td><td class="layer">transport</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr></tbody>
   </table></div>
   <div class="legend">
     <span><span class="sw" style="background:var(--enforce-bg);border:1px solid var(--enforce)"></span>● enforce (blocks)</span>
     <span><span class="sw" style="background:var(--detect-bg);border:1px solid var(--detect)"></span>◐ detect (warns)</span>
     <span><span class="sw" style="background:var(--none-bg);border:1px solid var(--line)"></span>not covered</span>
   </div>
-  <p class="note"><b>Defense-in-depth:</b> the tools cover different layers; <b>19 of 24</b> vectors are covered by at least one tool and <b>5</b> by none (registry/supply-chain, OS-isolation, and semantic vectors that lie outside a runtime proxy's reach). No single proxy is sufficient.</p>
+  <p class="note"><b>Defense-in-depth:</b> the tools cover different layers; <b>23 of 32</b> vectors are covered by at least one tool and <b>9</b> by none (registry/supply-chain, OS-isolation, and semantic vectors that lie outside a runtime proxy's reach). No single proxy is sufficient.</p>
 
   <h2>Evasion robustness</h2>
   <div class="card scroll"><table class="mx">
     <thead><tr><th>Attack</th><th>Encoding</th><th class="rot"><span>mcp-bastion</span></th><th class="rot"><span>mcp-firewall</span></th><th class="rot"><span>pipelock</span></th><th class="rot"><span>null-baseline</span></th></tr></thead>
-    <tbody><tr><td class="vec">response-injection</td><td class="layer">homoglyph substitution</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
+    <tbody><tr><td class="vec">header-body-desync</td><td class="layer">base64-sentinel</td><td class="c enforce" title="enforce">●</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr>
+<tr><td class="vec">response-injection</td><td class="layer">homoglyph substitution</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">response-injection</td><td class="layer">base64-wrapped payload</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td></tr>
 <tr><td class="vec">tool-poisoning</td><td class="layer">zero-width / bidi-control characters</td><td class="c detect" title="detect">◐</td><td class="c none" title="none"></td><td class="c none" title="none"></td><td class="c none" title="none"></td></tr></tbody>
   </table></div>
-  <p class="note"><b>Robustness (evasion fixtures detected):</b> mcp-bastion 3/3 · mcp-firewall 0/3 · pipelock 2/3 · null-baseline 0/3. The tools are robust to <em>different</em> obfuscations — no single tool survives all of them.</p>
+  <p class="note"><b>Robustness (evasion fixtures detected):</b> mcp-bastion 4/4 · mcp-firewall 0/4 · pipelock 2/4 · null-baseline 0/4. The tools are robust to <em>different</em> obfuscations — no single tool survives all of them.</p>
 
   <h2>Framework mapping</h2>
   <p class="note">Every attack vector is crosswalked to the frameworks security and compliance teams govern by. NIST AI RMF is a U.S. federal framework (NIST, Dept. of Commerce); OWASP is an international open standard; STRIDE is the classic threat-modeling taxonomy.</p>
@@ -148,27 +157,35 @@
     <tbody><tr><td class="vec">Tool poisoning</td><td class="layer">tool</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MAP, MEASURE, MANAGE</td><td>LLM01, LLM06</td><td>ASI01, ASI02</td><td>RT, AUTH</td></tr>
 <tr><td class="vec">Tool name collision / shadowing</td><td class="layer">client</td><td class="layer">Spoofing/Tampering</td><td>MAP, MANAGE</td><td>LLM01, LLM03</td><td>ASI01, ASI04</td><td>AUTH, RT</td></tr>
 <tr><td class="vec">Rug pull / dynamic capability mutation</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM03, LLM06</td><td>ASI04</td><td>AUTH, RT</td></tr>
-<tr><td class="vec">Out-of-scope parameter injection</td><td class="layer">tool</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MEASURE, MANAGE</td><td>LLM05, LLM06</td><td>ASI02</td><td>RT, AUTH</td></tr>
-<tr><td class="vec">Prompt injection via tool results</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM01, LLM05</td><td>ASI01</td><td>RT</td></tr>
-<tr><td class="vec">Indirect / retrieval injection</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM01</td><td>ASI01</td><td>RT</td></tr>
+<tr><td class="vec">Out-of-scope parameter injection</td><td class="layer">server</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MEASURE, MANAGE</td><td>LLM05, LLM06</td><td>ASI02</td><td>RT, AUTH</td></tr>
+<tr><td class="vec">Prompt injection via tool results</td><td class="layer">tool</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MEASURE, MANAGE</td><td>LLM01, LLM05</td><td>ASI01</td><td>RT</td></tr>
+<tr><td class="vec">Indirect / retrieval injection</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM01, LLM08</td><td>ASI01</td><td>RT</td></tr>
 <tr><td class="vec">Cross-tool data exfiltration / confused deputy</td><td class="layer">client</td><td class="layer">InformationDisclosure/ElevationOfPrivilege</td><td>MAP, MEASURE, MANAGE</td><td>LLM02, LLM06</td><td>ASI02, ASI03</td><td>RT, SEG</td></tr>
-<tr><td class="vec">Tool-transfer / cross-server chaining</td><td class="layer">host-orchestration</td><td class="layer">ElevationOfPrivilege</td><td>MAP, MANAGE</td><td>LLM06</td><td>ASI02, ASI03</td><td>AUTH, SEG</td></tr>
+<tr><td class="vec">Tool-transfer / cross-server chaining</td><td class="layer">host-orchestration</td><td class="layer">ElevationOfPrivilege</td><td>MAP, MANAGE</td><td>LLM06</td><td>ASI02, ASI03</td><td>AUTH, SEG, RT</td></tr>
 <tr><td class="vec">False-error escalation</td><td class="layer">tool</td><td class="layer">ElevationOfPrivilege/DenialOfService</td><td>MEASURE, MANAGE</td><td>LLM01, LLM06</td><td>ASI01, ASI02</td><td>RT, LOG</td></tr>
 <tr><td class="vec">Package / name squatting in registry</td><td class="layer">registry-supply-chain</td><td class="layer">Spoofing</td><td>GOVERN, MAP</td><td>LLM03</td><td>ASI04</td><td>AUTH</td></tr>
 <tr><td class="vec">Supply-chain poisoning (unverified provenance)</td><td class="layer">registry-supply-chain</td><td class="layer">Tampering/Spoofing</td><td>GOVERN, MAP, MANAGE</td><td>LLM03, LLM04</td><td>ASI04</td><td>AUTH</td></tr>
 <tr><td class="vec">Configuration drift</td><td class="layer">server</td><td class="layer">Tampering</td><td>GOVERN, MEASURE, MANAGE</td><td>LLM03</td><td>ASI04</td><td>LOG, AUTH</td></tr>
-<tr><td class="vec">Sandbox escape</td><td class="layer">server</td><td class="layer">ElevationOfPrivilege</td><td>MANAGE</td><td>LLM06</td><td>ASI02, ASI03</td><td>RT</td></tr>
+<tr><td class="vec">Sandbox escape</td><td class="layer">server</td><td class="layer">ElevationOfPrivilege</td><td>MANAGE, MEASURE</td><td>LLM06</td><td>ASI02, ASI03, ASI05</td><td>RT</td></tr>
 <tr><td class="vec">Schema / validation bypass</td><td class="layer">server</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MEASURE, MANAGE</td><td>LLM05</td><td>ASI02</td><td>RT</td></tr>
-<tr><td class="vec">Man-in-the-middle (transport)</td><td class="layer">transport</td><td class="layer">Tampering/InformationDisclosure/Spoofing</td><td>MANAGE</td><td>LLM02</td><td>ASI03</td><td>RT, AUTH</td></tr>
-<tr><td class="vec">DNS rebinding (local servers)</td><td class="layer">transport</td><td class="layer">Spoofing/ElevationOfPrivilege</td><td>MANAGE</td><td>LLM06</td><td>ASI03</td><td>AUTH, RT</td></tr>
+<tr><td class="vec">Man-in-the-middle (transport)</td><td class="layer">transport</td><td class="layer">Tampering/InformationDisclosure/Spoofing</td><td>MANAGE, MEASURE</td><td>LLM02</td><td>ASI03, ASI07</td><td>RT, AUTH</td></tr>
+<tr><td class="vec">DNS rebinding (local servers)</td><td class="layer">transport</td><td class="layer">Spoofing/ElevationOfPrivilege</td><td>MANAGE, MEASURE</td><td>LLM06</td><td>ASI03, ASI07</td><td>AUTH, RT</td></tr>
 <tr><td class="vec">Server impersonation / identity spoofing</td><td class="layer">registry-supply-chain</td><td class="layer">Spoofing</td><td>GOVERN, MAP, MANAGE</td><td>LLM03</td><td>ASI03, ASI04</td><td>AUTH</td></tr>
 <tr><td class="vec">Excessive permission / privilege escalation</td><td class="layer">host-orchestration</td><td class="layer">ElevationOfPrivilege</td><td>GOVERN, MAP, MANAGE</td><td>LLM06</td><td>ASI03</td><td>AUTH</td></tr>
 <tr><td class="vec">Credential / token theft via passthrough</td><td class="layer">host-orchestration</td><td class="layer">InformationDisclosure/ElevationOfPrivilege</td><td>GOVERN, MANAGE</td><td>LLM02, LLM06</td><td>ASI03</td><td>RT, SEG, AUTH</td></tr>
 <tr><td class="vec">Consent fatigue / over-broad grants</td><td class="layer">client</td><td class="layer">ElevationOfPrivilege/Repudiation</td><td>GOVERN, MANAGE</td><td>LLM06</td><td>ASI03</td><td>AUTH</td></tr>
-<tr><td class="vec">Command injection in tool execution</td><td class="layer">server</td><td class="layer">ElevationOfPrivilege/Tampering</td><td>MEASURE, MANAGE</td><td>LLM05</td><td>ASI02</td><td>RT</td></tr>
+<tr><td class="vec">Command injection in tool execution</td><td class="layer">server</td><td class="layer">ElevationOfPrivilege/Tampering</td><td>MEASURE, MANAGE</td><td>LLM05</td><td>ASI02, ASI05</td><td>RT</td></tr>
 <tr><td class="vec">System-prompt / context leakage via tools</td><td class="layer">client</td><td class="layer">InformationDisclosure</td><td>MEASURE, MANAGE</td><td>LLM07, LLM02</td><td>ASI01</td><td>RT, LOG</td></tr>
 <tr><td class="vec">Mid-session tool injection (MSTI)</td><td class="layer">client</td><td class="layer">Tampering/Spoofing</td><td>MEASURE, MANAGE</td><td>LLM01, LLM06</td><td>ASI01, ASI04</td><td>AUTH, LOG</td></tr>
-<tr><td class="vec">Multi-tool split poisoning (ShareLock)</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM01, LLM03</td><td>ASI01, ASI04</td><td>RT, LOG</td></tr></tbody>
+<tr><td class="vec">Multi-tool split poisoning (ShareLock)</td><td class="layer">tool</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM01, LLM03</td><td>ASI01, ASI04</td><td>RT, LOG</td></tr>
+<tr><td class="vec">Header/body routing desync (HeaderMismatch)</td><td class="layer">transport</td><td class="layer">Tampering/ElevationOfPrivilege</td><td>MEASURE, MANAGE</td><td>LLM06</td><td>ASI02, ASI03</td><td>AUTH, RT</td></tr>
+<tr><td class="vec">MRTR requestState forgery / replay</td><td class="layer">server</td><td class="layer">Tampering/Spoofing/ElevationOfPrivilege</td><td>MEASURE, MANAGE</td><td>LLM06</td><td>ASI03, ASI09</td><td>AUTH, RT</td></tr>
+<tr><td class="vec">List-result cache poisoning / stale-cache defense suppression</td><td class="layer">client</td><td class="layer">Tampering</td><td>MEASURE, MANAGE</td><td>LLM01, LLM03</td><td>ASI01, ASI04, ASI06</td><td>RT, LOG</td></tr>
+<tr><td class="vec">MRTR in-band input phishing / sampling injection</td><td class="layer">client</td><td class="layer">Spoofing/InformationDisclosure</td><td>MAP, MEASURE, MANAGE</td><td>LLM01, LLM02</td><td>ASI01, ASI03, ASI09</td><td>AUTH, RT</td></tr>
+<tr><td class="vec">Task authorization bypass</td><td class="layer">server</td><td class="layer">ElevationOfPrivilege/InformationDisclosure/Spoofing</td><td>MEASURE, MANAGE</td><td>LLM02, LLM06</td><td>ASI03</td><td>AUTH, LOG</td></tr>
+<tr><td class="vec">MCP Apps sandbox non-conformance</td><td class="layer">host-orchestration</td><td class="layer">Tampering/InformationDisclosure</td><td>MAP, MANAGE</td><td>LLM05, LLM02</td><td>ASI05, ASI09</td><td>RT</td></tr>
+<tr><td class="vec">Roots deprecation: no enforced filesystem boundary</td><td class="layer">host-orchestration</td><td class="layer">ElevationOfPrivilege/InformationDisclosure</td><td>MAP, MANAGE</td><td>LLM06, LLM02</td><td>ASI02, ASI03</td><td>SEG, AUTH</td></tr>
+<tr><td class="vec">Transport / revision downgrade</td><td class="layer">transport</td><td class="layer">Tampering/Spoofing</td><td>MEASURE, MANAGE</td><td></td><td>ASI07</td><td>AUTH, RT</td></tr></tbody>
   </table></div>
   <p class="note"><b>NIST AI RMF:</b> GOVERN · MAP · MEASURE · MANAGE. <b>OWASP LLM:</b> LLM01 Prompt Injection · LLM02 Sensitive Info Disclosure · LLM03 Supply Chain · LLM04 Data/Model Poisoning · LLM05 Improper Output Handling · LLM06 Excessive Agency · LLM07 System Prompt Leakage · LLM08 Vector/Embedding. <b>OWASP Agentic:</b> ASI01 Agent Goal Hijack · ASI02 Tool Misuse · ASI03 Identity &amp; Privilege Abuse · ASI04 Agentic Supply Chain. <b>NSA guidance (May 2026):</b> AUTH Authentication &amp; Access Control · LOG Monitoring &amp; Logging · SEG Data Classification &amp; Segmentation · RT Runtime Controls.</p>
 

@@ -1,0 +1,91 @@
+{
+  "vector": "list-cache-poisoning",
+  "id": "list-cache-poisoning/002-public-scope-across-auth-contexts",
+  "severity": "high",
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "description": "An authenticated tools/list whose contents vary by the caller's granted scopes is returned with cacheScope public, so one caller's privileged tool list can be served to another. The spec warns about exactly this.",
+  "fixture": {
+    "type": "list-result",
+    "method": "tools/list",
+    "authenticated": true,
+    "variesByAuthorization": true,
+    "result": {
+      "resultType": "complete",
+      "tools": [
+        {
+          "name": "get_weather",
+          "description": "Returns the current weather for a given city.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "city"
+            ]
+          }
+        },
+        {
+          "name": "admin_delete_tenant",
+          "description": "Deletes a tenant.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "tenant": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "tenant"
+            ]
+          }
+        }
+      ],
+      "ttlMs": 300000,
+      "cacheScope": "public"
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "cacheScope public on an authenticated, authorization-varying list result; downgrade to private so the cache cannot be shared across authorization contexts",
+    "rationale": "server/utilities/caching §Security Considerations: a public cacheScope may be shared between callers even when the result comes from an authenticated endpoint, and implementors MUST NOT rely on cacheScope alone for access control."
+  },
+  "benignControl": {
+    "type": "list-result",
+    "method": "tools/list",
+    "authenticated": true,
+    "variesByAuthorization": true,
+    "result": {
+      "resultType": "complete",
+      "tools": [
+        {
+          "name": "get_weather",
+          "description": "Returns the current weather for a given city.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "city"
+            ]
+          }
+        }
+      ],
+      "ttlMs": 300000,
+      "cacheScope": "private"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "synthetic — derived from server/utilities/caching §Security Considerations and §Cache Scope Field"
+}

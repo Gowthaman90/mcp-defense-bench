@@ -1,0 +1,44 @@
+{
+  "vector": "config-drift",
+  "id": "heldout/config-drift/002-sandbox-and-egress-disabled",
+  "heldout": true,
+  "family": "L",
+  "severity": "high",
+  "description": "Sandboxing is removed, egress opened, and secrets mounted, relative to baseline.",
+  "fixture": {
+    "type": "config-snapshot-diff",
+    "baseline": {
+      "sandbox": "gvisor",
+      "egress": "deny",
+      "secretsMount": false
+    },
+    "current": {
+      "sandbox": "none",
+      "egress": "allow",
+      "secretsMount": true
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "isolation and egress controls weakened"
+  },
+  "benignControl": {
+    "type": "config-snapshot-diff",
+    "baseline": {
+      "sandbox": "gvisor",
+      "egress": "deny",
+      "secretsMount": false
+    },
+    "current": {
+      "sandbox": "gvisor",
+      "egress": "deny",
+      "secretsMount": false
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (L)."
+}

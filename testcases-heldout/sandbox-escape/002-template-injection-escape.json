@@ -1,0 +1,38 @@
+{
+  "vector": "sandbox-escape",
+  "id": "heldout/sandbox-escape/002-template-injection-escape",
+  "heldout": true,
+  "family": "L",
+  "severity": "high",
+  "description": "A server-side template payload attempting to reach interpreter internals from a rendering tool.",
+  "fixture": {
+    "type": "scenario",
+    "setup": "Server 'mailer' renders user templates in a restricted engine.",
+    "action": {
+      "name": "render",
+      "arguments": {
+        "template": "{{ ''.__class__.__mro__[1].__subclasses__() }}"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "template expression reaching interpreter internals"
+  },
+  "benignControl": {
+    "type": "scenario",
+    "setup": "Server 'mailer' renders user templates in a restricted engine.",
+    "action": {
+      "name": "render",
+      "arguments": {
+        "template": "Hello {{ name }}, your order has shipped."
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (L)."
+}

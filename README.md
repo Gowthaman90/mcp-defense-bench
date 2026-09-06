@@ -14,7 +14,8 @@ surface they actually defend — mapped to NIST AI RMF and the OWASP Top 10s.**
 </div>
 
 > **Cite this work:** Arumugam, G. (2026). *Measuring the Defenders: A Layer-Aware, Framework-Mapped
-> Benchmark for Model Context Protocol Security Proxies.*
+> Benchmark for Model Context Protocol Security Proxies.* (v0.7.0 adds held-out, benign-corpus and
+> rater-agreement results; see `paper/`.)
 > Preprint: [10.6084/m9.figshare.32978657](https://doi.org/10.6084/m9.figshare.32978657) ·
 > Benchmark archive: [10.5281/zenodo.21346206](https://doi.org/10.5281/zenodo.21346206)
 
@@ -44,80 +45,93 @@ novelty positioning — read it before citing this anywhere.
 ## How it works
 
 ```
- rubric/crosswalk.json        testcases/<vector>/…            adapters/<tool>/
- (22 vectors + framework   →  (attack fixtures + expected  →  (adapter that runs the tool
-  mappings — the rubric)       defender behavior)              under test against fixtures)
-                                         │
-                                         ▼
-                                   bin/score.mjs
-                                         │
-                                         ▼
-             results/<tool>.json  +  a coverage score per layer / per NIST fn / per OWASP cat
+ rubric/crosswalk.json         testcases/  testcases-heldout/  testcases-benign/     adapters/<tool>/
+ (32 vectors + framework    →  (development · held-out · benign-only corpora)     →  (drives the tool's
+  mappings + appliesTo axis)                                                          REAL code)
+                                                  │
+                                                  ▼
+                              bin/run.mjs <tool> [--corpus dev|heldout|benign]
+                                                  │
+                                                  ▼
+             results/ · results/heldout/ · results/benign/  →  bin/leaderboard.mjs → docs/LEADERBOARD.md
 ```
 
-1. **Rubric** — [`rubric/crosswalk.json`](rubric/crosswalk.json): 22 MCP attack vectors, each mapped
-   to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, OWASP Agentic 2026. Vendor-neutral.
-2. **Test cases** — `testcases/<vector-id>/`: concrete attack fixtures + the behavior a competent
-   defender should exhibit. This is what turns a *claim* into a *verified* score.
-3. **Adapters** — `adapters/<tool>/`: a thin driver that runs a given defender against the fixtures
-   and reports what it caught. `adapters/mcp-bastion/coverage.json` currently holds mcp-bastion's
-   *self-reported* claim; the harness exists to **verify**, not trust, those claims.
-4. **Scorer** — `bin/score.mjs`: joins verified results against the rubric and emits per-layer /
-   per-framework coverage.
+1. **Rubric** — [`rubric/crosswalk.json`](rubric/crosswalk.json): **32 MCP attack vectors** (24 pre-existing +
+   8 introduced by the **2026-07-28 protocol revision**), each mapped to architectural layer, STRIDE, NIST AI
+   RMF, NSA MCP guidance, OWASP LLM 2025 and OWASP Agentic 2026, and tagged with the protocol revisions it
+   applies to (`appliesTo`). Mapping reliability is measured: a blind second-rater pass and open adjudication
+   live in [`rubric/RATING-CODEBOOK.md`](rubric/RATING-CODEBOOK.md), [`docs/AGREEMENT.md`](docs/AGREEMENT.md),
+   [`rubric/ratings/ADJUDICATION.md`](rubric/ratings/ADJUDICATION.md). **A human third rater is invited** —
+   copy `rubric/ratings/rater-TEMPLATE.json` and open a PR.
+2. **Three corpora** —
+   - `testcases/` — the **development** corpus (51 cases): used to find and fix gaps in the reference proxy.
+   - `testcases-heldout/` — the **held-out** corpus (48 cases): authored *after* every defender was frozen,
+     under the pre-registered [`docs/HELD-OUT-PROTOCOL.md`](docs/HELD-OUT-PROTOCOL.md) (domain / lexical /
+     surface / encoding shifts; no development phrasing or hosts; no iteration after the first run).
+   - `testcases-benign/` — the **benign-only** corpus (337 items): 256 *verbatim* tool definitions harvested
+     from 21 public MCP servers + 81 authored hard negatives. Every flag is a false positive.
+3. **Adapters** — `adapters/<tool>/`: a thin driver that runs a defender's real code against fixtures, under
+   the integrity rule in [`adapters/CONTRACT.md`](adapters/CONTRACT.md): *report only what the tool inspects
+   at runtime.*
+4. **Scorer / leaderboard** — `bin/run.mjs`, `bin/leaderboard.mjs`: CorpusRobustCoverage per vector, **per
+   protocol revision**, development **and** held-out side by side with the generalisation gap, and the
+   benign-corpus FP rate with a Wilson 95% interval.
 
-## Status
+## Status — v0.7.0 (2026-09-05)
 
-`v0.1.0-draft`. Rubric drafted (22 vectors), full test-case corpus (22 malicious + 22 benign), and a
-live runner (`bin/run.mjs`) that drives each adapter's **real** detection code.
+Full board: [docs/LEADERBOARD.md](docs/LEADERBOARD.md) · live site:
+[gowthaman90.github.io/mcp-defense-bench](https://gowthaman90.github.io/mcp-defense-bench/).
 
-**First comparative results** (`node bin/run.mjs <tool>` → `node bin/leaderboard.mjs`, full board in
-[docs/LEADERBOARD.md](docs/LEADERBOARD.md)):
+**CorpusRobustCoverage on the 24 pre-existing vectors — development vs. held-out:**
 
-Measured against the v2 corpus (28 cases: 22 v1 + 6 realistic/tool-neutral):
+| Tool | Class | Dev (24) | **Held-out (24)** | Gap | 2026-07-28-only (8) | Benign FP (n=337) |
+|---|---|--:|--:|--:|--:|--:|
+| `mcp-bastion` v0.9.0 | runtime proxy | 55% | **43%** | 13 pts | 44% | 13 (3.9%, CI 2.3–6.5%) |
+| `mcp-firewall` 0.1.0 | runtime proxy | 8% | **10%** | −2 pts | 13% | 2 (0.6%) |
+| `pipelock` 3.0.0 | egress firewall | 6% | **0%** | 6 pts | 0% | 3 (0.9%) |
+| `null-baseline` | control | 0% | 0% | 0 | 0% | 0 |
 
-| Tool | Class | Weighted coverage | Verified | False positives |
-|---|---|--:|---|---|
-| `mcp-bastion` | runtime-proxy | **34% (7.5/22)** | 22/22 | 0 / 31 |
-| `mcp-firewall` | runtime-proxy | **14% (3.0/22)** | 22/22 | 0 / 31 |
-| `pipelock` | egress-firewall | **11% (2.5/22)** | 22/22 | 0 / 31 |
-| `null-baseline` | control | 0% | 22/22 | 0 / 31 |
+Matched-control false positives: 0/51 (dev) and 0/48 (held-out) for every tool.
 
-_Corpus: 31 cases (22 base + 6 realistic + 3 evasion). mcp-bastion coverage reflects v0.3–v0.6
-features — response scanning, schema validation, transport hardening, sensitive-argument +
-least-privilege scanning — each verified here (9% → 34%). pipelock is driven through both its URL/egress
-scanner and its MCP injection scanner. 34% is a runtime proxy's realistic ceiling; the remaining 9
-vectors need attestation / OS isolation._
+**What the numbers say.**
+- **The held-out gap is the headline.** mcp-bastion's structural checks (hash pinning, schema validation,
+  data-flow tracking, command-injection parsing) hold on held-out fixtures; its *phrase heuristics* do not —
+  four vectors it covered in development (tool poisoning, ShareLock split poisoning, transport MITM,
+  system-prompt leakage) drop to zero. pipelock's development coverage was entirely corpus-specific.
+- **Coverage is quoted per protocol revision.** The 8 vectors introduced on 2026-07-28 did not exist before
+  it; on them mcp-bastion enforces header/body coherence (`-32020`) and list-cache policy and honestly misses
+  MRTR, Tasks, MCP Apps and legacy-transport refusal.
+- **Benign FP has a denominator now.** 4 of mcp-bastion's 13 are the by-design cost of trust-on-first-use
+  pinning flagging benign definition updates (reported in their own row, not excluded); 1/256 verbatim
+  third-party definitions is flagged.
+- **9 of 32 vectors are covered by no measured tool** — the five pre-existing registry/isolation/consent gaps
+  plus four 2026-07-28 surfaces. A proxy is necessary but not sufficient.
 
-**Evasion robustness** ([docs/ROBUSTNESS.md](docs/ROBUSTNESS.md)): obfuscated attack variants show the
-tools are robust to *different* evasions — mcp-bastion catches zero-width/bidi (1/3), pipelock catches
-homoglyph + base64 (2/3), and no tool survives all three. Defense-in-depth holds at the evasion layer too.
+**Why v0.7.0 looks like this.** The v0.4 paper was reviewed at AISec 2026; the expert reviewer asked for a
+held-out set, more attack variants and benign cases, and a second-rater agreement measure. All three are
+here. The submission itself was desk-rejected because the anonymised artifact mirror still carried the
+author's name — hence [`scripts/make-anon-mirror.mjs`](scripts/make-anon-mirror.mjs) and
+[`paper/SUBMISSION-CHECKLIST.md`](paper/SUBMISSION-CHECKLIST.md). Verbatim reviews and responses:
+[`paper/REVIEWS-AND-RESPONSE.md`](paper/REVIEWS-AND-RESPONSE.md).
 
-Each drives the tool's **real** code (bastion's `scanTool`/`scanText`/`hashToolDefinition`;
-mcp-firewall's Python SDK; pipelock's `explain` scanner). The headline finding is **complementarity,
-not ranking** — each tool guards a different layer:
+**Reproduce:**
 
-- **mcp-bastion** → definition + response layers (poisoning, shadowing, rug-pull, response/retrieval
-  injection, prompt-leak via its v0.3 response scanner).
-- **mcp-firewall** → call + egress layers (credential-path & cloud-metadata exfil, secret leakage).
-- **pipelock** → egress/SSRF layer (blocks exfiltration to cloud-metadata / private IPs).
-- Together they cover **8 of 22 vectors; 14 are covered by none** — the whole
-  transport/registry/supply-chain surface is undefended by any measured proxy.
-- Conclusion: no single proxy suffices — defense-in-depth across layers is required.
+```bash
+npm run gen:corpora && npm run bench:all && npm run bench:heldout && npm run bench:benign && npm run leaderboard
+```
 
-_(pipelock's number is a lower bound: only its URL/egress scanner is wired, not its text-injection
-mode — see `docs/ADAPTERS.md`.)_
+(`mcp-firewall` and `pipelock` need the local installs described in [`docs/ADAPTERS.md`](docs/ADAPTERS.md).)
 
-> **Two methodology notes baked into these numbers.** (1) The v1 corpus under-probed egress/secret
-> encodings, so mcp-firewall scored 5%; adding realistic v2 fixtures (AWS-key exfil, cloud-metadata
-> egress) raised it to 14% — a fairness fix, not a tuning trick. (2) mcp-bastion rose from 9% because
-> a real feature was added (tool-result scanning) and then verified here — the benchmark guided the
-> improvement. The matrix (which vectors, not just totals) remains the honest read.
+**Evasion robustness** ([docs/ROBUSTNESS.md](docs/ROBUSTNESS.md)): on the development evasion set mcp-bastion
+survives zero-width/bidi, homoglyph and base64 after its normalisation stage; the held-out **E** family shows
+the limit — HTML/markdown-comment hiding, JSON-LD embedding and newline-separated command injection are
+caught, base64 *shards* across tools and numbered sentence fragments are not.
 
-> **Measured (9%) is lower than the earlier self-reported 12% — on purpose.** The self-report credited
-> six "observe" (audit-trail-only) vectors at a small weight; the runner scores them 0 because
-> *observing a call in an audit log is not detecting an attack*. Strict, measured detection below
-> self-reported coverage is the benchmark working as intended. Zero false positives across all 22
-> benign controls is the key integrity result.
+> **Scope of the headline metric.** CorpusRobustCoverage is a descriptive coverage measure over a fixed,
+> non-exhaustive corpus — **not** a procurement or substitutability ranking. Tools at different layers are
+> complementary: mcp-firewall and pipelock *enforce* on vectors where mcp-bastion only warns. Read the
+> per-vector matrix, per revision, before quoting any single number. Metric design credited in
+> [`docs/CHANGELOG-scoring.md`](docs/CHANGELOG-scoring.md).
 
 ## Why this project exists
 

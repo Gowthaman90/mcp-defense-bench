@@ -1,0 +1,20 @@
+{
+  "id": "benign/scenario/001-loopback-origin",
+  "kind": "scenario",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Benign transport configuration.",
+  "fixture": {
+    "type": "scenario",
+    "setup": "Local MCP server with Origin allowlist.",
+    "request": {
+      "host": "127.0.0.1:7000",
+      "origin": "http://localhost:7000"
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

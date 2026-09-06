@@ -4,7 +4,7 @@
   "class": "runtime-proxy",
   "reproducible": true,
   "version": "0.2.0",
-  "rubricVersion": "0.1.0-draft",
+  "rubricVersion": "0.7.0",
   "measuredBy": "bin/run.mjs",
   "coverage": {
     "tool-poisoning": {
@@ -245,6 +245,86 @@
       "fixtures": 1,
       "fpCount": 0,
       "evidence": "multi-tool-split-poisoning/001-threshold-shares",
+      "verified": true
+    },
+    "header-body-desync": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "header-body-desync/001-mcp-name-mismatch",
+      "verified": true
+    },
+    "requeststate-forgery": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "requeststate-forgery/001-unprotected-state-tamper",
+      "verified": true
+    },
+    "list-cache-poisoning": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "list-cache-poisoning/001-long-ttl-public-pin",
+      "verified": true
+    },
+    "mrtr-input-phishing": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "mrtr-input-phishing/001-credential-elicitation",
+      "verified": true
+    },
+    "task-authz-bypass": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.5,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "task-authz-bypass/002-task-routing-header-desync",
+      "verified": true
+    },
+    "mcp-app-sandbox-bypass": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "mcp-app-sandbox-bypass/001-ui-resource-egress-attempt",
+      "verified": true
+    },
+    "roots-scope-gap": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "roots-scope-gap/001-no-enforced-filesystem-boundary",
+      "verified": true
+    },
+    "transport-downgrade": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "transport-downgrade/001-legacy-session-and-get-stream",
       "verified": true
     }
   }

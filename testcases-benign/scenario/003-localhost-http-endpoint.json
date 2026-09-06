@@ -1,0 +1,17 @@
+{
+  "id": "benign/scenario/003-localhost-http-endpoint",
+  "kind": "scenario",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Benign transport configuration.",
+  "fixture": {
+    "type": "scenario",
+    "setup": "Local dev server over plaintext loopback.",
+    "endpoint": "http://127.0.0.1:8080/mcp"
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

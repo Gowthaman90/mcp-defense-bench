@@ -1,0 +1,73 @@
+{
+  "id": "benign/tool-definition/137-server-everything--get-structured-content",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-everything.",
+  "source": {
+    "package": "@modelcontextprotocol/server-everything",
+    "version": "2.0.0",
+    "harvestedAt": "2026-09-06T02:36:35.531Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "get-structured-content",
+      "description": "Returns structured content along with an output schema for client data validation",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "enum": [
+              "New York",
+              "Chicago",
+              "Los Angeles"
+            ],
+            "description": "Choose city"
+          }
+        },
+        "required": [
+          "location"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "title": "Get Structured Content Tool",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "temperature": {
+            "type": "number",
+            "description": "Temperature in celsius"
+          },
+          "conditions": {
+            "type": "string",
+            "description": "Weather conditions description"
+          },
+          "humidity": {
+            "type": "number",
+            "description": "Humidity percentage"
+          }
+        },
+        "required": [
+          "temperature",
+          "conditions",
+          "humidity"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-everything"
+}

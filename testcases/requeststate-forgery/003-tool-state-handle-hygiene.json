@@ -1,0 +1,56 @@
+{
+  "vector": "requeststate-forgery",
+  "id": "requeststate-forgery/003-tool-state-handle-hygiene",
+  "severity": "medium",
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "description": "A tool returns a guessable, structured state handle and a later call presents another user's handle. NOTE: the spec's Stateful Tools section is explicitly NON-NORMATIVE, so this fixture measures guidance conformance and is deliberately lower severity.",
+  "fixture": {
+    "type": "tool-state-handle",
+    "createdBy": {
+      "principal": "alice",
+      "handle": "basket_1001"
+    },
+    "presentedBy": {
+      "principal": "mallory",
+      "handle": "basket_1002"
+    },
+    "call": {
+      "name": "add_item",
+      "arguments": {
+        "basket_id": "basket_1002",
+        "sku": "SKU-9"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "sequential, structured state handle accepted from a principal that did not create it; handle treated as a capability rather than a name",
+    "rationale": "server/tools §Stateful Tools (non-normative): a handle is a name, not a capability; servers should validate authorization against the handle on every call, keep handles opaque, and bound their lifetime."
+  },
+  "benignControl": {
+    "type": "tool-state-handle",
+    "createdBy": {
+      "principal": "alice",
+      "handle": "bsk_4f9a2c7e-3b11-4d02-9a55-0e7c1d6f8b21"
+    },
+    "presentedBy": {
+      "principal": "alice",
+      "handle": "bsk_4f9a2c7e-3b11-4d02-9a55-0e7c1d6f8b21"
+    },
+    "call": {
+      "name": "add_item",
+      "arguments": {
+        "basket_id": "bsk_4f9a2c7e-3b11-4d02-9a55-0e7c1d6f8b21",
+        "sku": "SKU-9"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "synthetic — guidance-level only. Split out from requestState during spec verification because the two were being conflated; see docs/SPEC-VERIFICATION-2026-07-28.md, Correction 1."
+}

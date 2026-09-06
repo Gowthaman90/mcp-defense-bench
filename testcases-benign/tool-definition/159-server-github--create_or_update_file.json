@@ -1,0 +1,67 @@
+{
+  "id": "benign/tool-definition/159-server-github--create_or_update_file",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-github.",
+  "source": {
+    "package": "@modelcontextprotocol/server-github",
+    "version": "0.6.2",
+    "harvestedAt": "2026-09-06T02:37:37.252Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "create_or_update_file",
+      "description": "Create or update a single file in a GitHub repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string",
+            "description": "Repository owner (username or organization)"
+          },
+          "repo": {
+            "type": "string",
+            "description": "Repository name"
+          },
+          "path": {
+            "type": "string",
+            "description": "Path where to create/update the file"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content of the file"
+          },
+          "message": {
+            "type": "string",
+            "description": "Commit message"
+          },
+          "branch": {
+            "type": "string",
+            "description": "Branch to create/update the file in"
+          },
+          "sha": {
+            "type": "string",
+            "description": "SHA of the file being replaced (required when updating existing files)"
+          }
+        },
+        "required": [
+          "owner",
+          "repo",
+          "path",
+          "content",
+          "message",
+          "branch"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-github"
+}

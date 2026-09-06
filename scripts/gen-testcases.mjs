@@ -11,6 +11,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { CASES_2026_07_28, REVISION as REV_2026_07_28 } from "./cases-2026-07-28.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
@@ -955,7 +956,7 @@ const CASES_V3 = [
 // --- validate + emit ---
 let errors = 0;
 const seen = new Set();
-for (const c of CASES) {
+for (const c of [...CASES, ...CASES_2026_07_28]) {
   if (!rubricIds.has(c.vector)) {
     console.error(`✗ '${c.vector}' is not a rubric vector id`);
     errors++;
@@ -973,8 +974,8 @@ if (errors) {
   process.exit(1);
 }
 
-// v2 + v3 cases must reference real vectors too.
-for (const c of [...CASES_V2, ...CASES_V3]) {
+// v2 + v3 + 2026-07-28 cases must reference real vectors too.
+for (const c of [...CASES_V2, ...CASES_V3, ...CASES_2026_07_28]) {
   if (!rubricIds.has(c.vector)) {
     console.error(`✗ additive case '${c.vector}' is not a rubric vector id`);
     process.exit(1);
@@ -989,6 +990,9 @@ function emitOne(c, num) {
     id: `${c.vector}/${num}-${c.slug}`,
     severity: c.severity,
     ...(c.evasion ? { evasion: c.evasion } : {}),
+    // Protocol-revision axis: vectors that exist only from 2026-07-28 carry it explicitly; every other
+    // fixture applies to all known revisions (the rubric's per-vector `appliesTo` is authoritative).
+    ...(c.appliesTo ? { appliesTo: c.appliesTo } : {}),
     description: c.description,
     fixture: c.fixture,
     expected: { ...c.expected },
@@ -998,14 +1002,15 @@ function emitOne(c, num) {
   writeFileSync(join(dir, `${num}-${c.slug}.json`), JSON.stringify(doc, null, 2) + "\n");
 }
 
-// Number sequentially per vector, in v1 → v2 → v3 order (stable: existing files keep their numbers).
-const ALL = [...CASES, ...CASES_V2, ...CASES_V3];
+// Number sequentially per vector, in v1 → v2 → v3 → 2026-07-28 order (stable: existing files keep their numbers).
+const CASES_V4 = CASES_2026_07_28.map((c) => ({ ...c, appliesTo: [REV_2026_07_28] }));
+const ALL = [...CASES, ...CASES_V2, ...CASES_V3, ...CASES_V4];
 const seq = {};
 for (const c of ALL) {
   seq[c.vector] = (seq[c.vector] ?? 0) + 1;
   emitOne(c, String(seq[c.vector]).padStart(3, "0"));
 }
 console.log(
-  `✓ wrote ${ALL.length} test cases (v1 ${CASES.length} + v2 ${CASES_V2.length} + v3 ${CASES_V3.length}) ` +
+  `✓ wrote ${ALL.length} test cases (v1 ${CASES.length} + v2 ${CASES_V2.length} + v3 ${CASES_V3.length} + 2026-07-28 ${CASES_V4.length}) ` +
     `across ${seen.size} vectors (all ${rubricIds.size} rubric vectors covered)`,
 );

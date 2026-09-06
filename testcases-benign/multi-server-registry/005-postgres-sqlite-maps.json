@@ -1,0 +1,80 @@
+{
+  "id": "benign/multi-server-registry/005-postgres-sqlite-maps",
+  "kind": "multi-server-registry",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Realistic multi-server deployment assembled from harvested public servers; no name collisions.",
+  "fixture": {
+    "type": "multi-server-registry",
+    "servers": [
+      {
+        "server": "server-postgres",
+        "tools": [
+          {
+            "name": "query",
+            "description": "Run a read-only SQL query"
+          }
+        ]
+      },
+      {
+        "server": "server-sqlite",
+        "tools": [
+          {
+            "name": "read_query",
+            "description": "Execute a SELECT query on the SQLite database"
+          },
+          {
+            "name": "write_query",
+            "description": "Execute an INSERT, UPDATE, or DELETE query on the SQLite database"
+          },
+          {
+            "name": "create_table",
+            "description": "Create a new table in the SQLite database"
+          },
+          {
+            "name": "list_tables",
+            "description": "List all tables in the SQLite database"
+          },
+          {
+            "name": "describe_table",
+            "description": "Get the schema information for a specific table"
+          }
+        ]
+      },
+      {
+        "server": "server-google-maps",
+        "tools": [
+          {
+            "name": "maps_geocode",
+            "description": "Convert an address into geographic coordinates"
+          },
+          {
+            "name": "maps_reverse_geocode",
+            "description": "Convert coordinates into an address"
+          },
+          {
+            "name": "maps_search_places",
+            "description": "Search for places using Google Places API"
+          },
+          {
+            "name": "maps_place_details",
+            "description": "Get detailed information about a specific place"
+          },
+          {
+            "name": "maps_distance_matrix",
+            "description": "Calculate travel distance and time for multiple origins and destinations"
+          },
+          {
+            "name": "maps_elevation",
+            "description": "Get elevation data for locations on the earth"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

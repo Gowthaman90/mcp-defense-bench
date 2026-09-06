@@ -1,0 +1,32 @@
+{
+  "id": "benign/tool-definition/201-server-postgres--query",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-postgres.",
+  "source": {
+    "package": "@modelcontextprotocol/server-postgres",
+    "version": "0.1.0",
+    "harvestedAt": "2026-09-06T02:37:39.109Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "query",
+      "description": "Run a read-only SQL query",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sql": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-postgres"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "benign/tool-definition/109-playwright-mcp--browser_navigate_back",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @playwright/mcp.",
+  "source": {
+    "package": "@playwright/mcp",
+    "version": "1.63.0-alpha-2026-08-31",
+    "harvestedAt": "2026-09-06T02:37:48.767Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "browser_navigate_back",
+      "description": "Go back to the previous page in the history",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Go back",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @playwright/mcp"
+}

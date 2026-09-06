@@ -1,0 +1,31 @@
+{
+  "source": {
+    "package": "@modelcontextprotocol/server-postgres",
+    "command": [
+      "npx",
+      "-y",
+      "@modelcontextprotocol/server-postgres",
+      "postgresql://localhost/harvest"
+    ],
+    "serverInfo": {
+      "name": "example-servers/postgres",
+      "version": "0.1.0"
+    }
+  },
+  "harvestedAt": "2026-09-06T02:37:39.109Z",
+  "note": "Verbatim tools/list output from a public MCP server started as a user would start it. Benign by construction; used only as false-positive controls.",
+  "tools": [
+    {
+      "name": "query",
+      "description": "Run a read-only SQL query",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sql": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}

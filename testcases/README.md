@@ -29,19 +29,22 @@ should exhibit. Test cases are what turn a self-reported coverage *claim* into a
 
 ## Coverage
 
-**22 / 22 rubric vectors** have a seed test case (one malicious fixture + one benign control each),
+**32 / 32 rubric vectors** have at least one test case (one malicious fixture + one benign control each),
 generated from `scripts/gen-testcases.mjs` (the authoritative source — edit that, not the JSON by
-hand; it validates every rubric vector is covered before writing).
+hand; it validates every rubric vector is covered before writing). The eight 2026-07-28 vectors live in
+`scripts/cases-2026-07-28.mjs` and carry `appliesTo: ["2026-07-28"]`.
 
 | Breadth | Status |
 |---|---|
-| ≥1 malicious + benign fixture per vector (22/22) | ✅ done |
-| Realistic tool-neutral encodings (v2, 6 cases) | ✅ done |
-| Evasion-robustness variants (v3, 3 cases: zero-width/bidi, homoglyph, base64) | ✅ done — see `../docs/ROBUSTNESS.md` |
-| Live adapter runner that executes fixtures against a tool | ✅ done — `../bin/run.mjs` |
+| ≥1 malicious + benign fixture per vector (32/32) | ✅ |
+| Realistic tool-neutral encodings (v2, 6 cases) | ✅ |
+| Evasion-robustness variants (v3, 3 cases: zero-width/bidi, homoglyph, base64) | ✅ — see `../docs/ROBUSTNESS.md` |
+| Protocol-revision 2026-07-28 vectors (16 cases, 8 vectors, verified against spec text) | ✅ v0.7.0 |
+| **Held-out corpus** (48 cases, authored after defender freeze, pre-registered) | ✅ v0.7.0 — `../testcases-heldout/`, `../docs/HELD-OUT-PROTOCOL.md` |
+| **Benign-only corpus** (337 items: 256 harvested real definitions + 81 hard negatives) | ✅ v0.7.0 — `../testcases-benign/` |
+| Live adapter runner | ✅ `../bin/run.mjs <tool> [--corpus dev\|heldout\|benign]` |
 
-**Corpus size: 31 cases** across 22 vectors. Fixtures with an `evasion` field are obfuscated variants
-used by `../bin/robustness.mjs` to measure per-encoding detection.
-
-Next: a runner that feeds each fixture to an adapter and records detect/enforce, so the scorer
-reports **verified** coverage instead of self-reported or `unknown` levels.
+**Development corpus: 51 cases** across 32 vectors. Fixtures with an `evasion` field are obfuscated
+variants used by `../bin/robustness.mjs`. This directory is the *development* corpus: it has been used to
+find and fix gaps in the reference proxy, which is why coverage on it is reported beside — never instead
+of — coverage on the held-out corpus.

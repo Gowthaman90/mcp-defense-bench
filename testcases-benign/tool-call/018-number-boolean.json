@@ -1,0 +1,41 @@
+{
+  "id": "benign/tool-call/018-number-boolean",
+  "kind": "tool-call",
+  "benign": true,
+  "hardNegative": true,
+  "description": "Schema-conformant tool call with edgy-looking but benign arguments.",
+  "fixture": {
+    "type": "tool-call",
+    "tool": {
+      "name": "resize",
+      "description": "Resize an image.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "integer"
+          },
+          "keepAspect": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "width",
+          "keepAspect"
+        ]
+      }
+    },
+    "call": {
+      "name": "resize",
+      "arguments": {
+        "width": 800,
+        "keepAspect": true
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

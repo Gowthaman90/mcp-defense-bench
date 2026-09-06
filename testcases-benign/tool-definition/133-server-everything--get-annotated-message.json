@@ -1,0 +1,54 @@
+{
+  "id": "benign/tool-definition/133-server-everything--get-annotated-message",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-everything.",
+  "source": {
+    "package": "@modelcontextprotocol/server-everything",
+    "version": "2.0.0",
+    "harvestedAt": "2026-09-06T02:36:35.531Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "get-annotated-message",
+      "description": "Demonstrates how annotations can be used to provide metadata about content.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "error",
+              "success",
+              "debug"
+            ],
+            "description": "Type of message to demonstrate different annotation patterns"
+          },
+          "includeImage": {
+            "default": false,
+            "description": "Whether to include an example image",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "messageType"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "title": "Get Annotated Message Tool"
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-everything"
+}

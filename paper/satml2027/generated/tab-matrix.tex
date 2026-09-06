@@ -1,0 +1,39 @@
+\begin{tabular}{@{}rl ccc ccc@{}}
+\toprule
+ & & \multicolumn{3}{c}{OurProxy} & \multicolumn{3}{c}{mcp-firewall / pipelock} \\
+\# & Vector & dev & held-out & $\Delta$ & fw dev & fw h-o & pl dev / h-o \\
+\midrule
+1 & Tool poisoning & D\,50 & --\,0 & -50 & --\,0 & --\,0 & --\,0 / --\,0 \\
+2 & Tool name collision / shadowing & D\,50 & D\,50 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+3 & Rug pull / dynamic capability mutation & E\,100 & E\,100 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+4 & Out-of-scope parameter injection & E\,100 & E\,100 & 0 & --\,0 & E\,100 & --\,0 / --\,0 \\
+5 & Prompt injection via tool results & D\,50 & D\,25 & -25 & --\,0 & --\,0 & D\,33 / --\,0 \\
+6 & Indirect / retrieval injection & E\,75 & D\,50 & -25 & E\,50 & --\,0 & D\,25 / --\,0 \\
+7 & Cross-tool data exfiltration / confused deputy & E\,100 & E\,100 & 0 & E\,100 & E\,50 & E\,50 / --\,0 \\
+8 & Tool-transfer / cross-server chaining & E\,50 & E\,50 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+9 & False-error escalation & --\,0 & --\,0 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+10 & Package / name squatting in registry & --\,0 & --\,0 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+11 & Supply-chain poisoning (unverified provenance) & --\,0 & --\,0 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+12 & Configuration drift & D\,50 & D\,25 & -25 & --\,0 & --\,0 & --\,0 / --\,0 \\
+13 & Sandbox escape & --\,0 & --\,0 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+14 & Schema / validation bypass & E\,100 & E\,100 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+15 & Man-in-the-middle (transport) & D\,25 & --\,0 & -25 & --\,0 & --\,0 & --\,0 / --\,0 \\
+16 & DNS rebinding (local servers) & E\,100 & E\,50 & -50 & --\,0 & --\,0 & --\,0 / --\,0 \\
+17 & Server impersonation / identity spoofing & E\,75 & E\,75 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+18 & Excessive permission / privilege escalation & D\,50 & D\,50 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+19 & Credential / token theft via passthrough & E\,75 & E\,50 & -25 & E\,50 & E\,50 & --\,0 / --\,0 \\
+20 & Consent fatigue / over-broad grants & --\,0 & --\,0 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+21 & Command injection in tool execution & E\,100 & E\,100 & 0 & --\,0 & E\,50 & --\,0 / --\,0 \\
+22 & System-prompt / context leakage via tools & D\,25 & --\,0 & -25 & --\,0 & --\,0 & D\,25 / --\,0 \\
+23 & Mid-session tool injection (MSTI) & E\,100 & E\,100 & 0 & --\,0 & --\,0 & --\,0 / --\,0 \\
+24 & Multi-tool split poisoning (ShareLock) & D\,50 & --\,0 & -50 & --\,0 & --\,0 & --\,0 / --\,0 \\
+25 & Header/body routing desync (HeaderMismatch)$^{\dagger}$ & E\,100 & \multicolumn{1}{c}{--} & -- & --\,0 & -- & --\,0 / -- \\
+26 & MRTR requestState forgery / replay$^{\dagger}$ & --\,0 & \multicolumn{1}{c}{--} & -- & --\,0 & -- & --\,0 / -- \\
+27 & List-result cache poisoning / stale-cache defense suppression$^{\dagger}$ & E\,100 & \multicolumn{1}{c}{--} & -- & --\,0 & -- & --\,0 / -- \\
+28 & MRTR in-band input phishing / sampling injection$^{\dagger}$ & --\,0 & \multicolumn{1}{c}{--} & -- & --\,0 & -- & --\,0 / -- \\
+29 & Task authorization bypass$^{\dagger}$ & E\,50 & \multicolumn{1}{c}{--} & -- & --\,0 & -- & --\,0 / -- \\
+30 & MCP Apps sandbox non-conformance$^{\dagger}$ & --\,0 & \multicolumn{1}{c}{--} & -- & --\,0 & -- & --\,0 / -- \\
+31 & Roots deprecation: no enforced filesystem boundary$^{\dagger}$ & E\,100 & \multicolumn{1}{c}{--} & -- & E\,100 & -- & --\,0 / -- \\
+32 & Transport / revision downgrade$^{\dagger}$ & --\,0 & \multicolumn{1}{c}{--} & -- & --\,0 & -- & --\,0 / -- \\
+\bottomrule
+\end{tabular}

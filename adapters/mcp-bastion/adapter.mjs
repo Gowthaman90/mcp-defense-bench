@@ -39,7 +39,18 @@ const {
   scanCallSequence,
   redactSecrets,
   hashToolDefinition,
+  // v0.9 (MCP 2026-07-28): wired into the HTTP listener / list path, so they may be scored.
+  checkHeaderBodyCoherence,
+  requiresHeaderValidation,
+  checkCachePolicy,
+  clampCacheHints,
 } = bastion;
+
+/** Rules the HTTP listener REJECTS with 400 / -32020 (mirrors REJECTING_HEADER_RULES in bastion). */
+const REJECTING_HEADER_RULES = new Set(["header-body-mismatch", "header-invalid-value", "header-duplicate-conflict"]);
+
+/** Lower-case a header bag the way Node's IncomingMessage presents it. */
+const lowerHeaders = (h) => Object.fromEntries(Object.entries(h ?? {}).map(([k, v]) => [k.toLowerCase(), v]));
 
 /**
  * bastion's argument inspection: schema validation + content scanning of argument values +
@@ -215,6 +226,72 @@ export async function assess(input, _testcase) {
         return { detect: true, enforce: false, signal: "insecure-transport (warn)" };
       return { detect: false, enforce: false };
     }
+
+    // ── MCP 2026-07-28 vectors (bastion v0.9 wiring) ────────────────────────────────────────────
+    case "http-request": {
+      // Header/body coherence: the HTTP listener runs checkHeaderBodyCoherence on every POST and
+      // answers 400 + JSON-RPC -32020 for a rejecting rule (mismatch / invalid value / duplicate
+      // conflict). Medium findings are logged only → detect without enforce.
+      const findings = checkHeaderBodyCoherence(lowerHeaders(input.headers), input.body) ?? [];
+      if (findings.length === 0) return { detect: false, enforce: false };
+      const rejecting = findings.filter((f) => REJECTING_HEADER_RULES.has(f.rule));
+      return {
+        detect: true,
+        enforce: rejecting.length > 0,
+        signal: rejecting.length
+          ? `-32020 HeaderMismatch: ${rejecting.map((f) => f.rule).join(", ")}`
+          : `header findings (logged): ${findings.map((f) => f.rule).join(", ")}`,
+      };
+    }
+
+    case "list-result": {
+      // Cache policy on upstream list results: violations are logged and the hints are CLAMPED
+      // before bastion forwards its own tools/list — an enforcing mitigation (the poisoned TTL /
+      // over-broad scope never reaches a downstream cache). Definitions in the list are also run
+      // through the poisoning scanner, as bastion does on every (re-)listing.
+      const ctx = { authenticated: input.authenticated === true, variesByAuthorization: input.variesByAuthorization === true };
+      // Mirror UpstreamConnection.policeCacheHints: a result with NO hints is left untouched (bastion
+      // returns early), so only a result that actually carries ttlMs/cacheScope can be "clamped".
+      const hasHints = input.result?.ttlMs !== undefined || input.result?.cacheScope !== undefined;
+      const findings = hasHints ? (checkCachePolicy(input.result, ctx) ?? []) : [];
+      const clamped = hasHints ? clampCacheHints(input.result, ctx) : { changed: false };
+      const poison = (input.result?.tools ?? []).flatMap((t) => scanTool(t) ?? []);
+      if (findings.length === 0 && !clamped.changed && poison.length === 0) return { detect: false, enforce: false };
+      return {
+        detect: true,
+        enforce: findings.length > 0 || clamped.changed,
+        signal: findings.length
+          ? `cache policy: ${findings.map((f) => f.rule).join(", ")}` + (clamped.changed ? " (hints clamped)" : "")
+          : `poisoning in listed definitions: ${poison.map((f) => f.rule).join(", ")}`,
+      };
+    }
+
+    case "cache-invalidation": {
+      // notifications/tools/list_changed makes bastion re-list IMMEDIATELY (since v0.7.0) and
+      // re-hash every definition; a changed definition is a rug pull and is blocked by default.
+      // With no notification outstanding bastion serves its cached list — correctly, no finding.
+      if (!input.notification) return { detect: false, enforce: false };
+      const cachedTools = input.cached?.result?.tools ?? [];
+      const nowTools = input.upstreamNow?.tools ?? [];
+      const byName = new Map(cachedTools.map((t) => [t.name, t]));
+      const changed = nowTools.filter((t) => byName.has(t.name) && hashToolDefinition(byName.get(t.name)) !== hashToolDefinition(t));
+      if (changed.length === 0) return { detect: false, enforce: false };
+      return { detect: true, enforce: true, signal: `re-listed on list_changed; definition hash changed for ${changed.map((t) => t.name).join(", ")} (rug-pull block)` };
+    }
+
+    case "http-request-sequence":
+      // Transport downgrade: bastion is on SDK 1.x and still honours Mcp-Session-Id / GET streams —
+      // it does NOT refuse legacy mechanics. Honest miss.
+      return { detect: false, enforce: false };
+
+    case "mrtr-retry":
+    case "tool-state-handle":
+    case "input-required-result":
+    case "task-lifecycle":
+    case "ui-resource":
+      // MRTR, Tasks and MCP Apps are 2026-07-28 / SDK 2.0 surfaces bastion does not yet speak.
+      // Honest miss until the v1.0 dual-stack migration.
+      return { detect: false, enforce: false };
 
     default:
       // Not inspected by bastion at runtime — honest miss.

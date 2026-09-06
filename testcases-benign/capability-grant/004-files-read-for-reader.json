@@ -1,0 +1,22 @@
+{
+  "id": "benign/capability-grant/004-files-read-for-reader",
+  "kind": "capability-grant",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Least-privilege scopes matching the tool's function.",
+  "fixture": {
+    "type": "capability-grant",
+    "tool": {
+      "name": "read_file",
+      "description": "Read files in the workspace."
+    },
+    "requestedScopes": [
+      "files.read"
+    ]
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

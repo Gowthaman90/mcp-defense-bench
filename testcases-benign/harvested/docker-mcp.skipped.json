@@ -1,0 +1,6 @@
+{
+  "source": {
+    "package": "docker-mcp"
+  },
+  "skipped": "MCP error -32000: Connection closed"
+}

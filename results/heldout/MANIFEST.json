@@ -1,0 +1,114 @@
+{
+  "protocol": "docs/HELD-OUT-PROTOCOL.md",
+  "registered": "2026-09-05",
+  "fixturesAuthored": "2026-09-05",
+  "authoringBlindToDetectorSource": true,
+  "defenders": {
+    "mcp-bastion": {
+      "version": "0.9.0",
+      "commit": "94257c2c14d23c138716ca7e78a685c07e17e343",
+      "note": "v0.9.0 wires only the two 2026-07-28 checks (header/body coherence, cache policy). Detection code for all 24 pre-existing vectors is unchanged since v0.8.0 (f1a9510, 2026-08-30), i.e. frozen before this protocol was registered and before any held-out fixture existed."
+    },
+    "mcp-firewall": {
+      "version": "0.1.0",
+      "install": ".tools/mcpfw-venv (pip)",
+      "config": "adapters/mcp-firewall/mcp-firewall.yaml"
+    },
+    "pipelock": {
+      "version": "3.0.0",
+      "install": ".tools/pipelock (release binary, checksum-verified)"
+    },
+    "null-baseline": {
+      "version": "n/a"
+    }
+  },
+  "removals": [],
+  "runs": [
+    {
+      "tool": "null-baseline",
+      "measuredAt": "2026-09-06T02:55:37.717Z",
+      "casesRun": 48,
+      "robustCoverage": 0,
+      "capability": 0,
+      "falsePositives": 0,
+      "firstRun": true
+    },
+    {
+      "tool": "mcp-bastion",
+      "measuredAt": "2026-09-06T02:55:37.798Z",
+      "casesRun": 48,
+      "robustCoverage": 10.25,
+      "capability": 12.5,
+      "falsePositives": 0,
+      "firstRun": true
+    },
+    {
+      "tool": "mcp-firewall",
+      "measuredAt": "2026-09-06T02:55:45.803Z",
+      "casesRun": 48,
+      "robustCoverage": 2.5,
+      "capability": 4,
+      "falsePositives": 0,
+      "firstRun": true
+    },
+    {
+      "tool": "pipelock",
+      "measuredAt": "2026-09-06T02:55:46.427Z",
+      "casesRun": 48,
+      "robustCoverage": 0,
+      "capability": 0,
+      "falsePositives": 0,
+      "firstRun": true
+    },
+    {
+      "tool": "null-baseline",
+      "measuredAt": "2026-09-08T02:26:06.342Z",
+      "casesRun": 48,
+      "robustCoverage": 0,
+      "capability": 0,
+      "falsePositives": 0,
+      "firstRun": false,
+      "note": "re-run after the 2026-09-07 redaction; outcomes identical"
+    },
+    {
+      "tool": "mcp-bastion",
+      "measuredAt": "2026-09-08T02:26:06.465Z",
+      "casesRun": 48,
+      "robustCoverage": 10.25,
+      "capability": 12.5,
+      "falsePositives": 0,
+      "firstRun": false,
+      "note": "re-run after the 2026-09-07 redaction; outcomes identical"
+    },
+    {
+      "tool": "mcp-firewall",
+      "measuredAt": "2026-09-08T02:26:14.467Z",
+      "casesRun": 48,
+      "robustCoverage": 2.5,
+      "capability": 4,
+      "falsePositives": 0,
+      "firstRun": false,
+      "note": "re-run after the 2026-09-07 redaction; outcomes identical"
+    },
+    {
+      "tool": "pipelock",
+      "measuredAt": "2026-09-08T02:26:15.129Z",
+      "casesRun": 48,
+      "robustCoverage": 0,
+      "capability": 0,
+      "falsePositives": 0,
+      "firstRun": false,
+      "note": "re-run after the 2026-09-07 redaction; outcomes identical"
+    }
+  ],
+  "redactions": [
+    {
+      "date": "2026-09-07",
+      "fixture": "heldout/tool-transfer/002-stripe-key-crosses-to-analytics",
+      "reason": "GitHub push protection rejects the synthetic Stripe-shaped literal (sk_live_…); the repository cannot be published with it.",
+      "change": "secret literal replaced by a JWT-shaped payment token in the fixture and its benign control; slug, structure and expected behaviour unchanged; description annotated",
+      "verification": "all four adapters re-run on the full held-out corpus; per-case level and false-positive outcomes byte-identical to the first run for every tool (bastion 10.25/24, mcp-firewall 2.5/24, pipelock 0, null 0)",
+      "protocolNote": "Rule 6 forbids edits that change an outcome; this edit changed none and is logged here rather than hidden."
+    }
+  ]
+}

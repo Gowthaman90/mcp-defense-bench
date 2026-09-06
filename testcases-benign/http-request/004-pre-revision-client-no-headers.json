@@ -1,0 +1,32 @@
+{
+  "id": "benign/http-request/004-pre-revision-client-no-headers",
+  "kind": "http-request",
+  "benign": true,
+  "hardNegative": false,
+  "appliesTo": [
+    "2026-07-28"
+  ],
+  "description": "Conforming 2026-07-28 traffic.",
+  "fixture": {
+    "type": "http-request",
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "tools/call",
+      "params": {
+        "name": "get_weather",
+        "arguments": {
+          "city": "Seattle"
+        }
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

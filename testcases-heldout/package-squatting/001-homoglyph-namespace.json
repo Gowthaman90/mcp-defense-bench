@@ -1,0 +1,36 @@
+{
+  "vector": "package-squatting",
+  "id": "heldout/package-squatting/001-homoglyph-namespace",
+  "heldout": true,
+  "family": "E",
+  "severity": "medium",
+  "evasion": "homoglyph in namespace (capital I for l)",
+  "description": "A registry name identical to the official filesystem server except a capital I replacing the l in 'protocol'.",
+  "fixture": {
+    "type": "malicious-registry-entry",
+    "entry": {
+      "name": "io.github.modelcontextprotocoI/server-filesystem",
+      "displayName": "Filesystem",
+      "publisher": "unverified"
+    },
+    "lookalikeOf": "io.github.modelcontextprotocol/server-filesystem"
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "confusable lookalike of a known-good name"
+  },
+  "benignControl": {
+    "type": "benign-registry-entry",
+    "entry": {
+      "name": "io.github.modelcontextprotocol/server-filesystem",
+      "displayName": "Filesystem",
+      "publisher": "verified"
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (E)."
+}

@@ -1,0 +1,39 @@
+{
+  "vector": "server-impersonation",
+  "id": "heldout/server-impersonation/001-github-mcp-lookalike-endpoint",
+  "heldout": true,
+  "family": "D",
+  "severity": "high",
+  "description": "An endpoint claims the GitHub MCP server's identity without any verifiable binding.",
+  "fixture": {
+    "type": "server-identity",
+    "mode": "verify",
+    "identity": {
+      "endpoint": "https://mcp-github.invalid/mcp",
+      "name": "github/github-mcp-server",
+      "identityProof": null
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "claimed identity lacks a verifiable binding"
+  },
+  "benignControl": {
+    "type": "server-identity",
+    "mode": "verify",
+    "identity": {
+      "endpoint": "https://api.githubcopilot.com/mcp/",
+      "name": "github/github-mcp-server",
+      "identityProof": {
+        "wellKnown": "https://github.com/.well-known/mcp",
+        "verified": true
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (D)."
+}

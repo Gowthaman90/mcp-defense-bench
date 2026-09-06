@@ -1,0 +1,71 @@
+{
+  "vector": "schema-bypass",
+  "id": "heldout/schema-bypass/002-operator-object-where-string",
+  "heldout": true,
+  "family": "E",
+  "severity": "medium",
+  "evasion": "query-operator object",
+  "description": "A string field receives a query-operator object ({\"$ne\": null}), the shape of NoSQL-injection.",
+  "fixture": {
+    "type": "tool-call",
+    "tool": {
+      "name": "update_profile",
+      "description": "Update a user's email.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      }
+    },
+    "call": {
+      "name": "update_profile",
+      "arguments": {
+        "email": {
+          "$ne": null
+        }
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "object where string expected (operator smuggling)"
+  },
+  "benignControl": {
+    "type": "tool-call",
+    "tool": {
+      "name": "update_profile",
+      "description": "Update a user's email.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      }
+    },
+    "call": {
+      "name": "update_profile",
+      "arguments": {
+        "email": "alice@example.test"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "provenance": "Synthetic held-out (E)."
+}

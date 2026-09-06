@@ -1,0 +1,28 @@
+{
+  "id": "benign/config-snapshot-diff/001-config-tightened",
+  "kind": "config-snapshot-diff",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Benign identity / configuration observation.",
+  "fixture": {
+    "type": "config-snapshot-diff",
+    "baseline": {
+      "tls": "optional",
+      "allowedHosts": [
+        "api.internal",
+        "*"
+      ]
+    },
+    "current": {
+      "tls": "required",
+      "allowedHosts": [
+        "api.internal"
+      ]
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

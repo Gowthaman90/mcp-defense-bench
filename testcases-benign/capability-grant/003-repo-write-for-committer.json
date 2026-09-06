@@ -1,0 +1,23 @@
+{
+  "id": "benign/capability-grant/003-repo-write-for-committer",
+  "kind": "capability-grant",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Least-privilege scopes matching the tool's function.",
+  "fixture": {
+    "type": "capability-grant",
+    "tool": {
+      "name": "git_commit",
+      "description": "Create commits in the workspace repository."
+    },
+    "requestedScopes": [
+      "repo.read",
+      "repo.write"
+    ]
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}

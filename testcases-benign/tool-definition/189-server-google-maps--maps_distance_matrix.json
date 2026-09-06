@@ -1,0 +1,57 @@
+{
+  "id": "benign/tool-definition/189-server-google-maps--maps_distance_matrix",
+  "kind": "tool-definition",
+  "benign": true,
+  "hardNegative": false,
+  "description": "Verbatim tool definition from @modelcontextprotocol/server-google-maps.",
+  "source": {
+    "package": "@modelcontextprotocol/server-google-maps",
+    "version": "0.1.0",
+    "harvestedAt": "2026-09-06T02:37:40.891Z"
+  },
+  "fixture": {
+    "type": "benign-tool-definition",
+    "tool": {
+      "name": "maps_distance_matrix",
+      "description": "Calculate travel distance and time for multiple origins and destinations",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "origins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of origin addresses or coordinates"
+          },
+          "destinations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of destination addresses or coordinates"
+          },
+          "mode": {
+            "type": "string",
+            "description": "Travel mode (driving, walking, bicycling, transit)",
+            "enum": [
+              "driving",
+              "walking",
+              "bicycling",
+              "transit"
+            ]
+          }
+        },
+        "required": [
+          "origins",
+          "destinations"
+        ]
+      }
+    }
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "harvested verbatim from @modelcontextprotocol/server-google-maps"
+}

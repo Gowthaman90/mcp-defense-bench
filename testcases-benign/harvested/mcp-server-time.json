@@ -1,0 +1,71 @@
+{
+  "source": {
+    "package": "mcp-server-time",
+    "command": [
+      "uvx",
+      "mcp-server-time"
+    ],
+    "serverInfo": {
+      "name": "mcp-time",
+      "version": "1.29.1"
+    }
+  },
+  "harvestedAt": "2026-09-06T02:39:05.292Z",
+  "note": "Verbatim tools/list output from a public MCP server started as a user would start it. Benign by construction; used only as false-positive controls.",
+  "tools": [
+    {
+      "name": "get_current_time",
+      "description": "Get current time in a specific timezone",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "timezone": {
+            "type": "string",
+            "description": "IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'America/Chicago' as local timezone if no timezone provided by the user."
+          }
+        },
+        "required": [
+          "timezone"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "convert_time",
+      "description": "Convert time between timezones",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source_timezone": {
+            "type": "string",
+            "description": "Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'America/Chicago' as local timezone if no source timezone provided by the user."
+          },
+          "time": {
+            "type": "string",
+            "description": "Time to convert in 24-hour format (HH:MM)"
+          },
+          "target_timezone": {
+            "type": "string",
+            "description": "Target IANA timezone name (e.g., 'Asia/Tokyo', 'America/San_Francisco'). Use 'America/Chicago' as local timezone if no target timezone provided by the user."
+          }
+        },
+        "required": [
+          "source_timezone",
+          "time",
+          "target_timezone"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+\begin{tabular}{@{}rp{3.9cm}lp{3.1cm}@{}}
+\toprule
+\# & Vector & Layer & Also known as \\
+\midrule
+25 & Header/body routing desync (HeaderMismatch) & transport & Mcp-Name mismatch; routing-header confusion \\
+26 & MRTR requestState forgery / replay & server & state-handle tampering; cross-principal replay \\
+27 & List-result cache poisoning / stale-cache defense suppression & client & ttlMs pinning; cacheScope confusion \\
+28 & MRTR in-band input phishing / sampling injection & client & credential elicitation; input\_required phishing \\
+29 & Task authorization bypass & server & guessable task IDs; cross-principal tasks/get \\
+30 & MCP Apps sandbox non-conformance & host-orchestration & ui:// resource egress; host iframe sandbox \\
+31 & Roots deprecation: no enforced filesystem boundary & host-orchestration & missing roots; path scope gap \\
+32 & Transport / revision downgrade & transport & legacy session acceptance; HTTP+SSE fallback \\
+\bottomrule
+\end{tabular}

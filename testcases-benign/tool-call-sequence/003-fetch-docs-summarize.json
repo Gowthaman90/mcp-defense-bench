@@ -1,0 +1,29 @@
+{
+  "id": "benign/tool-call-sequence/003-fetch-docs-summarize",
+  "kind": "tool-call-sequence",
+  "benign": true,
+  "hardNegative": true,
+  "description": "Benign multi-step workflow, including cross-server steps that carry no secret.",
+  "fixture": {
+    "type": "tool-call-sequence",
+    "calls": [
+      {
+        "name": "fetch",
+        "arguments": {
+          "url": "https://modelcontextprotocol.io/specification"
+        }
+      },
+      {
+        "name": "summarize",
+        "arguments": {
+          "text": "{{result_of_previous}}"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "detect": false,
+    "enforce": false
+  },
+  "provenance": "synthetic hard negative, authored 2026-09-05"
+}
