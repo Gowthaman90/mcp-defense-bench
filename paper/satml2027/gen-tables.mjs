@@ -103,7 +103,7 @@ T.push("\\bottomrule", "\\end{tabular}");
 writeFileSync(join(gen, "tab-agreement.tex"), T.join("\n") + "\n");
 
 // Table: new vectors
-T = ["\\begin{tabular}{@{}rp{4.2cm}p{1.9cm}p{4.6cm}@{}}", "\\toprule", "\\# & Vector & Layer & Also known as \\\\", "\\midrule"];
+T = ["\\begin{tabular}{@{}rp{3.3cm}p{1.55cm}p{3.05cm}@{}}", "\\toprule", "\\# & Vector & Layer & Also known as \\\\", "\\midrule"];
 rubric.vectors.filter(isNew).forEach((v) => T.push(`${all.indexOf(v.id) + 1} & ${esc(v.name)} & ${v.mcpLayer[0]} & ${esc((v.aliases ?? []).slice(0, 2).join("; "))} \\\\`));
 T.push("\\bottomrule", "\\end{tabular}");
 writeFileSync(join(gen, "tab-new.tex"), T.join("\n") + "\n");
