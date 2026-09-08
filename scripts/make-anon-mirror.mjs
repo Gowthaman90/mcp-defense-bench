@@ -57,13 +57,22 @@ const SUBS = [
   [/\bbastion\b/g, "ourproxy"],
   [/\bBastion\b/g, "OurProxy"],
   [/Massimiliano Brighindi|M\. Brighindi|Brighindi/g, "an independent reviewer"],
+  // Affiliation-like bylines and venue history are de-anonymising wording under the SaTML CfP.
+  [/\s*·\s*Independent Researcher/g, ""],
+  [/Independent Researcher/g, "Anonymous affiliation"],
+  [/AISec\s*(2026|'26)?/g, "a 2026 security workshop"],
+  // Self-referential hints (prior preprint, public availability, social write-ups) are de-anonymising too.
+  [/^> Preprint: .*$/gm, ""],
+  [/<span><a href="https:\/\/doi\.org\/10\.6084\/m9\.figshare\.X+">Preprint<\/a><\/span>\s*/g, ""],
+  [/one of two open-source artifacts/g, "one of two artifacts"],
+  [/via LinkedIn on the "Measuring the Defenders" write-up/g, "on a public write-up"],
   [/Arun Sanna|A\. Sanna|arunsanna/g, "a peer-benchmark author"],
   ...extra.map((re) => [re, "[REDACTED]"]),
 ];
 // Anything matching these after substitution is a leak.
 const LEAKS = [/gowthaman/i, /arumugam/i, /agowthaman90/i, /zenodo\.21346206/, /figshare\.32978657/, /mcp-bastion/i, /mcp_bastion/i, /mcp-defense-bench/i, /brighindi/i, /Co-Authored-By/i, /Gowthaman90/];
 // Files that exist to carry identity or are out of scope for review.
-const DROP = ["CITATION.cff", ".zenodo.json", "paper/arxiv", "docs/social-launch-kit.md", "docs/medium-benchmark-article.md", "docs/medium-measuring-defenders-63.md", "docs/devto-measuring-defenders-63.md", "paper/aisec2026", "paper/REVIEWS-AND-RESPONSE.md", "paper/SUBMISSION-CHECKLIST.md", "scripts/make-anon-mirror.mjs", ".github"];
+const DROP = ["CITATION.cff", ".zenodo.json", "paper/arxiv", "paper/SUBMISSION.md", "paper/whitepaper.md", "paper/whitepaper.tex", "paper/whitepaper.pdf", "docs/social-launch-kit.md", "docs/medium-benchmark-article.md", "docs/medium-measuring-defenders-63.md", "docs/devto-measuring-defenders-63.md", "paper/aisec2026", "paper/REVIEWS-AND-RESPONSE.md", "paper/SUBMISSION-CHECKLIST.md", "scripts/make-anon-mirror.mjs", ".github"];
 const TEXT = /\.(md|json|mjs|js|ts|tex|bib|yaml|yml|txt|html|css|cff|toml|py|sh)$/i;
 // Binaries cannot be scrubbed, so they never travel (the paper PDF goes through the submission system).
 const BINARY = /\.(pdf|zip|tar\.gz|tgz|png|jpg|jpeg|gif|docx|pptx|xlsx)$/i;
