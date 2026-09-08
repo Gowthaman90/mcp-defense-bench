@@ -65,7 +65,8 @@ const SUBS = [
   [/^> Preprint: .*$/gm, ""],
   [/<span><a href="https:\/\/doi\.org\/10\.6084\/m9\.figshare\.X+">Preprint<\/a><\/span>\s*/g, ""],
   [/one of two open-source artifacts/g, "one of two artifacts"],
-  [/via LinkedIn on the "Measuring the Defenders" write-up/g, "on a public write-up"],
+  [/via LinkedIn on the "Measuring the\s+Defenders" write-up/g, "on a public write-up"],
+  [/via LinkedIn/g, "in public"],
   [/Arun Sanna|A\. Sanna|arunsanna/g, "a peer-benchmark author"],
   ...extra.map((re) => [re, "[REDACTED]"]),
 ];
