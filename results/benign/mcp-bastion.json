@@ -2,7 +2,7 @@
   "summary": {
     "tool": "mcp-bastion",
     "corpus": "benign",
-    "rubricVersion": "0.7.0",
+    "rubricVersion": "0.7.1",
     "items": 337,
     "falsePositives": 13,
     "fpRate": 0.0386,
@@ -64,7 +64,7 @@
         "fp": 5
       }
     },
-    "measuredAt": "2026-09-06T02:56:26.819Z"
+    "measuredAt": "2026-09-08T02:54:37.335Z"
   },
   "items": [
     {

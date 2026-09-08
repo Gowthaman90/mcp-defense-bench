@@ -5,9 +5,9 @@
   "authoringBlindToDetectorSource": true,
   "defenders": {
     "mcp-bastion": {
-      "version": "0.9.0",
-      "commit": "94257c2c14d23c138716ca7e78a685c07e17e343",
-      "note": "v0.9.0 wires only the two 2026-07-28 checks (header/body coherence, cache policy). Detection code for all 24 pre-existing vectors is unchanged since v0.8.0 (f1a9510, 2026-08-30), i.e. frozen before this protocol was registered and before any held-out fixture existed."
+      "version": "1.0.0",
+      "commit": "a3716d59c6b918083c402e00eb65b39e0c80110a",
+      "note": "v1.0.0 migrates to SDK 2.0 and adds requestState custody + the MRTR gate (2026-07-28 vectors only). Detection code for all 24 pre-existing vectors is unchanged since v0.8.0 (f1a9510, 2026-08-30); held-out outcomes re-run under v1.0.0 are byte-identical to the first run."
     },
     "mcp-firewall": {
       "version": "0.1.0",
@@ -99,6 +99,16 @@
       "falsePositives": 0,
       "firstRun": false,
       "note": "re-run after the 2026-09-07 redaction; outcomes identical"
+    },
+    {
+      "tool": "mcp-bastion",
+      "measuredAt": "2026-09-08T02:54:37.211Z",
+      "casesRun": 48,
+      "robustCoverage": 10.25,
+      "capability": 12.5,
+      "falsePositives": 0,
+      "firstRun": false,
+      "note": "re-run under mcp-bastion v1.0.0; outcomes identical"
     }
   ],
   "redactions": [

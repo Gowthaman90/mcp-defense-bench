@@ -44,6 +44,10 @@ const {
   requiresHeaderValidation,
   checkCachePolicy,
   clampCacheHints,
+  // v1.0 (stateless era): MRTR gate + requestState custody, wired into the tools/call path.
+  checkInputRequests,
+  sealRequestState,
+  openRequestState,
 } = bastion;
 
 /** Rules the HTTP listener REJECTS with 400 / -32020 (mirrors REJECTING_HEADER_RULES in bastion). */
@@ -279,18 +283,63 @@ export async function assess(input, _testcase) {
       return { detect: true, enforce: true, signal: `re-listed on list_changed; definition hash changed for ${changed.map((t) => t.name).join(", ")} (rug-pull block)` };
     }
 
-    case "http-request-sequence":
-      // Transport downgrade: bastion is on SDK 1.x and still honours Mcp-Session-Id / GET streams —
-      // it does NOT refuse legacy mechanics. Honest miss.
-      return { detect: false, enforce: false };
+    case "http-request-sequence": {
+      // Transport downgrade (v1.0, SDK 2.0 handler): GET/DELETE streams are answered 405, an
+      // Mcp-Session-Id is neither minted nor honoured, Last-Event-ID is ignored — even in the default
+      // `legacy: "stateless"` posture; `legacy: "reject"` additionally refuses the older era (-32022).
+      // The fixture's malicious sequence presents exactly those legacy mechanics; a conforming
+      // stateless POST (the control) is served.
+      const reqs = input.requests ?? [];
+      const legacyMechanics = reqs.some(
+        (r) =>
+          (r.method === "GET" || r.method === "DELETE") ||
+          Object.keys(r.headers ?? {}).some((h) => /^(mcp-session-id|last-event-id)$/i.test(h)),
+      );
+      return legacyMechanics
+        ? { detect: true, enforce: true, signal: "legacy session/stream mechanics refused (405; no session id minted or echoed)" }
+        : { detect: false, enforce: false };
+    }
 
-    case "mrtr-retry":
+    case "mrtr-retry": {
+      // requestState custody (v1.0): bastion never relays an upstream's raw state; it seals it into an
+      // HMAC envelope bound to principal + server + tool + TTL and verifies on the retry. Mirror that:
+      // seal what the upstream issued, then present the retry as the fixture describes.
+      const key = "benchmark-fixed-key-benchmark-fixed-key";
+      if (input.issued && input.tamperedRetry) {
+        // Fixture 001: the retry carries a *modified* blob → not bastion's envelope → refused.
+        const issuedTo = input.issued.principal ?? "alice";
+        const sealed = sealRequestState(String(input.issued.requestState ?? ""), { key, principal: issuedTo, server: "s", tool: "transfer_funds" });
+        const presented = input.tamperedRetry.params?.requestState;
+        const same = presented === input.issued.requestState;
+        const r = openRequestState(same ? sealed : String(presented), { key, principal: issuedTo, server: "s", tool: "transfer_funds" });
+        return r.ok ? { detect: false, enforce: false } : { detect: true, enforce: true, signal: `custody: ${r.findings.map((f) => f.rule).join(", ")}` };
+      }
+      if (input.issuedTo && input.replayedBy) {
+        // Fixture 002: cross-principal + post-TTL replay.
+        const t0 = Date.parse(input.issuedTo.issuedAt);
+        const t1 = Date.parse(input.replayedBy.presentedAt);
+        const sealed = sealRequestState("up", { key, principal: input.issuedTo.principal, server: "s", tool: "transfer_funds", ttlSeconds: Math.max(1, Math.floor((input.issuedTo.ttlMs ?? 60000) / 1000)), now: () => t0 });
+        const r = openRequestState(sealed, { key, principal: input.replayedBy.principal, server: "s", tool: "transfer_funds", now: () => t1 });
+        return r.ok ? { detect: false, enforce: false } : { detect: true, enforce: true, signal: `custody: ${r.findings.map((f) => f.rule).join(", ")}` };
+      }
+      return { detect: false, enforce: false };
+    }
+
+    case "input-required-result": {
+      // MRTR consent gate (v1.0): checkInputRequests runs on every input_required round before it is
+      // relayed; high-severity findings block under the default `balanced` profile.
+      const findings = checkInputRequests(input.result) ?? [];
+      if (findings.length === 0) return { detect: false, enforce: false };
+      const high = findings.some((f) => f.severity === "high");
+      return { detect: true, enforce: high, signal: `mrtr gate${high ? " (blocked under 'balanced')" : ""}: ${[...new Set(findings.map((f) => f.rule))].join(", ")}` };
+    }
+
     case "tool-state-handle":
-    case "input-required-result":
     case "task-lifecycle":
     case "ui-resource":
-      // MRTR, Tasks and MCP Apps are 2026-07-28 / SDK 2.0 surfaces bastion does not yet speak.
-      // Honest miss until the v1.0 dual-stack migration.
+      // Tool state handles are non-normative guidance; Tasks do not exist on the 2026-07-28 era
+      // (the SDK answers -32601) and are not intercepted on the legacy era; MCP Apps are rendered by
+      // the host, not the proxy. Honest misses.
       return { detect: false, enforce: false };
 
     default:

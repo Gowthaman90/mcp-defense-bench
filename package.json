@@ -1,6 +1,6 @@
 {
   "name": "mcp-defense-bench",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "description": "Vendor-neutral benchmark scoring MCP security proxies/gateways on attack-surface coverage, crosswalked to NIST AI RMF and the OWASP LLM/Agentic Top 10s.",
   "type": "module",

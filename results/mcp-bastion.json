@@ -2,21 +2,21 @@
   "summary": {
     "tool": "mcp-bastion",
     "corpus": "dev",
-    "rubricVersion": "0.7.0",
+    "rubricVersion": "0.7.1",
     "casesRun": 51,
     "verifiedVectors": 32,
     "falsePositives": 0,
     "covered": {
-      "enforce": 15,
+      "enforce": 18,
       "detect": 8,
-      "none": 9,
+      "none": 6,
       "unknown": 0
     },
-    "overall": "52% (16.8/32 CorpusRobustCoverage)",
-    "robustCoverage": 16.75,
-    "capability": 19,
-    "guaranteed": 14.5,
-    "measuredAt": "2026-09-06T02:56:26.719Z"
+    "overall": "61% (19.4/32 CorpusRobustCoverage)",
+    "robustCoverage": 19.42,
+    "capability": 22,
+    "guaranteed": 16.5,
+    "measuredAt": "2026-09-08T02:54:37.121Z"
   },
   "coverage": {
     "tool-poisoning": {
@@ -270,9 +270,9 @@
       "verified": true
     },
     "requeststate-forgery": {
-      "level": "none",
-      "capability": 0,
-      "robustCoverage": 0,
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.6667,
       "guaranteed": 0,
       "fixtures": 3,
       "fpCount": 0,
@@ -290,10 +290,10 @@
       "verified": true
     },
     "mrtr-input-phishing": {
-      "level": "none",
-      "capability": 0,
-      "robustCoverage": 0,
-      "guaranteed": 0,
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
       "fixtures": 2,
       "fpCount": 0,
       "evidence": "mrtr-input-phishing/001-credential-elicitation",
@@ -330,10 +330,10 @@
       "verified": true
     },
     "transport-downgrade": {
-      "level": "none",
-      "capability": 0,
-      "robustCoverage": 0,
-      "guaranteed": 0,
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
       "fixtures": 1,
       "fpCount": 0,
       "evidence": "transport-downgrade/001-legacy-session-and-get-stream",
@@ -783,11 +783,12 @@
     },
     {
       "id": "mrtr-input-phishing/001-credential-elicitation",
-      "level": "none",
+      "level": "enforce",
       "falsePositive": false,
       "mal": {
-        "detect": false,
-        "enforce": false
+        "detect": true,
+        "enforce": true,
+        "signal": "mrtr gate (blocked under 'balanced'): mrtr-credential-elicitation, mrtr-elicitation-secret-access"
       },
       "benign": {
         "detect": false,
@@ -802,11 +803,12 @@
     },
     {
       "id": "mrtr-input-phishing/002-sampling-instruction-injection",
-      "level": "none",
+      "level": "enforce",
       "falsePositive": false,
       "mal": {
-        "detect": false,
-        "enforce": false
+        "detect": true,
+        "enforce": true,
+        "signal": "mrtr gate (blocked under 'balanced'): mrtr-server-system-prompt"
       },
       "benign": {
         "detect": false,
@@ -877,11 +879,12 @@
     },
     {
       "id": "requeststate-forgery/001-unprotected-state-tamper",
-      "level": "none",
+      "level": "enforce",
       "falsePositive": false,
       "mal": {
-        "detect": false,
-        "enforce": false
+        "detect": true,
+        "enforce": true,
+        "signal": "custody: requeststate-unsealed"
       },
       "benign": {
         "detect": false,
@@ -896,11 +899,12 @@
     },
     {
       "id": "requeststate-forgery/002-cross-principal-replay",
-      "level": "none",
+      "level": "enforce",
       "falsePositive": false,
       "mal": {
-        "detect": false,
-        "enforce": false
+        "detect": true,
+        "enforce": true,
+        "signal": "custody: requeststate-expired"
       },
       "benign": {
         "detect": false,
@@ -1293,11 +1297,12 @@
     },
     {
       "id": "transport-downgrade/001-legacy-session-and-get-stream",
-      "level": "none",
+      "level": "enforce",
       "falsePositive": false,
       "mal": {
-        "detect": false,
-        "enforce": false
+        "detect": true,
+        "enforce": true,
+        "signal": "legacy session/stream mechanics refused (405; no session id minted or echoed)"
       },
       "benign": {
         "detect": false,

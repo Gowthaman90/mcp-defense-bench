@@ -94,6 +94,20 @@ vector only when a fixture confirms it. `unknown` = not yet assessed (scored as 
   standalone `mcp scan` CLI, and the full DLP/tool_call eval endpoint (bearer-token HTTP server) is not
   driven — so this is still a lower bound on pipelock's total capability.
 
+## Wiring status (2026-09-08, v0.7.1 — mcp-bastion v1.0.0)
+
+- **mcp-bastion v1.0.0 (SDK 2.0, dual-stack)** — adds `mrtr-retry` (requestState custody: sealed HMAC
+  envelope bound to principal/server/tool/TTL; tampered, replayed and raw states refused),
+  `input-required-result` (MRTR consent gate: credential elicitation and steering systemPrompts blocked
+  under `balanced`) and `http-request-sequence` (stateless listener: GET/DELETE 405, no session id minted
+  or echoed, `legacy: "reject"` refuses the older era). 2026-07-28 vectors: 44% → **77% (6.2/8)**; all 32:
+  **61% (19.4/32)**, 0 FP. Pre-existing vectors, held-out and benign results unchanged.
+  **Matched-control catch before release:** the gate's first cut flagged every server-supplied sampling
+  `systemPrompt`, so the benign control of `mrtr-input-phishing/002` tripped — a real false positive in
+  runtime behaviour (the benign round would have been stripped). Fixed in bastion (a clean systemPrompt
+  is not a finding) before v1.0.0 shipped; logged here as the second time this corpus corrected the tool.
+  Still honest misses: tool-state handles (non-normative), `tasks/*` (not proxied), MCP Apps (host-rendered).
+
 ## Wiring status (2026-09-05, v0.7.0)
 
 - **mcp-bastion v0.9.0** — adds `http-request` (header/body coherence → 400/-32020, wired in the HTTP

@@ -4,7 +4,7 @@
   "class": "runtime-proxy",
   "reproducible": true,
   "version": "0.2.0",
-  "rubricVersion": "0.7.0",
+  "rubricVersion": "0.7.1",
   "measuredBy": "bin/run.mjs",
   "coverage": {
     "tool-poisoning": {
@@ -258,9 +258,9 @@
       "verified": true
     },
     "requeststate-forgery": {
-      "level": "none",
-      "capability": 0,
-      "robustCoverage": 0,
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.6667,
       "guaranteed": 0,
       "fixtures": 3,
       "fpCount": 0,
@@ -278,10 +278,10 @@
       "verified": true
     },
     "mrtr-input-phishing": {
-      "level": "none",
-      "capability": 0,
-      "robustCoverage": 0,
-      "guaranteed": 0,
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
       "fixtures": 2,
       "fpCount": 0,
       "evidence": "mrtr-input-phishing/001-credential-elicitation",
@@ -318,10 +318,10 @@
       "verified": true
     },
     "transport-downgrade": {
-      "level": "none",
-      "capability": 0,
-      "robustCoverage": 0,
-      "guaranteed": 0,
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
       "fixtures": 1,
       "fpCount": 0,
       "evidence": "transport-downgrade/001-legacy-session-and-get-stream",
