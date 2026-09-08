@@ -1,0 +1,607 @@
+{
+  "_note": "PRE-adjudication crosswalk mappings (v0.7.0, 2026-09-05) for the 24 original vectors, reconstructed from the 'Was (A)' column of ADJUDICATION.md. bin/agreement.mjs --crosswalk <this file> reproduces the headline agreement figures in docs/AGREEMENT.md.",
+  "version": "0.7.0",
+  "vectors": [
+    {
+      "id": "tool-poisoning",
+      "mcpLayer": [
+        "tool",
+        "client"
+      ],
+      "stride": [
+        "Tampering",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI02"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "AUTH"
+      ]
+    },
+    {
+      "id": "tool-shadowing",
+      "mcpLayer": [
+        "client",
+        "tool"
+      ],
+      "stride": [
+        "Spoofing",
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI04"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
+      ]
+    },
+    {
+      "id": "rug-pull",
+      "mcpLayer": [
+        "tool",
+        "registry-supply-chain"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI04"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
+      ]
+    },
+    {
+      "id": "out-of-scope-params",
+      "mcpLayer": [
+        "tool",
+        "server"
+      ],
+      "stride": [
+        "Tampering",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM05",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "AUTH"
+      ]
+    },
+    {
+      "id": "response-injection",
+      "mcpLayer": [
+        "tool",
+        "client"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM05"
+      ],
+      "owaspAgentic2026": [
+        "ASI01"
+      ],
+      "nsaGuidance": [
+        "RT"
+      ]
+    },
+    {
+      "id": "indirect-retrieval-injection",
+      "mcpLayer": [
+        "tool",
+        "server"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01"
+      ],
+      "owaspAgentic2026": [
+        "ASI01"
+      ],
+      "nsaGuidance": [
+        "RT"
+      ]
+    },
+    {
+      "id": "cross-tool-exfiltration",
+      "mcpLayer": [
+        "client",
+        "host-orchestration"
+      ],
+      "stride": [
+        "InformationDisclosure",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02",
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "SEG"
+      ]
+    },
+    {
+      "id": "tool-transfer",
+      "mcpLayer": [
+        "host-orchestration",
+        "client"
+      ],
+      "stride": [
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02",
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "SEG"
+      ]
+    },
+    {
+      "id": "false-error-escalation",
+      "mcpLayer": [
+        "tool",
+        "client"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "DenialOfService"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI02"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "LOG"
+      ]
+    },
+    {
+      "id": "package-squatting",
+      "mcpLayer": [
+        "registry-supply-chain"
+      ],
+      "stride": [
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MAP"
+      ],
+      "owaspLlm2025": [
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI04"
+      ],
+      "nsaGuidance": [
+        "AUTH"
+      ]
+    },
+    {
+      "id": "supply-chain-poisoning",
+      "mcpLayer": [
+        "registry-supply-chain"
+      ],
+      "stride": [
+        "Tampering",
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM03",
+        "LLM04"
+      ],
+      "owaspAgentic2026": [
+        "ASI04"
+      ],
+      "nsaGuidance": [
+        "AUTH"
+      ]
+    },
+    {
+      "id": "config-drift",
+      "mcpLayer": [
+        "server",
+        "host-orchestration"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI04"
+      ],
+      "nsaGuidance": [
+        "LOG",
+        "AUTH"
+      ]
+    },
+    {
+      "id": "sandbox-escape",
+      "mcpLayer": [
+        "server",
+        "host-orchestration"
+      ],
+      "stride": [
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI02",
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "RT"
+      ]
+    },
+    {
+      "id": "schema-bypass",
+      "mcpLayer": [
+        "server",
+        "tool"
+      ],
+      "stride": [
+        "Tampering",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM05"
+      ],
+      "owaspAgentic2026": [
+        "ASI02"
+      ],
+      "nsaGuidance": [
+        "RT"
+      ]
+    },
+    {
+      "id": "mitm-transport",
+      "mcpLayer": [
+        "transport"
+      ],
+      "stride": [
+        "Tampering",
+        "InformationDisclosure",
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM02"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "AUTH"
+      ]
+    },
+    {
+      "id": "dns-rebinding",
+      "mcpLayer": [
+        "transport",
+        "host-orchestration"
+      ],
+      "stride": [
+        "Spoofing",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
+      ]
+    },
+    {
+      "id": "server-impersonation",
+      "mcpLayer": [
+        "registry-supply-chain",
+        "transport"
+      ],
+      "stride": [
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI03",
+        "ASI04"
+      ],
+      "nsaGuidance": [
+        "AUTH"
+      ]
+    },
+    {
+      "id": "excessive-permission",
+      "mcpLayer": [
+        "host-orchestration",
+        "server"
+      ],
+      "stride": [
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MAP",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "AUTH"
+      ]
+    },
+    {
+      "id": "credential-token-theft",
+      "mcpLayer": [
+        "host-orchestration",
+        "transport"
+      ],
+      "stride": [
+        "InformationDisclosure",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "SEG",
+        "AUTH"
+      ]
+    },
+    {
+      "id": "consent-fatigue",
+      "mcpLayer": [
+        "client",
+        "host-orchestration"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "Repudiation"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03"
+      ],
+      "nsaGuidance": [
+        "AUTH"
+      ]
+    },
+    {
+      "id": "command-injection",
+      "mcpLayer": [
+        "server"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM05"
+      ],
+      "owaspAgentic2026": [
+        "ASI02"
+      ],
+      "nsaGuidance": [
+        "RT"
+      ]
+    },
+    {
+      "id": "system-prompt-leakage",
+      "mcpLayer": [
+        "client",
+        "tool"
+      ],
+      "stride": [
+        "InformationDisclosure"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM07",
+        "LLM02"
+      ],
+      "owaspAgentic2026": [
+        "ASI01"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "LOG"
+      ]
+    },
+    {
+      "id": "mid-session-tool-injection",
+      "mcpLayer": [
+        "client",
+        "tool"
+      ],
+      "stride": [
+        "Tampering",
+        "Spoofing"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI04"
+      ],
+      "nsaGuidance": [
+        "AUTH",
+        "LOG"
+      ]
+    },
+    {
+      "id": "multi-tool-split-poisoning",
+      "mcpLayer": [
+        "tool",
+        "registry-supply-chain"
+      ],
+      "stride": [
+        "Tampering"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM01",
+        "LLM03"
+      ],
+      "owaspAgentic2026": [
+        "ASI01",
+        "ASI04"
+      ],
+      "nsaGuidance": [
+        "RT",
+        "LOG"
+      ]
+    }
+  ]
+}

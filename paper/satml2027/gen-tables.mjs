@@ -4,6 +4,7 @@
  * Emits paper/satml2027/generated/{numbers.tex,tab-*.tex}. Run before compiling.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -102,8 +103,22 @@ T.push("\\bottomrule", "\\end{tabular}");
 writeFileSync(join(gen, "tab-agreement.tex"), T.join("\n") + "\n");
 
 // Table: new vectors
-T = ["\\begin{tabular}{@{}rp{3.9cm}lp{3.1cm}@{}}", "\\toprule", "\\# & Vector & Layer & Also known as \\\\", "\\midrule"];
+T = ["\\begin{tabular}{@{}rp{4.2cm}p{1.9cm}p{4.6cm}@{}}", "\\toprule", "\\# & Vector & Layer & Also known as \\\\", "\\midrule"];
 rubric.vectors.filter(isNew).forEach((v) => T.push(`${all.indexOf(v.id) + 1} & ${esc(v.name)} & ${v.mcpLayer[0]} & ${esc((v.aliases ?? []).slice(0, 2).join("; "))} \\\\`));
 T.push("\\bottomrule", "\\end{tabular}");
 writeFileSync(join(gen, "tab-new.tex"), T.join("\n") + "\n");
-console.log("generated:", nums.length, "numbers; tables: headline, matrix, benign, agreement, new. anon =", ANON);
+// Table: coverage per EU AI Act obligation and ISO/IEC 42001 control (reference proxy), from bin/score.mjs.
+const score = JSON.parse(spawnSync(process.execPath, [join(root, "bin", "score.mjs"), join(root, "adapters", "mcp-bastion", "coverage.json")], { encoding: "utf8" }).stdout.replace(/^[^{]*/, ""));
+const legendEU = rubric._frameworks.euAiAct ?? {}, legendISO = rubric._frameworks.iso42001 ?? {};
+const short = (t) => esc(String(t).split(" — ")[0].split(" (")[0]);
+T = ["\\begin{tabular}{@{}llr@{}}", "\\toprule", "Framework & Obligation / control & \\proxy{} coverage \\\\", "\\midrule"];
+for (const [k, v] of Object.entries(score.byEuAiAct ?? {}).sort()) T.push(`EU AI Act & ${esc(k)} ${short(legendEU[k] ?? "")} & ${esc(v)} \\\\`);
+T.push("\\midrule");
+for (const [k, v] of Object.entries(score.byIso42001 ?? {}).sort()) T.push(`ISO/IEC 42001 & ${esc(k)} ${short(legendISO[k] ?? "")} & ${esc(v)} \\\\`);
+T.push("\\bottomrule", "\\end{tabular}");
+writeFileSync(join(gen, "tab-frameworks.tex"), T.join("\n") + "\n");
+// Historical: the reference proxy's coverage of the 2026-07-28-only vectors BEFORE its SDK-2.0 rebuild
+// (v0.9.0, measured at mcp-defense-bench v0.7.0, commit 2771b2a): 3.5/8.
+N("bastNewPrev", "44\\%"); N("bastNewPrevFrac", "3.5/8");
+writeFileSync(join(gen, "numbers.tex"), nums.join("\n") + "\n");
+console.log("generated:", nums.length, "numbers; tables: headline, matrix, benign, agreement, new, frameworks. anon =", ANON);

@@ -33,14 +33,15 @@ not. This checklist exists so it cannot happen again. Run it in order; do not sk
 - [ ] PDF metadata stripped: `exiftool -all= paper.pdf` or check `pdfinfo paper.pdf` shows no Author.
 - [ ] LaTeX comments removed from the submitted source if source is uploaded (`%%` lines carry names).
 
-## C. Venue-specific (SaTML 2027)
+## C. Venue-specific (SaTML 2027) — verified against the CfP 2026-09-08
 
-- [ ] Abstract registration **Sep 22, 2026 AoE**; paper **Sep 29, 2026 AoE**; ORCID + certification at abstract time.
-- [ ] Up to 12 pages IEEEtran, references/appendix unlimited.
-- [ ] **Prior reviews must be appended** with a statement of how each point was addressed — use
-      `paper/REVIEWS-AND-RESPONSE.md`, anonymised (it mentions no names).
-- [ ] Anonymised artifact shared **within 3 days of submission** (open-science policy; violation = desk reject).
-- [ ] LLM-usage disclosure section present.
+- [ ] Abstract registration **Tue Sep 22, 2026 AoE** (authors and topics fixed at this point); paper **Tue Sep 29, 2026 AoE**.
+- [ ] Anonymised artifact **Fri Oct 2, 2026** (within 3 days of submission), fully-anonymised repository. Early reject Nov 4; discussion Nov 25–Dec 9; decision Dec 16; camera-ready mid-Feb 2027; final artifact on Zenodo by Jan 14, 2027.
+- [ ] `\documentclass[conference]{IEEEtran}`, 10 pt, two-column, **≤ 12 pages of body text**; violations = desk reject.
+- [ ] Mandatory **"Open Science"** section immediately before the references (does not count toward the limit) — but it must NOT say the artifact "is already available as open source" (the CfP names that as de-anonymising).
+- [ ] Mandatory **"LLM Usage Considerations"** section right after Open Science: accountability, transparency (LLM integral to methodology → detail it and its limitations — Rater B qualifies), responsibility.
+- [ ] **Prior reviews appended at the very end, after all appendices: anonymised, otherwise unedited and complete**, plus how each point was addressed. Omitting them "may result in rejection without further consideration".
+- [ ] Own prior work cited in the third person; no author names or institutions anywhere; no de-anonymising material.
 - [ ] Not under submission elsewhere.
 
 ## D. Content sanity (what the AISec reviewer actually asked for)

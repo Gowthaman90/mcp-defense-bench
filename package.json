@@ -17,7 +17,7 @@
     "bench:benign": "for t in null-baseline mcp-bastion mcp-firewall pipelock; do node bin/run.mjs $t --corpus benign; done",
     "gen:corpora": "node scripts/gen-testcases.mjs && node scripts/gen-heldout.mjs && node scripts/gen-benign.mjs",
     "leaderboard": "node bin/leaderboard.mjs > docs/LEADERBOARD.md && node bin/robustness.mjs > docs/ROBUSTNESS.md && node bin/build-site.mjs",
-    "agreement": "node bin/agreement.mjs --md > docs/AGREEMENT.md",
+    "agreement": "node bin/agreement.mjs --crosswalk rubric/ratings/crosswalk-pre-adjudication-v0.7.0.json --md > docs/AGREEMENT.md",
     "anon-mirror": "node scripts/make-anon-mirror.mjs"
   },
   "license": "Apache-2.0",
