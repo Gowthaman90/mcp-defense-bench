@@ -124,7 +124,12 @@ const scan = (dir) => {
 scan(out);
 
 // 5. report
-const lines = ["# Anonymization report", "", `Generated ${new Date().toISOString()} by the benchmark's anonymisation script from a \`git archive\` of the release commit (no history included).`, "", "| Pattern | Substitutions |", "|---|--:|", ...[...report.entries()].map(([k, v]) => `| \`${k.replace(/\|/g, "\\|")}\` | ${v} |`), "", "Files removed because they exist only to carry identity: " + DROP.join(", "), "", hits.length ? `## ⚠️ ${hits.length} residual leak(s)\n\n` + hits.map((h) => "- " + h).join("\n") : "## Leak scan: clean"];
+// The report must not itself carry the identity strings it removed: describe each substitution by an
+// opaque label and its category, never by the pattern source.
+const CATEGORY = (k) => (/OurBench|OurProxy|bastion|defense-bench/i.test(k) ? "tool name → placeholder" : /github\.io|4open|anonymous\.example/i.test(k) ? "personal URL → placeholder" : /zenodo|figshare/i.test(k) ? "DOI → placeholder" : /@|example\.org/i.test(k) ? "e-mail → placeholder" : /binary|renamed/i.test(k) ? k : "author / contributor name → placeholder");
+const lines = ["# Anonymization report", "", `Generated ${new Date().toISOString()} by the benchmark's anonymisation script from a \`git archive\` of the release commit (no history included). Patterns are described by category only; the identity strings themselves are deliberately not reproduced here.`, "", "| # | Category | Substitutions |", "|---|---|--:|", ...[...report.entries()].map(([k, v], i) => `| ${i + 1} | ${CATEGORY(k)} | ${v} |`), "", "Files removed because they exist only to carry identity: " + DROP.join(", "), "", hits.length ? `## ⚠️ ${hits.length} residual leak(s)\n\n` + hits.map((h) => "- " + h).join("\n") : "## Leak scan: clean"];
 writeFileSync(join(out, "ANONYMIZATION-REPORT.md"), lines.join("\n") + "\n");
+// The report is part of the artifact: it must pass the same scan.
+readFileSync(join(out, "ANONYMIZATION-REPORT.md"), "utf8").split("\n").forEach((line, i) => { for (const re of LEAKS) if (re.test(line)) hits.push(`ANONYMIZATION-REPORT.md:${i + 1}: ${line.trim().slice(0, 100)}`); });
 if (hits.length) { console.error(`✗ ${hits.length} residual identity leak(s) in ${out}:\n` + hits.slice(0, 40).map((h) => "  " + h).join("\n")); process.exit(2); }
 console.log(`✓ anonymised mirror at ${out} — ${[...report.values()].reduce((a, b) => a + b, 0)} substitutions, leak scan clean. Upload THIS directory, not the git repo.`);
