@@ -2,7 +2,7 @@
   "summary": {
     "tool": "null-baseline",
     "corpus": "dev",
-    "rubricVersion": "0.7.0",
+    "rubricVersion": "0.8.0",
     "casesRun": 51,
     "verifiedVectors": 32,
     "falsePositives": 0,
@@ -16,7 +16,7 @@
     "robustCoverage": 0,
     "capability": 0,
     "guaranteed": 0,
-    "measuredAt": "2026-09-06T02:52:11.671Z"
+    "measuredAt": "2026-09-08T02:58:50.155Z"
   },
   "coverage": {
     "tool-poisoning": {

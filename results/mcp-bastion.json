@@ -2,7 +2,7 @@
   "summary": {
     "tool": "mcp-bastion",
     "corpus": "dev",
-    "rubricVersion": "0.7.1",
+    "rubricVersion": "0.8.0",
     "casesRun": 51,
     "verifiedVectors": 32,
     "falsePositives": 0,
@@ -16,7 +16,7 @@
     "robustCoverage": 19.42,
     "capability": 22,
     "guaranteed": 16.5,
-    "measuredAt": "2026-09-08T02:54:37.121Z"
+    "measuredAt": "2026-09-08T02:58:50.240Z"
   },
   "coverage": {
     "tool-poisoning": {

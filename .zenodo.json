@@ -1,7 +1,7 @@
 {
   "title": "mcp-defense-bench: A Layer-Aware, Framework-Mapped Benchmark for Model Context Protocol Security Proxies",
   "upload_type": "software",
-  "description": "<p>A vendor-neutral benchmark that measures how much of the Model Context Protocol (MCP) attack surface a defensive proxy or gateway actually covers, driving each tool through its real code. It contributes: (1) a threat&ndash;control crosswalk of 32 MCP attack vectors (24 pre-existing + 8 introduced by the 2026-07-28 protocol revision) mapped to architectural layer, STRIDE, the NIST AI Risk Management Framework, the NSA MCP Security guidance, and the OWASP Top 10 for LLM and Agentic Applications; (2) a matched malicious/benign development corpus, a pre-registered held-out corpus, and a 337-item benign-only corpus; (3) adapters, a runner, and a scorer; and (4) an accompanying whitepaper. Coverage is reported per protocol revision, on development and held-out fixtures side by side, with a benign-corpus false-positive rate and 95% interval, and with inter-rater agreement for the crosswalk. This deposit includes the rubric, corpus, adapters, harness, and the whitepaper (Markdown, LaTeX, and PDF).</p><p>Rubric data and the whitepaper are licensed CC-BY-4.0; the harness code is Apache-2.0.</p>",
+  "description": "<p>A vendor-neutral benchmark that measures how much of the Model Context Protocol (MCP) attack surface a defensive proxy or gateway actually covers, driving each tool through its real code. It contributes: (1) a threat&ndash;control crosswalk of 32 MCP attack vectors (24 pre-existing + 8 introduced by the 2026-07-28 protocol revision) mapped to architectural layer, STRIDE, the NIST AI Risk Management Framework, the NSA MCP Security guidance, the OWASP Top 10, EU AI Act obligations and ISO/IEC 42001 Annex A controls for LLM and Agentic Applications; (2) a matched malicious/benign development corpus, a pre-registered held-out corpus, and a 337-item benign-only corpus; (3) adapters, a runner, and a scorer; and (4) an accompanying whitepaper. Coverage is reported per protocol revision, on development and held-out fixtures side by side, with a benign-corpus false-positive rate and 95% interval, and with inter-rater agreement for the crosswalk. This deposit includes the rubric, corpus, adapters, harness, and the whitepaper (Markdown, LaTeX, and PDF).</p><p>Rubric data and the whitepaper are licensed CC-BY-4.0; the harness code is Apache-2.0.</p>",
   "creators": [
     {
       "name": "Arumugam, Gowthaman",
@@ -37,5 +37,5 @@
     "OWASP LLM Top 10",
     "OWASP Agentic Top 10"
   ],
-  "version": "0.7.0"
+  "version": "0.8.0"
 }

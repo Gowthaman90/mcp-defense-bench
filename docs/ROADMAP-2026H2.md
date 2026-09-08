@@ -227,5 +227,6 @@ output against the pre-change baseline (identical).
 expert review — see `paper/REVIEWS-AND-RESPONSE.md`). Promoted the 8 vectors (24 → 32), re-measured every
 adapter, published coverage per revision, and — driven by the review — added a pre-registered held-out
 corpus, a 337-item benign-only corpus with FP intervals, and a rater-agreement protocol. bastion v0.9.0
-wires the two Phase-0 checks. Still open from Phase 1: EU AI Act / ISO 42001 crosswalk columns (deferred to
-v0.8). Next: Phase 2 adapters, and the SaTML 2027 resubmission (deadline 2026-09-29).
+wires the two Phase-0 checks. EU AI Act / ISO 42001 crosswalk columns landed 2026-09-08 (v0.8.0, single-rater). bastion **v1.0.0**
+(SDK 2.0 dual-stack, requestState custody, MRTR gate) measured the same day: 77% of the 2026-07-28 vectors,
+61% of all 32. Next: Phase 2 adapters, and the SaTML 2027 resubmission (deadline 2026-09-29).

@@ -4,7 +4,7 @@
   "class": "runtime-proxy",
   "reproducible": true,
   "version": "TBD",
-  "rubricVersion": "0.7.0",
+  "rubricVersion": "0.8.0",
   "measuredBy": "bin/run.mjs",
   "coverage": {
     "tool-poisoning": {

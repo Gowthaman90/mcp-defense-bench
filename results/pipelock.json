@@ -2,7 +2,7 @@
   "summary": {
     "tool": "pipelock",
     "corpus": "dev",
-    "rubricVersion": "0.7.0",
+    "rubricVersion": "0.8.0",
     "casesRun": 51,
     "verifiedVectors": 32,
     "falsePositives": 0,
@@ -16,7 +16,7 @@
     "robustCoverage": 1.33,
     "capability": 2.5,
     "guaranteed": 0,
-    "measuredAt": "2026-09-06T02:52:49.705Z"
+    "measuredAt": "2026-09-08T02:58:59.682Z"
   },
   "coverage": {
     "tool-poisoning": {

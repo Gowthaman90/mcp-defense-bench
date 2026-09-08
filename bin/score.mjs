@@ -47,7 +47,9 @@ const add = (obj, key, w) => {
 const byLayer = {},
   byNist = {},
   byOwaspLlm = {},
-  byOwaspAgentic = {};
+  byOwaspAgentic = {},
+  byEuAiAct = {},
+  byIso42001 = {};
 let covered = 0; // headline = RobustCoverage (mean over a vector's fixtures)
 let coveredCapability = 0; // secondary = Capability (best-case)
 let unknown = 0;
@@ -65,6 +67,8 @@ for (const v of rubric.vectors) {
   for (const n of v.nistAiRmf) add(byNist, n, w);
   for (const o of v.owaspLlm2025) add(byOwaspLlm, o, w);
   for (const a of v.owaspAgentic2026) add(byOwaspAgentic, a, w);
+  for (const e of v.euAiAct ?? []) add(byEuAiAct, e, w);
+  for (const c of v.iso42001 ?? []) add(byIso42001, c, w);
 }
 
 const pct = (o) =>
@@ -90,6 +94,8 @@ const report = {
   byNistAiRmf: pct(byNist),
   byOwaspLlm2025: pct(byOwaspLlm),
   byOwaspAgentic2026: pct(byOwaspAgentic),
+  byEuAiAct: pct(byEuAiAct),
+  byIso42001: pct(byIso42001),
 };
 
 console.log(JSON.stringify(report, null, 2));

@@ -1,10 +1,10 @@
 {
   "$schema": "./rubric.schema.json",
   "artifact": "MCP Threat–Control Crosswalk (rubric)",
-  "version": "0.7.1",
-  "date": "2026-09-05",
+  "version": "0.8.0",
+  "date": "2026-09-08",
   "license": "CC-BY-4.0",
-  "description": "Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, OWASP Agentic 2026, and NSA MCP Security guidance (May 2026). Per-tool coverage lives in adapters/*, NOT here, so the rubric stays neutral.",
+  "description": "Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, OWASP Agentic 2026, NSA MCP Security guidance, EU AI Act obligations (Arts. 12/14/15/26/55/72/73) and ISO/IEC 42001 Annex A controls (May 2026). Per-tool coverage lives in adapters/*, NOT here, so the rubric stays neutral.",
   "_frameworks": {
     "mcpLayer": [
       "host-orchestration",
@@ -57,6 +57,28 @@
       "LOG": "Monitoring & Logging (log all tool/model invocations with parameters, identities, and result hashes)",
       "SEG": "Data Classification & Segmentation (align tools/models to data-classification zones)",
       "RT": "Runtime Controls (egress-filtering proxy, DLP, sandboxing, message integrity, output filtering, local MCP scans)"
+    },
+    "euAiAct": {
+      "_scope": "Regulation (EU) 2024/1689. Articles 9–15 bind PROVIDERS of high-risk AI systems (Annex III), Art. 26 binds DEPLOYERS of high-risk systems, Arts. 53/55 bind providers of general-purpose AI models (GPAI obligations enforceable since 2026-08-02). An MCP deployment engages these only when the surrounding AI system is in scope; the mapping says which obligation a vector's defence serves, not that every MCP deployment is regulated.",
+      "Art.12": "Record-keeping — automatic logging of events over the system's lifetime (traceability)",
+      "Art.14": "Human oversight — measures enabling natural persons to oversee, understand, and intervene",
+      "Art.15(5)": "Accuracy, robustness and cybersecurity — resilience against unauthorised third parties altering use, outputs or performance by exploiting vulnerabilities (incl. data/model poisoning, adversarial examples, confidentiality attacks)",
+      "Art.26": "Obligations of deployers of high-risk AI systems — use per instructions, assign human oversight, monitor operation, keep logs",
+      "Art.55(1)(d)": "GPAI with systemic risk — ensure an adequate level of cybersecurity protection for the model and its physical infrastructure",
+      "Art.72": "Post-market monitoring — actively and systematically collect and analyse performance data over the lifetime",
+      "Art.73": "Reporting of serious incidents — track, document and report incidents and corrective measures"
+    },
+    "iso42001": {
+      "_scope": "ISO/IEC 42001:2023 Annex A reference controls (AI management system). Control titles per the standard; an organisation selects controls via its Statement of Applicability, so these are the controls a vector's defence would evidence.",
+      "A.4.4": "Tooling resources — document the tools and resources used by the AI system",
+      "A.6.2.4": "AI system verification and validation",
+      "A.6.2.5": "AI system deployment — deployment requirements incl. security configuration",
+      "A.6.2.6": "AI system operation and monitoring",
+      "A.6.2.8": "AI system recording of event logs",
+      "A.7.5": "Data provenance — provenance of data used by the AI system",
+      "A.8.4": "Communication of incidents",
+      "A.9.2": "Processes for responsible use of AI systems",
+      "A.10.3": "Suppliers — manage risks from third-party suppliers of components and services"
     }
   },
   "_todo": [
@@ -65,7 +87,8 @@
     "DONE 2026-07-13: second-reviewer pass on all 22 owaspLlm2025 mappings — 20 confirmed, 2 corrected (indirect-retrieval-injection LLM08→LLM01; false-error-escalation +LLM01).",
     "Populate priorArtCoverage per-benchmark once MSB/MCPTox/AgentDefense-Bench vector lists are reconciled to these IDs.",
     "2026-09-05: second-rater agreement pass over the 24 original vectors (rubric/RATING-CODEBOOK.md, bin/agreement.mjs). The 8 promoted 2026-07-28 vectors are single-rater until Rater C exists.",
-    "2026-09-05: adjudicated 62 A/B disagreements (rubric/ratings/ADJUDICATION.md): 12 mappings changed, codebook GOVERN rule clarified."
+    "2026-09-05: adjudicated 62 A/B disagreements (rubric/ratings/ADJUDICATION.md): 12 mappings changed, codebook GOVERN rule clarified.",
+    "2026-09-08: euAiAct + iso42001 columns added (v0.8.0). SINGLE-RATER (author) — decision rules in rubric/RATING-CODEBOOK.md v1.2; second-rater pass not yet run for these two dimensions."
   ],
   "vectors": [
     {
@@ -112,6 +135,14 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.4.4",
+        "A.10.3"
       ]
     },
     {
@@ -156,6 +187,14 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.4.4",
+        "A.10.3"
       ]
     },
     {
@@ -198,7 +237,18 @@
         "2025-11-25",
         "2026-07-28"
       ],
-      "revisionNotes": "Unchanged as a mechanism, but 2026-07-28 adds a suppression path: a cached tools/list (ttlMs/cacheScope) can hide the definition change that pinning detects. See staged vector list-cache-poisoning."
+      "revisionNotes": "Unchanged as a mechanism, but 2026-07-28 adds a suppression path: a cached tools/list (ttlMs/cacheScope) can hide the definition change that pinning detects. See staged vector list-cache-poisoning.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.14",
+        "Art.55(1)(d)",
+        "Art.72"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.4.4",
+        "A.10.3"
+      ]
     },
     {
       "id": "out-of-scope-params",
@@ -241,7 +291,16 @@
         "2025-11-25",
         "2026-07-28"
       ],
-      "revisionNotes": "As for schema-bypass: undeclared or malformed parameters can now also surface as Mcp-Param-* headers."
+      "revisionNotes": "As for schema-bypass: undeclared or malformed parameters can now also surface as Mcp-Param-* headers.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.4",
+        "A.9.2"
+      ]
     },
     {
       "id": "response-injection",
@@ -283,6 +342,14 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.7.5",
+        "A.10.3"
       ]
     },
     {
@@ -323,6 +390,14 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.7.5"
       ]
     },
     {
@@ -367,6 +442,14 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.8.4"
       ]
     },
     {
@@ -407,6 +490,15 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.10.3",
+        "A.8.4"
       ]
     },
     {
@@ -449,6 +541,16 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.14"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.10.3"
       ]
     },
     {
@@ -486,6 +588,14 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.10.3"
       ]
     },
     {
@@ -525,6 +635,16 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.10.3",
+        "A.8.4"
       ]
     },
     {
@@ -564,6 +684,18 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.26",
+        "Art.55(1)(d)",
+        "Art.72"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.6.2.5"
       ]
     },
     {
@@ -603,6 +735,17 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.4",
+        "A.6.2.5",
+        "A.8.4"
       ]
     },
     {
@@ -642,7 +785,15 @@
         "2025-11-25",
         "2026-07-28"
       ],
-      "revisionNotes": "2026-07-28 adds the x-mcp-header annotation, which mirrors declared parameters into HTTP headers and carries its own normative constraints (token syntax, no CR/LF, primitive types, static reachability)."
+      "revisionNotes": "2026-07-28 adds the x-mcp-header annotation, which mirrors declared parameters into HTTP headers and carries its own normative constraints (token syntax, no CR/LF, primitive types, static reachability).",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.4"
+      ]
     },
     {
       "id": "mitm-transport",
@@ -682,6 +833,14 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.5"
       ]
     },
     {
@@ -724,7 +883,15 @@
         "2026-07-28"
       ],
       "revisionNotes": "Unchanged: Origin validation with HTTP 403 on an invalid Origin remains a MUST in streamable-http §Security & Endpoint.",
-      "mappingNotes": "OWASP LLM 2025 LLM06 is indicative only (no LLM category describes DNS rebinding); flagged during adjudication."
+      "mappingNotes": "OWASP LLM 2025 LLM06 is indicative only (no LLM category describes DNS rebinding); flagged during adjudication.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.5"
+      ]
     },
     {
       "id": "server-impersonation",
@@ -762,7 +929,16 @@
         "2025-11-25",
         "2026-07-28"
       ],
-      "revisionNotes": "2026-07-28 models the MCP server as a standard OAuth 2.0 resource server advertising protected-resource metadata, changing how identity is established."
+      "revisionNotes": "2026-07-28 models the MCP server as a standard OAuth 2.0 resource server advertising protected-resource metadata, changing how identity is established.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)",
+        "Art.72"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.10.3"
+      ]
     },
     {
       "id": "excessive-permission",
@@ -802,6 +978,17 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.14",
+        "Art.26",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.5",
+        "A.9.2"
       ]
     },
     {
@@ -845,7 +1032,16 @@
         "2025-11-25",
         "2026-07-28"
       ],
-      "revisionNotes": "Authorization was rewritten in 2026-07-28: RFC 9207 issuer validation is mandatory, credentials are bound to the issuer that minted them, and DCR is deprecated in favour of CIMD."
+      "revisionNotes": "Authorization was rewritten in 2026-07-28: RFC 9207 issuer validation is mandatory, credentials are bound to the issuer that minted them, and DCR is deprecated in favour of CIMD.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.8.4"
+      ]
     },
     {
       "id": "consent-fatigue",
@@ -881,6 +1077,16 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.14",
+        "Art.26"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.5",
+        "A.9.2"
       ]
     },
     {
@@ -919,6 +1125,16 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.4",
+        "A.8.4"
       ]
     },
     {
@@ -959,6 +1175,14 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8"
       ]
     },
     {
@@ -1002,7 +1226,19 @@
         "2025-11-25",
         "2026-07-28"
       ],
-      "revisionNotes": "2026-07-28 removes protocol-level sessions, so 'mid-session' is no longer a connection property. The equivalent surface is notifications/tools/list_changed plus cached list results."
+      "revisionNotes": "2026-07-28 removes protocol-level sessions, so 'mid-session' is no longer a connection property. The equivalent surface is notifications/tools/list_changed plus cached list results.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.14",
+        "Art.72"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.4.4",
+        "A.10.3"
+      ]
     },
     {
       "id": "multi-tool-split-poisoning",
@@ -1042,6 +1278,17 @@
         "2025-06-18",
         "2025-11-25",
         "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.4.4",
+        "A.10.3"
       ]
     },
     {
@@ -1081,7 +1328,15 @@
       "appliesTo": [
         "2026-07-28"
       ],
-      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.4"
+      ]
     },
     {
       "id": "requeststate-forgery",
@@ -1121,7 +1376,17 @@
       "appliesTo": [
         "2026-07-28"
       ],
-      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.4",
+        "A.8.4"
+      ]
     },
     {
       "id": "list-cache-poisoning",
@@ -1161,7 +1426,18 @@
       "appliesTo": [
         "2026-07-28"
       ],
-      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.72"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.4.4",
+        "A.10.3"
+      ]
     },
     {
       "id": "mrtr-input-phishing",
@@ -1203,7 +1479,15 @@
       "appliesTo": [
         "2026-07-28"
       ],
-      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.14"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.10.3"
+      ]
     },
     {
       "id": "task-authz-bypass",
@@ -1243,7 +1527,17 @@
       "appliesTo": [
         "2026-07-28"
       ],
-      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.6.2.4"
+      ]
     },
     {
       "id": "mcp-app-sandbox-bypass",
@@ -1282,7 +1576,17 @@
       "appliesTo": [
         "2026-07-28"
       ],
-      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.14",
+        "Art.26"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.5",
+        "A.10.3"
+      ]
     },
     {
       "id": "roots-scope-gap",
@@ -1322,7 +1626,18 @@
       "appliesTo": [
         "2026-07-28"
       ],
-      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.26",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.4",
+        "A.6.2.5",
+        "A.9.2"
+      ]
     },
     {
       "id": "transport-downgrade",
@@ -1358,7 +1673,16 @@
       "appliesTo": [
         "2026-07-28"
       ],
-      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes."
+      "revisionNotes": "Introduced by the 2026-07-28 revision; does not exist in earlier protocol shapes.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.26",
+        "Art.55(1)(d)"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.5"
+      ]
     }
   ],
   "_specRevisions": {

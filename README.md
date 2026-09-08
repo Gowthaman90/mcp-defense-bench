@@ -58,8 +58,10 @@ novelty positioning — read it before citing this anywhere.
 
 1. **Rubric** — [`rubric/crosswalk.json`](rubric/crosswalk.json): **32 MCP attack vectors** (24 pre-existing +
    8 introduced by the **2026-07-28 protocol revision**), each mapped to architectural layer, STRIDE, NIST AI
-   RMF, NSA MCP guidance, OWASP LLM 2025 and OWASP Agentic 2026, and tagged with the protocol revisions it
-   applies to (`appliesTo`). Mapping reliability is measured: a blind second-rater pass and open adjudication
+   RMF, NSA MCP guidance, OWASP LLM 2025, OWASP Agentic 2026, **EU AI Act obligations** (Arts. 12, 14, 15(5),
+   26, 55(1)(d), 72, 73 — the language regulated buyers are audited against since GPAI enforcement began
+   2026-08-02) and **ISO/IEC 42001 Annex A controls** (v0.8.0), and tagged with the protocol revisions it
+   applies to (`appliesTo`). The scorer rolls coverage up per obligation and per control. Mapping reliability is measured: a blind second-rater pass and open adjudication
    live in [`rubric/RATING-CODEBOOK.md`](rubric/RATING-CODEBOOK.md), [`docs/AGREEMENT.md`](docs/AGREEMENT.md),
    [`rubric/ratings/ADJUDICATION.md`](rubric/ratings/ADJUDICATION.md). **A human third rater is invited** —
    copy `rubric/ratings/rater-TEMPLATE.json` and open a PR.

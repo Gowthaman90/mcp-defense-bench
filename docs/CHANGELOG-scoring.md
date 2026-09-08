@@ -1,5 +1,15 @@
 # Scoring changelog
 
+## 2026-09-08 — v0.8.0: EU AI Act + ISO/IEC 42001 crosswalk columns (no metric change)
+
+Two framework dimensions added to every vector — `euAiAct` (Regulation (EU) 2024/1689 Arts. 12, 14,
+15(5), 26, 55(1)(d), 72, 73) and `iso42001` (Annex A controls A.4.4, A.6.2.4, A.6.2.5, A.6.2.6, A.6.2.8,
+A.7.5, A.8.4, A.9.2, A.10.3) — with per-dimension decision rules in `rubric/RATING-CODEBOOK.md` v1.2 and
+scope notes in the rubric legend (the mapping states which obligation a vector's defence *serves*, not that
+a given deployment is regulated). `bin/score.mjs` reports `byEuAiAct` / `byIso42001` rollups. **Single-rater
+as of v0.8.0**; a second-rater pass over these two dimensions is the next agreement task. CorpusRobustCoverage
+and every measured number are unchanged.
+
 ## 2026-09-05 — v0.7.0: per-revision coverage, held-out coverage, benign-corpus FP rate (no metric change)
 
 **Trigger:** AISec 2026 Review #34A (expert). Three requests — a held-out attack set, more variants and a

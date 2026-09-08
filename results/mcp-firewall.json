@@ -2,7 +2,7 @@
   "summary": {
     "tool": "mcp-firewall",
     "corpus": "dev",
-    "rubricVersion": "0.7.0",
+    "rubricVersion": "0.8.0",
     "casesRun": 51,
     "verifiedVectors": 32,
     "falsePositives": 0,
@@ -16,7 +16,7 @@
     "robustCoverage": 3,
     "capability": 4,
     "guaranteed": 2,
-    "measuredAt": "2026-09-06T02:52:20.635Z"
+    "measuredAt": "2026-09-08T02:58:58.941Z"
   },
   "coverage": {
     "tool-poisoning": {

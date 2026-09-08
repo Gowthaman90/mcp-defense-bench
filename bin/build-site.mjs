@@ -87,7 +87,7 @@ const robust = tools.map((t) => `${esc(t.tool)} ${evasion.filter((e) => (t.byId[
 
 // Framework mapping: every vector -> STRIDE / NIST AI RMF / OWASP LLM 2025 / OWASP Agentic 2026.
 const fwRows = rubric.vectors
-  .map((v) => `<tr><td class="vec">${esc(v.name)}</td><td class="layer">${esc(v.mcpLayer[0])}</td><td class="layer">${esc(v.stride.join("/"))}</td><td>${esc(v.nistAiRmf.join(", "))}</td><td>${esc((v.owaspLlm2025 || []).join(", "))}</td><td>${esc((v.owaspAgentic2026 || []).join(", "))}</td><td>${esc((v.nsaGuidance || []).join(", "))}</td></tr>`)
+  .map((v) => `<tr><td class="vec">${esc(v.name)}</td><td class="layer">${esc(v.mcpLayer[0])}</td><td class="layer">${esc(v.stride.join("/"))}</td><td>${esc(v.nistAiRmf.join(", "))}</td><td>${esc((v.owaspLlm2025 || []).join(", "))}</td><td>${esc((v.owaspAgentic2026 || []).join(", "))}</td><td>${esc((v.nsaGuidance || []).join(", "))}</td><td>${esc((v.euAiAct || []).join(", "))}</td><td>${esc((v.iso42001 || []).join(", "))}</td></tr>`)
   .join("\n");
 
 const html = `<!doctype html>
