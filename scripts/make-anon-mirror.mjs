@@ -69,6 +69,8 @@ const SUBS = [
   [/one of two open-source artifacts/g, "one of two artifacts"],
   [/via LinkedIn on the "Measuring the\s+Defenders" write-up/g, "on a public write-up"],
   [/via LinkedIn/g, "in public"],
+  // The mirror drops the review/checklist files; don't leave the README pointing at them.
+  [/ — hence \[`scripts\/make-anon-mirror\.mjs`\]\([^)]*\) and\s*\[`paper\/SUBMISSION-CHECKLIST\.md`\]\([^)]*\)\. Verbatim reviews and responses:\s*\[`paper\/REVIEWS-AND-RESPONSE\.md`\]\([^)]*\)\./g, ". The reviews and the point-by-point response are appended to the paper."],
   [/Arun Sanna|A\. Sanna|arunsanna/g, "a peer-benchmark author"],
   ...extra.map((re) => [re, "[REDACTED]"]),
 ];

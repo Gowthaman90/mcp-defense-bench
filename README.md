@@ -79,7 +79,7 @@ novelty positioning — read it before citing this anywhere.
    protocol revision**, development **and** held-out side by side with the generalisation gap, and the
    benign-corpus FP rate with a Wilson 95% interval.
 
-## Status — v0.7.0 (2026-09-05)
+## Status — v0.8.0 (2026-09-08)
 
 Full board: [docs/LEADERBOARD.md](docs/LEADERBOARD.md) · live site:
 [gowthaman90.github.io/mcp-defense-bench](https://gowthaman90.github.io/mcp-defense-bench/).
@@ -88,7 +88,7 @@ Full board: [docs/LEADERBOARD.md](docs/LEADERBOARD.md) · live site:
 
 | Tool | Class | Dev (24) | **Held-out (24)** | Gap | 2026-07-28-only (8) | Benign FP (n=337) |
 |---|---|--:|--:|--:|--:|--:|
-| `mcp-bastion` v0.9.0 | runtime proxy | 55% | **43%** | 13 pts | 44% | 13 (3.9%, CI 2.3–6.5%) |
+| `mcp-bastion` v1.0.2 | runtime proxy | 55% | **43%** | 13 pts | **77%** | 13 (3.9%, CI 2.3–6.5%) |
 | `mcp-firewall` 0.1.0 | runtime proxy | 8% | **10%** | −2 pts | 13% | 2 (0.6%) |
 | `pipelock` 3.0.0 | egress firewall | 6% | **0%** | 6 pts | 0% | 3 (0.9%) |
 | `null-baseline` | control | 0% | 0% | 0 | 0% | 0 |
@@ -101,18 +101,21 @@ Matched-control false positives: 0/51 (dev) and 0/48 (held-out) for every tool.
   four vectors it covered in development (tool poisoning, ShareLock split poisoning, transport MITM,
   system-prompt leakage) drop to zero. pipelock's development coverage was entirely corpus-specific.
 - **Coverage is quoted per protocol revision.** The 8 vectors introduced on 2026-07-28 did not exist before
-  it; on them mcp-bastion enforces header/body coherence (`-32020`) and list-cache policy and honestly misses
-  MRTR, Tasks, MCP Apps and legacy-transport refusal.
+  it. mcp-bastion v0.9.0 covered 44% of them; the benchmark named the rest and v1.0.0 (rebuilt on the
+  2026-07-28 SDK line: `requestState` custody, an in-band consent gate, legacy-transport refusal) covers
+  **77%**. Still honest misses: Tasks (not served on the new era), MCP Apps, and the non-normative
+  tool-state-handle case. The 24 pre-existing vectors and the held-out results are byte-identical across
+  that rebuild — and the matched controls caught a real false positive in the new gate before release.
 - **Benign FP has a denominator now.** 4 of mcp-bastion's 13 are the by-design cost of trust-on-first-use
   pinning flagging benign definition updates (reported in their own row, not excluded); 1/256 verbatim
   third-party definitions is flagged.
-- **9 of 32 vectors are covered by no measured tool** — the five pre-existing registry/isolation/consent gaps
-  plus four 2026-07-28 surfaces. A proxy is necessary but not sufficient.
+- **6 of 32 vectors are covered by no measured tool** — the five pre-existing registry/isolation/consent gaps
+  plus MCP Apps conformance. A proxy is necessary but not sufficient.
 
-**Why v0.7.0 looks like this.** The v0.4 paper was reviewed at AISec 2026; the expert reviewer asked for a
+**Why v0.7+ looks like this.** The v0.4 paper was reviewed at AISec 2026; the expert reviewer asked for a
 held-out set, more attack variants and benign cases, and a second-rater agreement measure. All three are
-here. The submission itself was desk-rejected because the anonymised artifact mirror still carried the
-author's name — hence [`scripts/make-anon-mirror.mjs`](scripts/make-anon-mirror.mjs) and
+here. The submission itself was desk-rejected because the anonymised artifact mirror still carried
+identifying metadata — hence [`scripts/make-anon-mirror.mjs`](scripts/make-anon-mirror.mjs) and
 [`paper/SUBMISSION-CHECKLIST.md`](paper/SUBMISSION-CHECKLIST.md). Verbatim reviews and responses:
 [`paper/REVIEWS-AND-RESPONSE.md`](paper/REVIEWS-AND-RESPONSE.md).
 
