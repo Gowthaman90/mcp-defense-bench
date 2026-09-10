@@ -180,12 +180,16 @@ All artifacts needed to reproduce and extend this work are shared: the crosswalk
 \textbf{Transparency.} An LLM assistant was used to format the manuscript, edit prose, and generate the \LaTeX{} tables from measured result files via a script. An LLM was also \emph{integral to one methodological step}: the blind second rating pass (Rater~B, Section~\ref{sec:agreement}) was performed by an LLM following the published codebook, given only vector identifiers, names, aliases and descriptions. Its limitations are stated where the result is reported: it is not an independent human expert, it demonstrates that the codebook is followable and makes every disagreement public, and a human third-rater slot is open in the artifact. The pre-adjudication agreement figures are reported as the headline so that the adjudication (in which the same session participated) cannot inflate them. Held-out fixtures were authored without consulting any defender's detection source; the protocol records that constraint rather than relying on the authoring agent's memory.
 \textbf{Responsibility.} No model was trained; no personal data was collected. The benign corpus contains verbatim tool definitions harvested by running publicly published MCP servers as an end user would, recorded with package and version provenance.
 
+\section*{Ethical Considerations}
+The work measures defensive software; it does not attack any live system. Every attack fixture is static data with reserved, non-routable hosts (RFC~2606/5737/6761), and the benign corpus was gathered by launching publicly published MCP servers as an end user would and recording their advertised tool definitions, with no credentials, private data or network calls beyond the servers' own startup. Fixtures target attack \emph{classes} already described in the cited literature and specification text; none discloses a new exploit against a named product. The evaluated third-party tools are open-source projects run under their published licences; their authors were contacted about the earlier public measurements and the artifact credits their corrections. The principal ethical risk we see is a conflict of interest: one measured tool is developed by the authors. It is mitigated structurally rather than by assertion---the same harness, matched controls, a null baseline, a pre-registered held-out corpus authored after the defender was frozen, and results published as measured on the first run, including the cases where our own tool lost coverage or produced a false positive.
+
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
 \clearpage
 \appendix
-\section*{Prior Reviews and How They Were Addressed}
+\section*{Previous Reviews}
+\emph{Reproduced anonymised but otherwise unedited and complete, as required, with a description of how each point was addressed.}
 This paper was previously submitted to a 2026 security workshop (benchmark-paper track). It was desk-rejected because the anonymised artifact mirror still carried an author name; two reviews had already been filed. The reviews are reproduced below unedited apart from anonymisation, followed by how each point was addressed.
 
 \subsection*{Decision (chair)}
