@@ -32,14 +32,16 @@ const root = join(here, "..");
 const args = process.argv.slice(2);
 const out = args.find((a) => !a.startsWith("--"));
 if (!out) { console.error("usage: node scripts/make-anon-mirror.mjs <output-dir>"); process.exit(1); }
+// --anon-url <base>: the real anonymous.4open.science base once it exists, so the mirror's internal links resolve.
+const ANON_URL = (args.includes("--anon-url") ? args[args.indexOf("--anon-url") + 1] : "https://anonymous.4open.science/r/OurBench").replace(/\/$/, "");
 const extra = args.flatMap((a, i) => (a === "--extra" ? [new RegExp(args[i + 1], "gi")] : []));
 
 // ── identity → placeholder substitutions (ORDER MATTERS: longer / more specific first) ──────────
 const SUBS = [
-  [/https?:\/\/(www\.)?github\.com\/Gowthaman90\/mcp-defense-bench[^\s)"'`]*/gi, "https://anonymous.4open.science/r/OurBench"],
-  [/https?:\/\/(www\.)?github\.com\/Gowthaman90\/mcp-bastion[^\s)"'`]*/gi, "https://anonymous.4open.science/r/OurProxy"],
-  [/https?:\/\/gowthaman90\.github\.io\/mcp-defense-bench\/?/gi, "https://anonymous.4open.science/r/OurBench/docs/"],
-  [/https?:\/\/gowthaman90\.github\.io\/?/gi, "https://anonymous.example/"],
+  [/https?:\/\/(www\.)?github\.com\/Gowthaman90\/mcp-defense-bench[^\s)"'`]*/gi, `${ANON_URL}`],
+  [/https?:\/\/(www\.)?github\.com\/Gowthaman90\/mcp-bastion[^\s)"'`]*/gi, `${ANON_URL}/adapters/OurProxy`],
+  [/https?:\/\/gowthaman90\.github\.io\/mcp-defense-bench\/?/gi, `${ANON_URL}/docs/`],
+  [/https?:\/\/gowthaman90\.github\.io\/?/gi, `${ANON_URL}/docs/`],
   [/gowthaman90\.github\.io/gi, "anonymous.example"],
   [/10\.5281\/zenodo\.21346206/g, "10.5281/zenodo.XXXXXXX"],
   [/10\.6084\/m9\.figshare\.32978657/g, "10.6084/m9.figshare.XXXXXXXX"],
