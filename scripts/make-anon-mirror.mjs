@@ -11,7 +11,7 @@
  *   1. `git archive HEAD` into <out> (so no .git history travels — history is the leak most people
  *      forget; anonymous.4open.science and Zenodo both preserve it if you upload a clone).
  *   2. Deletes files that exist only to carry identity (CITATION.cff, .zenodo.json, LICENSE header
- *      lines are rewritten, .github/FUNDING, social/blog drafts, the NIW-facing docs).
+ *      lines are rewritten, .github/FUNDING, social/blog drafts, personal docs).
  *   3. Rewrites identity strings and REAL TOOL NAMES to placeholders in every text file
  *      (the reference proxy → "OurProxy", this benchmark → "OurBench", GitHub handle, name,
  *      e-mail, DOIs, personal URLs).
@@ -59,7 +59,7 @@ const SUBS = [
   [/\bbastion\b/g, "ourproxy"],
   [/\bBastion\b/g, "OurProxy"],
   [/Massimiliano Brighindi|M\. Brighindi|Brighindi/g, "an independent reviewer"],
-  // Affiliation-like bylines and venue history are de-anonymising wording under the SaTML CfP.
+  // Affiliation-like bylines and venue history are de-anonymising wording under double-blind rules.
   [/\s*·\s*Independent Researcher/g, ""],
   [/Independent Researcher/g, "Anonymous affiliation"],
   [/AISec\s*(2026|'26)?/g, "a 2026 security workshop"],

@@ -1,6 +1,6 @@
 # Spec verification — MCP 2026-07-28
 
-**Purpose.** Every claim in [`ROADMAP-2026H2.md`](ROADMAP-2026H2.md) that originated in a vendor blog
+**Purpose.** Every claim in the 2026 H2 roadmap that originated in a vendor blog
 post is checked here against **primary sources**: the specification text, the deprecated-features
 registry, and the extension repositories. Nothing sourced only from a blog may enter a fixture, the
 rubric, or a paper. Verified 2026-08-30.

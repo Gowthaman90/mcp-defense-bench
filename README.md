@@ -15,7 +15,7 @@ surface they actually defend — mapped to NIST AI RMF and the OWASP Top 10s.**
 
 > **Cite this work:** Arumugam, G. (2026). *Measuring the Defenders: A Layer-Aware, Framework-Mapped
 > Benchmark for Model Context Protocol Security Proxies.* (v0.7.0 adds held-out, benign-corpus and
-> rater-agreement results; see `paper/`.)
+> rater-agreement results.)
 > Preprint: [10.6084/m9.figshare.32978657](https://doi.org/10.6084/m9.figshare.32978657) ·
 > Benchmark archive: [10.5281/zenodo.21346206](https://doi.org/10.5281/zenodo.21346206)
 
@@ -118,9 +118,7 @@ Matched-control false positives: 0/51 (dev) and 0/48 (held-out) for every tool.
 **Why v0.7+ looks like this.** The v0.4 paper was reviewed at AISec 2026; the expert reviewer asked for a
 held-out set, more attack variants and benign cases, and a second-rater agreement measure. All three are
 here. The submission itself was desk-rejected because the anonymised artifact mirror still carried
-identifying metadata — hence [`scripts/make-anon-mirror.mjs`](scripts/make-anon-mirror.mjs) and
-[`paper/SUBMISSION-CHECKLIST.md`](paper/SUBMISSION-CHECKLIST.md). Verbatim reviews and responses:
-[`paper/REVIEWS-AND-RESPONSE.md`](paper/REVIEWS-AND-RESPONSE.md).
+identifying metadata — hence [`scripts/make-anon-mirror.mjs`](scripts/make-anon-mirror.mjs).
 
 **Reproduce:**
 

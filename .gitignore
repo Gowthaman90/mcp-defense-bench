@@ -3,3 +3,10 @@ node_modules/
 *.audit.jsonl
 .DS_Store
 attestation/
+
+# Papers and personal documentation — kept local, never published
+paper/
+docs/ROADMAP-*.md
+docs/medium-*.md
+docs/devto-*.md
+docs/social-launch-kit.md

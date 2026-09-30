@@ -2,8 +2,8 @@
 
 _MCP security research and tooling, as of mid-2026. Compiled from an adversarially-verified
 literature sweep (24 sources, 24 verified claims). This file exists so every claim of novelty in
-the crosswalk and the defense-side benchmark can be defended against a reviewer — or an immigration
-examiner's expert — who knows the field._
+the crosswalk and the defense-side benchmark can be defended against an expert
+who knows the field._
 
 > **Bottom line:** The MCP-security field is **no longer a green field**. Threat taxonomies,
 > attack-side benchmarks, and cryptographic attestation schemes all already exist. Our contribution
