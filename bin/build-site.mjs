@@ -113,7 +113,9 @@ const html = `<!doctype html>
   }}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1000px;margin:0 auto;padding:44px 24px 72px}
+  /* Full width: the tables use the whole screen; only running prose keeps a readable measure. */
+  .wrap{width:100%;max-width:none;margin:0;padding:clamp(24px,4vw,44px) clamp(16px,3vw,48px) 72px}
+  .note{max-width:120ch}
   .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 12px}
   h1{font-family:var(--serif);font-size:clamp(26px,4vw,38px);line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;text-wrap:balance}
   .lede{font-family:var(--serif);font-size:clamp(15px,2vw,18px);color:var(--muted);margin:0 0 20px;max-width:64ch}
