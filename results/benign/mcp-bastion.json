@@ -2,13 +2,13 @@
   "summary": {
     "tool": "mcp-bastion",
     "corpus": "benign",
-    "rubricVersion": "0.7.1",
+    "rubricVersion": "0.8.0",
     "items": 337,
-    "falsePositives": 13,
-    "fpRate": 0.0386,
+    "falsePositives": 14,
+    "fpRate": 0.0415,
     "fpRate95ci": {
-      "lo": 0.0227,
-      "hi": 0.0649
+      "lo": 0.0249,
+      "hi": 0.0685
     },
     "byKind": {
       "cache-invalidation": {
@@ -61,10 +61,10 @@
       },
       "tool-result": {
         "n": 24,
-        "fp": 5
+        "fp": 6
       }
     },
-    "measuredAt": "2026-09-08T02:54:37.335Z"
+    "measuredAt": "2026-09-30T14:30:38.430Z"
   },
   "items": [
     {
@@ -4671,10 +4671,11 @@
       "kind": "tool-result",
       "source": null,
       "hardNegative": true,
-      "falsePositive": false,
+      "falsePositive": true,
       "verdict": {
-        "detect": false,
-        "enforce": false
+        "detect": true,
+        "enforce": false,
+        "signal": "response rules: error-privilege-steering"
       }
     },
     {

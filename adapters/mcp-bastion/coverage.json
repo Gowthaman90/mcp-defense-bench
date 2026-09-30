@@ -88,10 +88,10 @@
       "verified": true
     },
     "false-error-escalation": {
-      "level": "none",
-      "capability": 0,
-      "robustCoverage": 0,
-      "guaranteed": 0,
+      "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.5,
+      "guaranteed": 0.5,
       "fixtures": 1,
       "fpCount": 0,
       "evidence": "false-error-escalation/001-fake-failure-retry",

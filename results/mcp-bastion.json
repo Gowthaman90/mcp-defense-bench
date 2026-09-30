@@ -8,15 +8,15 @@
     "falsePositives": 0,
     "covered": {
       "enforce": 18,
-      "detect": 8,
-      "none": 6,
+      "detect": 9,
+      "none": 5,
       "unknown": 0
     },
-    "overall": "61% (19.4/32 CorpusRobustCoverage)",
-    "robustCoverage": 19.42,
-    "capability": 22,
-    "guaranteed": 16.5,
-    "measuredAt": "2026-09-08T02:58:50.240Z"
+    "overall": "62% (19.9/32 CorpusRobustCoverage)",
+    "robustCoverage": 19.92,
+    "capability": 22.5,
+    "guaranteed": 17,
+    "measuredAt": "2026-09-30T14:30:38.236Z"
   },
   "coverage": {
     "tool-poisoning": {
@@ -100,10 +100,10 @@
       "verified": true
     },
     "false-error-escalation": {
-      "level": "none",
-      "capability": 0,
-      "robustCoverage": 0,
-      "guaranteed": 0,
+      "level": "detect",
+      "capability": 0.5,
+      "robustCoverage": 0.5,
+      "guaranteed": 0.5,
       "fixtures": 1,
       "fpCount": 0,
       "evidence": "false-error-escalation/001-fake-failure-retry",
@@ -532,11 +532,12 @@
     },
     {
       "id": "false-error-escalation/001-fake-failure-retry",
-      "level": "none",
+      "level": "detect",
       "falsePositive": false,
       "mal": {
-        "detect": false,
-        "enforce": false
+        "detect": true,
+        "enforce": false,
+        "signal": "response rules: error-privilege-steering"
       },
       "benign": {
         "detect": false,

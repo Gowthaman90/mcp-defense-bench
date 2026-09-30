@@ -88,7 +88,7 @@ Full board: [docs/LEADERBOARD.md](docs/LEADERBOARD.md) · live site:
 
 | Tool | Class | Dev (24) | **Held-out (24)** | Gap | 2026-07-28-only (8) | Benign FP (n=337) |
 |---|---|--:|--:|--:|--:|--:|
-| `mcp-bastion` v1.0.2 | runtime proxy | 55% | **43%** | 13 pts | **77%** | 13 (3.9%, CI 2.3–6.5%) |
+| `mcp-bastion` v1.1.0 | runtime proxy | 57% | **44%** | 14 pts | **77%** | 14 (4.2%, CI 2.5–6.9%) |
 | `mcp-firewall` 0.1.0 | runtime proxy | 8% | **10%** | −2 pts | 13% | 2 (0.6%) |
 | `pipelock` 3.0.0 | egress firewall | 6% | **0%** | 6 pts | 0% | 3 (0.9%) |
 | `null-baseline` | control | 0% | 0% | 0 | 0% | 0 |
@@ -106,11 +106,14 @@ Matched-control false positives: 0/51 (dev) and 0/48 (held-out) for every tool.
   **77%**. Still honest misses: Tasks (not served on the new era), MCP Apps, and the non-normative
   tool-state-handle case. The 24 pre-existing vectors and the held-out results are byte-identical across
   that rebuild — and the matched controls caught a real false positive in the new gate before release.
-- **Benign FP has a denominator now.** 4 of mcp-bastion's 13 are the by-design cost of trust-on-first-use
+- **Benign FP has a denominator now.** 4 of mcp-bastion's 14 are the by-design cost of trust-on-first-use
   pinning flagging benign definition updates (reported in their own row, not excluded); 1/256 verbatim
-  third-party definitions is flagged.
-- **6 of 32 vectors are covered by no measured tool** — the five pre-existing registry/isolation/consent gaps
-  plus MCP Apps conformance. A proxy is necessary but not sufficient.
+  third-party definitions is flagged. 1 is new in v1.1.0: the false-error rule flags a genuine EACCES error
+  that suggests "elevated privileges" (kept, not tuned away).
+- **5 of 32 vectors are covered by no measured tool** — four pre-existing registry/isolation/consent gaps
+  plus MCP Apps conformance. mcp-bastion v1.1.0 closed false-error escalation at detect level (dev 50%,
+  held-out 25%: the plain held-out case is caught, its evasion variants are not). A proxy is necessary but
+  not sufficient.
 
 **Why v0.7+ looks like this.** The v0.4 paper was reviewed at AISec 2026; the expert reviewer asked for a
 held-out set, more attack variants and benign cases, and a second-rater agreement measure. All three are

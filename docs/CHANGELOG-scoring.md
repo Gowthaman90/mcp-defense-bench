@@ -1,5 +1,20 @@
 # Scoring changelog
 
+## 2026-09-30 — mcp-bastion v1.1.0 re-measured (no metric or corpus change)
+
+Tool change only; rubric v0.8.0, corpora and scorer unchanged. The adapter now calls `checkErrorSteering`
+(wired into bastion's response scan on the tools/call path) in the tool-result case.
+
+- Dev CorpusRobustCoverage 61% (19.4/32) → **62% (19.9/32)**; Capability 69% → 70%; uncovered 6 → **5**.
+- 24 pre-existing vectors: dev 55% → 57%, held-out 43% → 44% (gap 13 → 14 pts). The held-out false-error
+  fixtures were not consulted while writing the rule (docs/HELD-OUT-PROTOCOL.md); robust 0.25.
+- Matched-control false positives unchanged: 0/51 dev, 0/48 held-out.
+- Benign corpus 13 → **14** flags (3.9% → 4.2%, Wilson 2.5–6.9%): an EACCES error that suggests "elevated
+  privileges". Kept as a disclosed cost rather than tuned away.
+- bastion's new standing-grant elicitation check does not score: the consent-fatigue fixture is not
+  elicitation-shaped, so the adapter still reports it as a miss.
+- The v1.0.2 figures remain reproducible from the results at commit 00a78b0.
+
 ## 2026-09-08 — v0.8.0: EU AI Act + ISO/IEC 42001 crosswalk columns (no metric change)
 
 Two framework dimensions added to every vector — `euAiAct` (Regulation (EU) 2024/1689 Arts. 12, 14,
