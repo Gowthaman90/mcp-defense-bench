@@ -46,6 +46,8 @@ const {
   clampCacheHints,
   // v1.0 (stateless era): MRTR gate + requestState custody, wired into the tools/call path.
   checkInputRequests,
+  // v1.1: false-error escalation, wired into the response scan on the tools/call path.
+  checkErrorSteering,
   sealRequestState,
   openRequestState,
 } = bastion;
@@ -141,7 +143,7 @@ export async function assess(input, _testcase) {
         .filter((c) => c && c.type === "text" && typeof c.text === "string")
         .map((c) => c.text)
         .join("\n");
-      const findings = scanText(text) ?? [];
+      const findings = [...(scanText(text) ?? []), ...(checkErrorSteering?.(input.result) ?? [])];
       const redaction = redactSecrets(text) ?? { redactions: 0 };
       if (findings.length === 0 && redaction.redactions === 0) {
         return { detect: false, enforce: false };
