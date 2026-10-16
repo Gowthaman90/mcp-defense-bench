@@ -81,3 +81,63 @@ the six GOVERN disagreements for future raters without changing any mapping.
 Re-running `bin/agreement.mjs` after these changes is **not** reported as the headline agreement figure:
 post-adjudication agreement is inflated by construction. The headline stays the pre-adjudication
 κ/Jaccard in `docs/AGREEMENT.md`. Crosswalk version bumped to **0.7.1** to mark the adjudicated mapping.
+
+---
+
+# Delegation family — crosswalk v0.9.0-staged → v0.9.0
+
+_Source: `staging/delegation/ratings/AGREEMENT-pre-adjudication.md` (12 set-level disagreements over the
+5 delegation vectors, six dimensions; `euAiAct` / `iso42001` are single-rater as of v0.8.0 and were not
+in the agreement scope). Adjudicated 2026-10-16 at promotion (`docs/DELEGATION-PREREG.md` §7–§8)._
+
+**Who adjudicated, and the limit of that.** Same as the v0.7.1 round: done in a working session with
+both raters' rows visible, so it is a documented reconciliation against `RATING-CODEBOOK.md` v1.2, not a
+neutral third party. Rule: **adopt a change only where a codebook rule clearly supports it**; where both
+readings are defensible, Rater A stands and the disagreement is recorded. Pre-adjudication agreement in
+the prereg (STRIDE primary κ 0.29, mcpLayer sets 5/5) stays the headline figure.
+
+## Decision summary
+
+| Dimension | Disagreements | A kept | Union adopted |
+|---|--:|--:|--:|
+| stride | 2 | 0 | 2 |
+| nistAiRmf | 2 | 0 | 2 |
+| owaspLlm2025 | 1 | 1 | 0 |
+| owaspAgentic2026 | 3 | 1 | 2 |
+| nsaGuidance | 4 | 3 | 1 |
+| **Total** | **12** | **5** | **7** |
+
+No change replaced an A label; every adopted change is a union (A's labels kept, B's added).
+
+## Adopted changes (applied to `rubric/crosswalk.json`)
+
+| Vector | Dimension | Was (A) | Now | Why (codebook rule) |
+|---|---|---|---|---|
+| delegation-stale-relay | stride | Spoofing | Spoofing, ElevationOfPrivilege | "Second class the attack necessarily achieves": relaying an expired or over-long token extends a grant beyond its intended use, which is an escalation; matches the Spoofing + EoP reading A gave audience confusion and subject mixing for the same outcome. Primary stays Spoofing. |
+| delegation-signature-forgery | stride | Spoofing, Tampering | Spoofing, Tampering, ElevationOfPrivilege | A forged token carries whatever claims the attacker writes, so it necessarily confers authority (EoP). Tampering stays: the signature is an integrity control and post-signing tamper is one listed variant. |
+| delegation-stale-relay | nistAiRmf | MEASURE, MANAGE | GOVERN, MEASURE, MANAGE | v1.1 GOVERN rule: a governance artefact is one of the controls. "Over-long" is defined against the deployment's delegation policy (maximum lifetime); A applied the same reasoning to chain laundering (allowed-actor policy). |
+| delegation-signature-forgery | nistAiRmf | MEASURE, MANAGE | GOVERN, MEASURE, MANAGE | v1.1 GOVERN rule: the defence relies on a trusted key set (a provenance requirement) and an algorithm allow-list (a policy; RFC 8725 §3.1). |
+| delegation-stale-relay | owaspAgentic2026 | ASI03 | ASI03, ASI07 | ASI07 (Insecure Inter-Agent Communication) covers freshness/replay of credentials on agent-to-agent hops; A gave ASI07 to the other relay-path vectors. |
+| delegation-signature-forgery | owaspAgentic2026 | ASI03 | ASI03, ASI07 | Same category: an unauthenticated (forged) message on the inter-agent hop. |
+| delegation-signature-forgery | nsaGuidance | AUTH | AUTH, RT | The codebook's `RT` explicitly lists *message integrity*; signature verification at the relay is that runtime control. |
+
+## Kept as A (with reason)
+
+- **delegation-signature-forgery / owaspLlm2025 LLM06 (B: ∅).** The codebook maps on mechanism *or*
+  direct impact. No LLM category describes JWS forgery (B's reason), but the direct impact, an agent
+  acting with authority it was not granted, is LLM06's. Both readings defensible; A kept and flagged in
+  `mappingNotes` as indicative only, like dns-rebinding's LLM06.
+- **delegation-chain-laundering / owaspAgentic2026 +ASI10 (B).** ASI10 (Rogue Agents) concerns an agent
+  whose own behaviour deviates or is compromised. The vector is about authority recorded in delegation
+  tokens: an unlisted current actor or a deep/cyclic chain does not require any agent to be rogue. Not
+  clearly supported; A kept.
+- **nsaGuidance LOG on delegation-audience-confusion, -subject-mixing, -stale-relay (B: AUTH only).**
+  Per-invocation logging of the delegated identity ("who acted for whom") is the detective control for
+  these misuses, and for subject mixing it is the only place the splice is visible after the fact. The
+  codebook ties `euAiAct` Art.12 and `iso42001` A.6.2.8 to NSA LOG, so dropping LOG would change two other
+  dimensions with no rule clearly requiring it. A kept on all three.
+
+## Effect
+
+Crosswalk version bumped to **0.9.0** (37 vectors; the 5 promoted rows carry `vectorFamily: "delegation"`).
+Post-adjudication agreement is inflated by construction and is not reported as a headline.

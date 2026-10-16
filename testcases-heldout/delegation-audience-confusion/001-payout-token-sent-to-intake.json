@@ -1,0 +1,112 @@
+{
+  "vector": "delegation-audience-confusion",
+  "id": "heldout/delegation-audience-confusion/001-payout-token-sent-to-intake",
+  "staged": true,
+  "heldout": true,
+  "family": "D",
+  "severity": "high",
+  "description": "A claims coordinator's call to the intake sub-agent carries the token minted for the payout sub-agent.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "claims-gateway"
+      ]
+    },
+    "upstreams": {
+      "intake": {
+        "audience": "claims-intake",
+        "incomingHeader": "x-on-behalf-of-intake",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "adjudication": {
+        "audience": "claims-adjudication",
+        "incomingHeader": "x-on-behalf-of-adjudication",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "payout": {
+        "audience": "claims-payout",
+        "incomingHeader": "x-on-behalf-of-payout",
+        "upstreamHeader": "x-end-user-token"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 600,
+      "clockSkewSeconds": 60,
+      "allowedActors": [
+        "claims-coordinator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "intake",
+      "headers": {
+        "x-on-behalf-of-intake": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmNsYWltcy5pbnZhbGlkIiwic3ViIjoic3ViLTdmM2E5MSIsImF1ZCI6ImNsYWltcy1wYXlvdXQiLCJpYXQiOjE3OTE5MzU5NTUsImV4cCI6MTc5MTkzNjMwMCwianRpIjoiYy1jbGFpbXMtcGF5b3V0LWJhc2UiLCJhY3QiOnsic3ViIjoiY2xhaW1zLWNvb3JkaW5hdG9yIn19.oaCi63u8rHoN2hh9zhmnjNotj-hU1mPK8SeDCvnKs68"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "audience is the payout service, target is intake"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "claims-gateway"
+      ]
+    },
+    "upstreams": {
+      "intake": {
+        "audience": "claims-intake",
+        "incomingHeader": "x-on-behalf-of-intake",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "adjudication": {
+        "audience": "claims-adjudication",
+        "incomingHeader": "x-on-behalf-of-adjudication",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "payout": {
+        "audience": "claims-payout",
+        "incomingHeader": "x-on-behalf-of-payout",
+        "upstreamHeader": "x-end-user-token"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 600,
+      "clockSkewSeconds": 60,
+      "allowedActors": [
+        "claims-coordinator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "intake",
+      "headers": {
+        "x-on-behalf-of-intake": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmNsYWltcy5pbnZhbGlkIiwic3ViIjoic3ViLTdmM2E5MSIsImF1ZCI6ImNsYWltcy1pbnRha2UiLCJpYXQiOjE3OTE5MzU5NTUsImV4cCI6MTc5MTkzNjMwMCwianRpIjoiYy1jbGFpbXMtaW50YWtlLWJhc2UiLCJhY3QiOnsic3ViIjoiY2xhaW1zLWNvb3JkaW5hdG9yIn19.xjOZLcZNk7qN5KG7L9DXiNgCYdGRuz4Bw65vrKH5cwA"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "audience-lateral"
+    ]
+  },
+  "provenance": "Synthetic held-out (D/L: bare-string audiences)."
+}

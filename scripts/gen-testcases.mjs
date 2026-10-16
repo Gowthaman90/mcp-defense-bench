@@ -8,7 +8,8 @@
  * Fixtures are STATIC DATA, never live exploits. Attacker hosts use RFC-2606/5737 reserved names
  * (attacker.example, 198.51.100.0) so nothing is routable. Run: node scripts/gen-testcases.mjs
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { CASES_2026_07_28, REVISION as REV_2026_07_28 } from "./cases-2026-07-28.mjs";
@@ -17,6 +18,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 const rubric = JSON.parse(readFileSync(join(root, "rubric", "crosswalk.json"), "utf8"));
 const rubricIds = new Set(rubric.vectors.map((v) => v.id));
+// Vectors of promoted families get their development fixtures from staging (copied below), not CASES.
+const familyVectors = new Set(rubric.vectors.filter((v) => v.vectorFamily).map((v) => v.id));
 
 // weatherTool: the benign definition several fixtures mutate, so controls stay comparable.
 const weather = {
@@ -964,7 +967,7 @@ for (const c of [...CASES, ...CASES_2026_07_28]) {
   seen.add(c.vector);
 }
 for (const id of rubricIds) {
-  if (!seen.has(id)) {
+  if (!seen.has(id) && !familyVectors.has(id)) {
     console.error(`✗ rubric vector '${id}' has no test case`);
     errors++;
   }
@@ -1010,7 +1013,39 @@ for (const c of ALL) {
   seq[c.vector] = (seq[c.vector] ?? 0) + 1;
   emitOne(c, String(seq[c.vector]).padStart(3, "0"));
 }
+const staged = copyStagedFamily("dev", join(root, "testcases"));
+for (const id of familyVectors) {
+  if (!staged.has(id)) {
+    console.error(`✗ promoted vector '${id}' has no staged development fixture`);
+    process.exit(1);
+  }
+}
+console.log(`✓ copied the staged delegation dev fixtures byte-identical for ${staged.size} vectors`);
 console.log(
   `✓ wrote ${ALL.length} test cases (v1 ${CASES.length} + v2 ${CASES_V2.length} + v3 ${CASES_V3.length} + 2026-07-28 ${CASES_V4.length}) ` +
     `across ${seen.size} vectors (all ${rubricIds.size} rubric vectors covered)`,
 );
+
+// ── Promoted families: staged fixtures copied BYTE-IDENTICAL (never re-serialized) ─────────────────
+// docs/DELEGATION-PREREG.md §8.4: each staged file must still match the sha256 registered in
+// staging/delegation/MANIFEST.json; a file listed in MANIFEST.removals is skipped (removed, logged).
+// Returns the vector ids that received at least one fixture.
+function copyStagedFamily(split, destRoot) {
+  const manifest = JSON.parse(readFileSync(join(root, "staging", "delegation", "MANIFEST.json"), "utf8"));
+  const removed = new Set((manifest.removals ?? []).map((r) => r.file));
+  const prefix = `staging/delegation/${split}/`;
+  const vectors = new Set();
+  for (const [rel, sha] of Object.entries(manifest.files)) {
+    if (!rel.startsWith(prefix) || removed.has(rel)) continue;
+    const got = createHash("sha256").update(readFileSync(join(root, rel))).digest("hex");
+    if (got !== sha) {
+      console.error(`✗ ${rel}: sha256 ${got} does not match the MANIFEST (${sha}); refusing to copy`);
+      process.exit(1);
+    }
+    const sub = rel.slice(prefix.length);
+    mkdirSync(join(destRoot, dirname(sub)), { recursive: true });
+    copyFileSync(join(root, rel), join(destRoot, sub));
+    vectors.add(sub.split("/")[0]);
+  }
+  return vectors;
+}

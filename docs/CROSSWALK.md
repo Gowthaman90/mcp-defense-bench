@@ -1,10 +1,10 @@
-# MCP Threat–Control Crosswalk (rubric) — v0.8.0
+# MCP Threat–Control Crosswalk (rubric) — v0.9.0
 
-_Generated from `rubric/crosswalk.json` on 2026-09-08. Edit the JSON, not this file._
+_Generated from `rubric/crosswalk.json` on 2026-10-16. Edit the JSON, not this file._
 
 Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, OWASP Agentic 2026, NSA MCP Security guidance, EU AI Act obligations (Arts. 12/14/15/26/55/72/73) and ISO/IEC 42001 Annex A controls (May 2026). Per-tool coverage lives in adapters/*, NOT here, so the rubric stays neutral.
 
-**32 vectors** · **CC-BY-4.0**
+**37 vectors** · **CC-BY-4.0**
 
 | # | Vector | Layer | STRIDE | NIST AI RMF | OWASP LLM 2025 | OWASP Agentic 2026 | NSA (May 2026) | EU AI Act | ISO/IEC 42001 | Applies to | Prior-art benchmarks |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -40,6 +40,11 @@ Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE,
 | 30 | **MCP Apps sandbox non-conformance** | host-orchestration, client | Tampering, InformationDisclosure | MAP, MANAGE | LLM05, LLM02 | ASI05, ASI09 | RT | Art.15(5), Art.14, Art.26 | A.6.2.6, A.6.2.5, A.10.3 | 2026-07-28 | — |
 | 31 | **Roots deprecation: no enforced filesystem boundary** | host-orchestration, server | ElevationOfPrivilege, InformationDisclosure | MAP, MANAGE | LLM06, LLM02 | ASI02, ASI03 | SEG, AUTH | Art.15(5), Art.26, Art.55(1)(d) | A.6.2.6, A.6.2.4, A.6.2.5, A.9.2 | 2026-07-28 | — |
 | 32 | **Transport / revision downgrade** | transport | Tampering, Spoofing | MEASURE, MANAGE |  | ASI07 | AUTH, RT | Art.15(5), Art.26, Art.55(1)(d) | A.6.2.6, A.6.2.5 | 2026-07-28 | — |
+| 33 | **Delegated-token audience confusion (lateral misroute or passthrough)** | host-orchestration, server | Spoofing, ElevationOfPrivilege | MEASURE, MANAGE | LLM06 | ASI03, ASI07 | AUTH, LOG | Art.15(5), Art.12, Art.73 | A.6.2.6, A.6.2.8, A.6.2.4, A.6.2.5, A.8.4 | all | — |
+| 34 | **Delegation subject mixing (one request, several users)** | host-orchestration | Spoofing, ElevationOfPrivilege | MEASURE, MANAGE | LLM06 | ASI03, ASI07 | AUTH, LOG | Art.15(5), Art.12, Art.73 | A.6.2.6, A.6.2.8, A.6.2.4, A.8.4 | all | — |
+| 35 | **Stale or over-long delegate token relayed** | host-orchestration, server | Spoofing, ElevationOfPrivilege | GOVERN, MEASURE, MANAGE | LLM06 | ASI03, ASI07 | AUTH, LOG | Art.15(5), Art.12 | A.6.2.6, A.6.2.8, A.6.2.4 | all | — |
+| 36 | **Delegation chain laundering** | host-orchestration | ElevationOfPrivilege, Repudiation | GOVERN, MEASURE, MANAGE | LLM06 | ASI03, ASI07 | AUTH, LOG | Art.15(5), Art.12, Art.26 | A.6.2.6, A.6.2.8, A.6.2.5, A.9.2 | all | — |
+| 37 | **Delegate token signature forgery** | server, host-orchestration | Spoofing, Tampering, ElevationOfPrivilege | GOVERN, MEASURE, MANAGE | LLM06 | ASI03, ASI07 | AUTH, RT | Art.15(5), Art.55(1)(d), Art.73 | A.6.2.6, A.6.2.4, A.8.4 | all | — |
 
 ## Framework legends
 

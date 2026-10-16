@@ -1,0 +1,120 @@
+{
+  "vector": "delegation-chain-laundering",
+  "id": "heldout/delegation-chain-laundering/002-actor-named-by-client-id",
+  "staged": true,
+  "heldout": true,
+  "family": "L",
+  "severity": "high",
+  "description": "The current actor is identified by client_id rather than sub: 'rate-shopper-x', not the allowed dispatch-orchestrator.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWFjdCIsImFjdCI6eyJjbGllbnRfaWQiOiJyYXRlLXNob3BwZXIteCJ9fQ.WQJT89vHU8AHXQhO5-n6iwGYKkNCzsw19frWuRVeJJc"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "current actor (client_id) not allowed"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.07h_bOLQzKPPgexf98rvXR1iuqksuMSszGKD5WF9r9s"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "actor"
+    ]
+  },
+  "provenance": "Synthetic held-out (L). RFC 8693 §4.1 (act holds claims identifying the actor)."
+}

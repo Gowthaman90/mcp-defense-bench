@@ -1,8 +1,8 @@
 {
   "$schema": "./rubric.schema.json",
   "artifact": "MCP Threat–Control Crosswalk (rubric)",
-  "version": "0.8.0",
-  "date": "2026-09-08",
+  "version": "0.9.0",
+  "date": "2026-10-16",
   "license": "CC-BY-4.0",
   "description": "Vendor-neutral rubric: MCP attack vectors mapped to architectural layer, STRIDE, NIST AI RMF, OWASP LLM 2025, OWASP Agentic 2026, NSA MCP Security guidance, EU AI Act obligations (Arts. 12/14/15/26/55/72/73) and ISO/IEC 42001 Annex A controls (May 2026). Per-tool coverage lives in adapters/*, NOT here, so the rubric stays neutral.",
   "_frameworks": {
@@ -1683,6 +1683,275 @@
         "A.6.2.6",
         "A.6.2.5"
       ]
+    },
+    {
+      "id": "delegation-audience-confusion",
+      "name": "Delegated-token audience confusion (lateral misroute or passthrough)",
+      "aliases": [
+        "cross-audience token replay",
+        "confused deputy across sub-agents",
+        "gateway token relayed upstream",
+        "unscoped delegate token"
+      ],
+      "description": "In agent-to-sub-agent delegation, a caller sends one short-lived token per downstream audience through a relay. A token is presented to a party it was not issued for: a sibling sub-agent's token is routed to the wrong upstream (lateral), or a token issued for the relay itself, or carrying no audience at all, is passed on downstream (passthrough). Each misuse lets one service's grant act at another.",
+      "mcpLayer": [
+        "host-orchestration",
+        "server"
+      ],
+      "stride": [
+        "Spoofing",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03",
+        "ASI07"
+      ],
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "AUTH",
+        "LOG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "revisionNotes": "Header-carried delegate tokens are independent of protocol revision; audience binding of tokens to the receiving MCP server is required by the MCP authorization specification.",
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.6.2.4",
+        "A.6.2.5",
+        "A.8.4"
+      ],
+      "provenance": "MCP Security Best Practices, 'Token Passthrough' (servers MUST NOT accept tokens not explicitly issued for them); RFC 8707 resource indicators; RFC 8725 §3.9 (validate the audience). Distinct from credential-token-theft, whose fixtures are result-borne capture of a token by the agent.",
+      "vectorFamily": "delegation"
+    },
+    {
+      "id": "delegation-subject-mixing",
+      "name": "Delegation subject mixing (one request, several users)",
+      "aliases": [
+        "session splicing across sub-agents",
+        "identity mixing",
+        "cross-user token bundling"
+      ],
+      "description": "One downstream request carries several delegate tokens, one per sub-agent, that name different end users (different subject, or the same subject string from a different issuer). Each sub-agent sees only its own token, which is valid on its own, so the composite operation runs partly as one user and partly as another. Only a component that sees the whole request can notice.",
+      "mcpLayer": [
+        "host-orchestration"
+      ],
+      "stride": [
+        "Spoofing",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03",
+        "ASI07"
+      ],
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "AUTH",
+        "LOG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.6.2.4",
+        "A.8.4"
+      ],
+      "provenance": "OWASP Top 10 for Agentic Applications 2026, ASI03 Identity and Privilege Abuse; MCP Security Best Practices, session binding to user-specific information; RFC 7519 §4.1.1–4.1.2 (sub is unique within its issuer).",
+      "vectorFamily": "delegation"
+    },
+    {
+      "id": "delegation-stale-relay",
+      "name": "Stale or over-long delegate token relayed",
+      "aliases": [
+        "expired token replay",
+        "not-yet-valid token",
+        "long-lived delegation token"
+      ],
+      "description": "A delegate token outside its validity window (expired, not yet valid, or without any expiry) or with a lifetime far longer than the deployment's delegation policy is relayed to a sub-agent, extending a captured or over-issued grant beyond its intended use.",
+      "mcpLayer": [
+        "host-orchestration",
+        "server"
+      ],
+      "stride": [
+        "Spoofing",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03",
+        "ASI07"
+      ],
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "AUTH",
+        "LOG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.6.2.4"
+      ],
+      "provenance": "RFC 7519 §4.1.4–4.1.5 (exp, nbf); RFC 8725 (JWT BCP); NSA MCP guidance, least-privilege tokens per action.",
+      "vectorFamily": "delegation"
+    },
+    {
+      "id": "delegation-chain-laundering",
+      "name": "Delegation chain laundering",
+      "aliases": [
+        "unexpected current actor",
+        "deep act chain",
+        "cyclic delegation"
+      ],
+      "description": "A delegate token names, as its current actor, an agent the deployment never authorized to act for users, or carries a prior-actor chain that is unexpectedly deep or cyclic, so authority is laundered through intermediate agents and the record of who acted becomes unreliable. Per RFC 8693 only the current actor may drive access control; prior actors are informational and suited to detection and audit.",
+      "mcpLayer": [
+        "host-orchestration"
+      ],
+      "stride": [
+        "ElevationOfPrivilege",
+        "Repudiation"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03",
+        "ASI07"
+      ],
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "AUTH",
+        "LOG"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.12",
+        "Art.26"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.8",
+        "A.6.2.5",
+        "A.9.2"
+      ],
+      "provenance": "RFC 8693 §4.1 (act claim; outermost act is the current actor; nested act claims are informational only).",
+      "vectorFamily": "delegation"
+    },
+    {
+      "id": "delegation-signature-forgery",
+      "name": "Delegate token signature forgery",
+      "aliases": [
+        "alg none",
+        "algorithm confusion",
+        "jku injection",
+        "post-signing tamper"
+      ],
+      "description": "A delegate token whose signature does not verify under the deployment's trusted keys is presented as genuine: unsigned (alg none), signed with an attacker key, signed with HMAC using the public key as secret (algorithm confusion), pointing to an attacker-controlled key set, or altered after signing.",
+      "mcpLayer": [
+        "server",
+        "host-orchestration"
+      ],
+      "stride": [
+        "Spoofing",
+        "Tampering",
+        "ElevationOfPrivilege"
+      ],
+      "nistAiRmf": [
+        "GOVERN",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "owaspLlm2025": [
+        "LLM06"
+      ],
+      "owaspAgentic2026": [
+        "ASI03",
+        "ASI07"
+      ],
+      "priorArtCoverage": [],
+      "nsaGuidance": [
+        "AUTH",
+        "RT"
+      ],
+      "appliesTo": [
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "euAiAct": [
+        "Art.15(5)",
+        "Art.55(1)(d)",
+        "Art.73"
+      ],
+      "iso42001": [
+        "A.6.2.6",
+        "A.6.2.4",
+        "A.8.4"
+      ],
+      "mappingNotes": "OWASP LLM 2025 LLM06 is indicative only (mapped on direct impact: forged authority makes the agent act beyond its grant; no LLM category describes JWS forgery); kept at adjudication, Rater B left it empty.",
+      "provenance": "RFC 8725 §2.1–2.2, §3.1–3.2 (algorithm verification, key/algorithm binding); RFC 7515 (JWS).",
+      "vectorFamily": "delegation"
     }
   ],
   "_specRevisions": {
@@ -1699,7 +1968,8 @@
     ],
     "latest": "2026-07-28",
     "promoted": {
-      "2026-07-28": "8 vectors promoted from staging on 2026-09-05 (v0.7.0). Use appliesTo to compute coverage per revision."
+      "2026-07-28": "8 vectors promoted from staging on 2026-09-05 (v0.7.0). Use appliesTo to compute coverage per revision.",
+      "delegation": "5 delegation-family vectors (vectorFamily: delegation) promoted from staging/delegation on 2026-10-16 (v0.9.0), pre-registered in docs/DELEGATION-PREREG.md; rows adjudicated in rubric/ratings/ADJUDICATION.md. Totals are reported over the 32 previously published vectors and over all 37."
     }
   }
 }

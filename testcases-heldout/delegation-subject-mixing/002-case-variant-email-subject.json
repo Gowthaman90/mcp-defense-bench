@@ -1,0 +1,122 @@
+{
+  "vector": "delegation-subject-mixing",
+  "id": "heldout/delegation-subject-mixing/002-case-variant-email-subject",
+  "staged": true,
+  "heldout": true,
+  "family": "E",
+  "severity": "high",
+  "description": "The routing token names dana.ortiz@freight.invalid and the billing token names Dana.Ortiz@freight.invalid. JWT subjects are case-sensitive strings, so these are different principals; a case-folding comparison would merge them.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.07h_bOLQzKPPgexf98rvXR1iuqksuMSszGKD5WF9r9s",
+        "x-freight-delegation-billing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJEYW5hLk9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OmJpbGxpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpiaWxsaW5nLXN1YiIsImFjdCI6eyJjbGllbnRfaWQiOiJkaXNwYXRjaC1vcmNoZXN0cmF0b3IifX0.6ADMQjpIyYltEA4F3mVWCxe8YOs0tRRRxae_FLSosyU"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "subjects differ (case-sensitive)"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.07h_bOLQzKPPgexf98rvXR1iuqksuMSszGKD5WF9r9s",
+        "x-freight-delegation-billing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OmJpbGxpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpiaWxsaW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.4FU63W7Kt0MlD6-pl146GQHKf6oJQ0vffFBlCC4iGUM"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "subject-mixing"
+    ]
+  },
+  "provenance": "Synthetic held-out (E). RFC 7519 §4.1.2 (StringOrURI, case-sensitive comparison)."
+}

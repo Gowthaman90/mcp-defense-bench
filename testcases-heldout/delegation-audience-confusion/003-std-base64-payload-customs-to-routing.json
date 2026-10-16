@@ -1,0 +1,120 @@
+{
+  "vector": "delegation-audience-confusion",
+  "id": "heldout/delegation-audience-confusion/003-std-base64-payload-customs-to-routing",
+  "staged": true,
+  "heldout": true,
+  "family": "E",
+  "severity": "high",
+  "description": "A customs token is routed to the routing sub-agent, and its payload segment is encoded with standard base64 and padding instead of base64url. A strict decoder rejects it; a lenient one decodes it and finds the wrong audience; a check that silently skips undecodable tokens lets it through.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OmN1c3RvbXMiLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpjdXN0b21zLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn0gfQ==.Vy6bCuICKn3QK_n-dA8Ymuh9ePKAjh76zIilBKZ0Hdo"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "non-base64url JWS segment / wrong audience — must fail closed"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.07h_bOLQzKPPgexf98rvXR1iuqksuMSszGKD5WF9r9s"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "malformed"
+    ]
+  },
+  "provenance": "Synthetic held-out (E). RFC 7515 §2 (base64url without padding)."
+}

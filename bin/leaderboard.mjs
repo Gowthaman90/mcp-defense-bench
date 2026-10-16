@@ -53,11 +53,11 @@ const appliesTo = (v, rev) => !Array.isArray(v.appliesTo) || v.appliesTo.include
 const idsFor = (rev) => rubric.vectors.filter((v) => appliesTo(v, rev)).map((v) => v.id);
 const newInLatest = rubric.vectors.filter((v) => Array.isArray(v.appliesTo) && v.appliesTo.length === 1 && v.appliesTo[0] === latest).map((v) => v.id);
 const original = ids.filter((id) => !newInLatest.includes(id));
-// Vector families promoted after the v0.8.0 publication (rubric `family`), so totals can be reported
+// Vector families promoted after the v0.8.0 publication (rubric `vectorFamily`), so totals can be reported
 // over the previously published denominator as well as the full one (DELEGATION-PREREG §6.6).
-const familyIds = (f) => rubric.vectors.filter((v) => v.family === f).map((v) => v.id);
-const families = [...new Set(rubric.vectors.map((v) => v.family).filter(Boolean))];
-const published = ids.filter((id) => !rubric.vectors.find((v) => v.id === id).family);
+const familyIds = (f) => rubric.vectors.filter((v) => v.vectorFamily === f).map((v) => v.id);
+const families = [...new Set(rubric.vectors.map((v) => v.vectorFamily).filter(Boolean))];
+const published = ids.filter((id) => !rubric.vectors.find((v) => v.id === id).vectorFamily);
 
 const L = [];
 L.push("# Leaderboard (verified)", "");

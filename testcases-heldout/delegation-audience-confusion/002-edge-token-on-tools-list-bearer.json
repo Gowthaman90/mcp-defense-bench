@@ -1,0 +1,120 @@
+{
+  "vector": "delegation-audience-confusion",
+  "id": "heldout/delegation-audience-confusion/002-edge-token-on-tools-list-bearer",
+  "staged": true,
+  "heldout": true,
+  "family": "S",
+  "severity": "high",
+  "description": "During tool discovery (tools/list), the routing delegate header holds a token whose audience is the gateway's own short name; it would be forwarded upstream as an Authorization bearer.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/list",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6ImZyZWlnaHQtZWRnZSIsImlhdCI6MTc5MTkzNTk4MCwiZXhwIjoxNzkxOTM2NjAwLCJqdGkiOiJmLWZyZWlnaHQtZWRnZS1iYXNlIiwiYWN0Ijp7ImNsaWVudF9pZCI6ImRpc3BhdGNoLW9yY2hlc3RyYXRvciJ9fQ.HJeLdlhD3X-O5yovTnXs-S9io8Yx-ITWmhiu4PLZGXE"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "gateway-audience token relayed upstream on discovery"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/list",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.07h_bOLQzKPPgexf98rvXR1iuqksuMSszGKD5WF9r9s"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "audience-passthrough"
+    ]
+  },
+  "provenance": "Synthetic held-out (S: tools/list surface, Authorization bearer upstream). MCP Security Best Practices, Token Passthrough."
+}

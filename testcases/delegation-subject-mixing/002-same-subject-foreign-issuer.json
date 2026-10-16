@@ -1,0 +1,112 @@
+{
+  "vector": "delegation-subject-mixing",
+  "id": "delegation-subject-mixing/002-same-subject-foreign-issuer",
+  "staged": true,
+  "severity": "high",
+  "description": "Both tokens name 'user:ana.k', but the hotels token comes from a different identity provider. A subject is only unique within its issuer, so these may be two different people.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi1ycnV1ZG8iLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IifX0.2iRLRNrZf225CTASYmWrPBpwERGzj19TsE5xcQKuR_A",
+        "x-delegate-hotels": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3BhcnRuZXItaWRwLnRyYXZlbC50ZXN0Iiwic3ViIjoidXNlcjphbmEuayIsImF1ZCI6Imh0dHBzOi8vaG90ZWxzLnRyYXZlbC50ZXN0L21jcCIsImlhdCI6MTc5MTkzNTk3MCwiZXhwIjoxNzkxOTM2MDkwLCJqdGkiOiJkZXYtN3I3ZHl3IiwiYWN0Ijp7InN1YiI6InRyaXAtb3JjaGVzdHJhdG9yIn19.Dp7rhyXXw2MpkNTsJUUMFstxkQBhxf7MrX4sPWnDuNw"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "same subject string from different issuers"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi1ycnV1ZG8iLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IifX0.2iRLRNrZf225CTASYmWrPBpwERGzj19TsE5xcQKuR_A",
+        "x-delegate-hotels": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2hvdGVscy50cmF2ZWwudGVzdC9tY3AiLCJpYXQiOjE3OTE5MzU5NzAsImV4cCI6MTc5MTkzNjA5MCwianRpIjoiZGV2LW9odnEzNiIsImFjdCI6eyJzdWIiOiJ0cmlwLW9yY2hlc3RyYXRvciJ9fQ.oT6idBaSx0rBX57m2tSn2QFASs_vjz_9LA7h1uFgWAg"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "subject-mixing"
+    ]
+  },
+  "provenance": "Synthetic. RFC 7519 §4.1.1–4.1.2 (sub unique within iss)."
+}
