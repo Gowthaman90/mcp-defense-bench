@@ -66,7 +66,45 @@
       "L": 3
     }
   },
-  "defenderFreeze": null,
+  "defenderFreeze": {
+    "frozenAt": "2026-10-16T04:04:20.815Z",
+    "rule": "No defender or adapter change between this record and publication of the held-out numbers (DELEGATION-PREREG §6.2).",
+    "bench": {
+      "commit": "52fde33",
+      "note": "adapters for every peer + scoreCap rule; built against dev fixtures only"
+    },
+    "defenders": {
+      "mcp-bastion": {
+        "repo": "https://github.com/Gowthaman90/mcp-bastion",
+        "branch": "feat/delegation-checks",
+        "commit": "c18ff0f4bf7fa721b8c8737cfe72234c828144f2",
+        "distBuiltAt": "2026-10-15T22:58:02-05:00",
+        "distSha256": {
+          "dist/index.js": "96edd6bc3c292d544cda5bc537cbc60772eda66fa49920dc3b41d59c71576aef",
+          "dist/chunk-4EKPD3XA.js": "95ac720ef954fd6c4c84f1991d597aa5e2022aa691b4c2ca5f9eba888f12f2d0"
+        },
+        "note": "unreleased (package.json still 1.1.0); working tree differs from the commit only in an unrelated README line"
+      },
+      "mcp-firewall": {
+        "version": "0.1.0 (PyPI)",
+        "runtime": ".tools/mcpfw-venv, Python 3.12"
+      },
+      "pipelock": {
+        "version": "3.0.0",
+        "binarySha256": "96843f7f3b5415384230b9e1b8ecfb925d89df2e57849ee74ab63c15b6d02444"
+      },
+      "vaquarkhan-mcp-bastion": {
+        "repo": "https://github.com/vaquarkhan/MCP-Bastion",
+        "commit": "28a1a61ffdb23873da298b993bb1185964d2977e",
+        "packageVersion": "5.1.0",
+        "runtime": ".tools/vaquarkhan-mcp-bastion/venv, Python 3.12, PyJWT[crypto] 2.13.0, run with python -I"
+      },
+      "null-baseline": {
+        "version": "bench commit 52fde33"
+      }
+    },
+    "node": "v24.16.0"
+  },
   "removals": [],
   "generators": {
     "scripts/gen-delegation.mjs": "31723fae17573162982082b2adbe094fe4e1d5de20440d26639ce60c4a76761f",
