@@ -1,0 +1,111 @@
+{
+  "vector": "delegation-chain-laundering",
+  "id": "delegation-chain-laundering/003-cyclic-act-chain",
+  "staged": true,
+  "severity": "medium",
+  "description": "The chain runs trip-orchestrator → itinerary-planner → trip-orchestrator: the same agent appears twice, a loop that obscures who actually originated the action.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi1jNDF4cTEiLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IiLCJhY3QiOnsic3ViIjoiaXRpbmVyYXJ5LXBsYW5uZXIiLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IifX19fQ.ZkhTyexIuNJ-bX6vxYvvShnP9oFluTuyqklPP7Iwwzg"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "cycle in the delegation chain"
+  },
+  "scoreCap": "detect",
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi1hbGtwNTYiLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IiLCJhY3QiOnsic3ViIjoiaXRpbmVyYXJ5LXBsYW5uZXIifX19.H2aCZ3Sg1T_zZL0bXMdHghHitJAwZqZJmOAQMdHlcM8"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "chain-cycle"
+    ]
+  },
+  "provenance": "Synthetic. RFC 8693 §4.1 (prior actors informational)."
+}

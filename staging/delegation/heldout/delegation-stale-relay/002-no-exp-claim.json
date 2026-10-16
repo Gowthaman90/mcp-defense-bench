@@ -1,0 +1,120 @@
+{
+  "vector": "delegation-stale-relay",
+  "id": "heldout/delegation-stale-relay/002-no-exp-claim",
+  "staged": true,
+  "heldout": true,
+  "family": "L",
+  "severity": "high",
+  "description": "The routing token carries an issued-at time but no expiry at all, so it never lapses.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImp0aSI6ImYtdXJuOmZyZWlnaHQ6cm91dGluZy1iYXNlIiwiYWN0Ijp7ImNsaWVudF9pZCI6ImRpc3BhdGNoLW9yY2hlc3RyYXRvciJ9fQ.Ep4raR6Vv1YUfuGW4lj-QDHb46QQUZ2n8gQMpLA2cKY"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "no exp claim"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.07h_bOLQzKPPgexf98rvXR1iuqksuMSszGKD5WF9r9s"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "time"
+    ]
+  },
+  "provenance": "Synthetic held-out (L). RFC 8725 (tokens should be short-lived)."
+}

@@ -1,0 +1,110 @@
+{
+  "vector": "delegation-audience-confusion",
+  "id": "delegation-audience-confusion/001-hotels-token-routed-to-flights",
+  "staged": true,
+  "severity": "high",
+  "description": "The orchestrator's call to the flights sub-agent carries the token the platform issued for the hotels sub-agent. A relay that does not check the audience lets one service's grant act at another.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2hvdGVscy50cmF2ZWwudGVzdC9tY3AiLCJpYXQiOjE3OTE5MzU5NzAsImV4cCI6MTc5MTkzNjA5MCwianRpIjoiZGV2LW9odnEzNiIsImFjdCI6eyJzdWIiOiJ0cmlwLW9yY2hlc3RyYXRvciJ9fQ.oT6idBaSx0rBX57m2tSn2QFASs_vjz_9LA7h1uFgWAg"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "delegate token audience (hotels) does not match the target upstream (flights)"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi1ycnV1ZG8iLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IifX0.2iRLRNrZf225CTASYmWrPBpwERGzj19TsE5xcQKuR_A"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "audience-lateral"
+    ]
+  },
+  "provenance": "Synthetic. RFC 8707 resource indicators; RFC 8725 §3.9."
+}

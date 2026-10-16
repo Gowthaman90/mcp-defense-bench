@@ -1,0 +1,112 @@
+{
+  "vector": "delegation-chain-laundering",
+  "id": "heldout/delegation-chain-laundering/001-records-sync-bot-as-current-actor",
+  "staged": true,
+  "heldout": true,
+  "family": "D",
+  "severity": "high",
+  "description": "The intake token's current actor is 'records-sync-bot'; only 'claims-coordinator' may act for claimants.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "claims-gateway"
+      ]
+    },
+    "upstreams": {
+      "intake": {
+        "audience": "claims-intake",
+        "incomingHeader": "x-on-behalf-of-intake",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "adjudication": {
+        "audience": "claims-adjudication",
+        "incomingHeader": "x-on-behalf-of-adjudication",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "payout": {
+        "audience": "claims-payout",
+        "incomingHeader": "x-on-behalf-of-payout",
+        "upstreamHeader": "x-end-user-token"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 600,
+      "clockSkewSeconds": 60,
+      "allowedActors": [
+        "claims-coordinator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "intake",
+      "headers": {
+        "x-on-behalf-of-intake": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmNsYWltcy5pbnZhbGlkIiwic3ViIjoic3ViLTdmM2E5MSIsImF1ZCI6ImNsYWltcy1pbnRha2UiLCJpYXQiOjE3OTE5MzU5NTUsImV4cCI6MTc5MTkzNjMwMCwianRpIjoiYy1jbGFpbXMtaW50YWtlLWFjdCIsImFjdCI6eyJzdWIiOiJyZWNvcmRzLXN5bmMtYm90In19.6S-5myFGNFD7c_mgv5D8TQ_gjNq0kfMcemeD4KdFTHY"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "current actor not allowed"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "claims-gateway"
+      ]
+    },
+    "upstreams": {
+      "intake": {
+        "audience": "claims-intake",
+        "incomingHeader": "x-on-behalf-of-intake",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "adjudication": {
+        "audience": "claims-adjudication",
+        "incomingHeader": "x-on-behalf-of-adjudication",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "payout": {
+        "audience": "claims-payout",
+        "incomingHeader": "x-on-behalf-of-payout",
+        "upstreamHeader": "x-end-user-token"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 600,
+      "clockSkewSeconds": 60,
+      "allowedActors": [
+        "claims-coordinator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "intake",
+      "headers": {
+        "x-on-behalf-of-intake": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmNsYWltcy5pbnZhbGlkIiwic3ViIjoic3ViLTdmM2E5MSIsImF1ZCI6ImNsYWltcy1pbnRha2UiLCJpYXQiOjE3OTE5MzU5NTUsImV4cCI6MTc5MTkzNjMwMCwianRpIjoiYy1jbGFpbXMtaW50YWtlLWJhc2UiLCJhY3QiOnsic3ViIjoiY2xhaW1zLWNvb3JkaW5hdG9yIn19.xjOZLcZNk7qN5KG7L9DXiNgCYdGRuz4Bw65vrKH5cwA"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "actor"
+    ]
+  },
+  "provenance": "Synthetic held-out (D). RFC 8693 §4.1."
+}

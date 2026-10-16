@@ -1,0 +1,144 @@
+{
+  "vector": "delegation-signature-forgery",
+  "id": "delegation-signature-forgery/002-attacker-key-same-kid",
+  "staged": true,
+  "severity": "high",
+  "description": "The token claims the deployment's key id but is signed with a different (attacker) ES256 key.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "signature",
+      "jwks": {
+        "keys": [
+          {
+            "kty": "EC",
+            "x": "Hakpe0ibDoLR_hvUWfdG_j85RTNV6LL3vIyTZ93CBEQ",
+            "y": "ahq52T0fb3J9MXCST0FZzNxXb9GLOTPGCth_UH8DutM",
+            "crv": "P-256",
+            "kid": "travel-2026-10",
+            "alg": "ES256",
+            "use": "sig"
+          }
+        ]
+      },
+      "issuer": "https://idp.travel.test",
+      "algorithms": [
+        "ES256"
+      ]
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6InRyYXZlbC0yMDI2LTEwIn0.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi1ycnV1ZG8iLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IifX0.Yx-gERMpksbsZyJlp6a1-1k2UTjL1neRhCROz2k3K5KHhtvbXEVXbe2hUNTR00y-KNi5_79xIZiFUwegmcCUGQ"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "signature does not verify under the trusted key"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "signature",
+      "jwks": {
+        "keys": [
+          {
+            "kty": "EC",
+            "x": "Hakpe0ibDoLR_hvUWfdG_j85RTNV6LL3vIyTZ93CBEQ",
+            "y": "ahq52T0fb3J9MXCST0FZzNxXb9GLOTPGCth_UH8DutM",
+            "crv": "P-256",
+            "kid": "travel-2026-10",
+            "alg": "ES256",
+            "use": "sig"
+          }
+        ]
+      },
+      "issuer": "https://idp.travel.test",
+      "algorithms": [
+        "ES256"
+      ]
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6InRyYXZlbC0yMDI2LTEwIn0.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi1ycnV1ZG8iLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IifX0.Wo8jCueV3VtaKezVtzVTO-hx7oN4RPiKvvV7i3jVPxQ_b0E1dQTwliv98_qn4QhtVIRSKNCQqPUFKOgEqtY4Fg"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "signature"
+    ]
+  },
+  "provenance": "Synthetic. RFC 7515; RFC 8725 §3.2."
+}

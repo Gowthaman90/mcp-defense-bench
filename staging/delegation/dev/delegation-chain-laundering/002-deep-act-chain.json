@@ -1,0 +1,111 @@
+{
+  "vector": "delegation-chain-laundering",
+  "id": "delegation-chain-laundering/002-deep-act-chain",
+  "staged": true,
+  "severity": "medium",
+  "description": "The current actor is allowed, but the prior-actor chain is four agents deep (policy: three), so authority passed through more intermediaries than the deployment expects.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi13aHpqbzQiLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IiLCJhY3QiOnsic3ViIjoiaXRpbmVyYXJ5LXBsYW5uZXIiLCJhY3QiOnsic3ViIjoiZmFyZS1zY3JhcGVyIiwiYWN0Ijp7InN1YiI6ImhlbHBlci03In19fX19._mR4qjgSVY7wx1066dC5LlZwoRy1nfy1V2ou10oqoyE"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": false,
+    "signal": "delegation chain deeper than policy (prior actors are informational: detect + audit)"
+  },
+  "scoreCap": "detect",
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://gw.travel.test/mcp"
+      ]
+    },
+    "upstreams": {
+      "flights": {
+        "audience": "https://flights.travel.test/mcp",
+        "incomingHeader": "x-delegate-flights",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "hotels": {
+        "audience": "https://hotels.travel.test/mcp",
+        "incomingHeader": "x-delegate-hotels",
+        "upstreamHeader": "x-user-assertion"
+      },
+      "payments": {
+        "audience": "https://payments.travel.test/mcp",
+        "incomingHeader": "x-delegate-payments",
+        "upstreamHeader": "x-user-assertion"
+      }
+    },
+    "trust": {
+      "mode": "structural"
+    },
+    "policy": {
+      "maxLifetimeSeconds": 300,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "trip-orchestrator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "flights",
+      "headers": {
+        "x-delegate-flights": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lkcC50cmF2ZWwudGVzdCIsInN1YiI6InVzZXI6YW5hLmsiLCJhdWQiOiJodHRwczovL2ZsaWdodHMudHJhdmVsLnRlc3QvbWNwIiwiaWF0IjoxNzkxOTM1OTcwLCJleHAiOjE3OTE5MzYwOTAsImp0aSI6ImRldi1hbGtwNTYiLCJhY3QiOnsic3ViIjoidHJpcC1vcmNoZXN0cmF0b3IiLCJhY3QiOnsic3ViIjoiaXRpbmVyYXJ5LXBsYW5uZXIifX19.H2aCZ3Sg1T_zZL0bXMdHghHitJAwZqZJmOAQMdHlcM8"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "chain-depth"
+    ]
+  },
+  "provenance": "Synthetic. RFC 8693 §4.1: prior actors are informational only and MUST NOT drive access control, so detection is the conforming response."
+}

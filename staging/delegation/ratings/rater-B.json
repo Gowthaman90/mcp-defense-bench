@@ -1,0 +1,62 @@
+{
+  "_rater": {
+    "id": "B",
+    "who": "Claude (LLM), blind pass",
+    "date": "2026-10-15",
+    "blind": true,
+    "notes": "The delegation relay/gateway is treated as host-orchestration; the receiving sub-agent's own token checks are treated as server. Art.73/A.8.4 is given only to signature forgery (authorization forgery); Art.26 and A.6.2.5 go to vectors whose control is a deployer-set policy, allowlist or trusted key set; signature forgery gets no OWASP LLM category because none clearly covers it."
+  },
+  "_disclosure": "Rater B is an LLM performing a blind pass from the codebook and vector descriptions only.",
+  "ratings": {
+    "delegation-audience-confusion": {
+      "mcpLayer": ["server", "host-orchestration"],
+      "stride": ["ElevationOfPrivilege", "Spoofing"],
+      "nistAiRmf": ["MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03", "ASI07"],
+      "nsaGuidance": ["AUTH"],
+      "euAiAct": ["Art.15(5)", "Art.55(1)(d)"],
+      "iso42001": ["A.6.2.6", "A.6.2.4", "A.6.2.5", "A.9.2"]
+    },
+    "delegation-subject-mixing": {
+      "mcpLayer": ["host-orchestration"],
+      "stride": ["Spoofing", "ElevationOfPrivilege"],
+      "nistAiRmf": ["MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03", "ASI07"],
+      "nsaGuidance": ["AUTH"],
+      "euAiAct": ["Art.15(5)"],
+      "iso42001": ["A.6.2.6", "A.6.2.4", "A.9.2"]
+    },
+    "delegation-stale-relay": {
+      "mcpLayer": ["host-orchestration", "server"],
+      "stride": ["ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03", "ASI07"],
+      "nsaGuidance": ["AUTH"],
+      "euAiAct": ["Art.15(5)", "Art.26"],
+      "iso42001": ["A.6.2.6", "A.6.2.4", "A.6.2.5", "A.9.2"]
+    },
+    "delegation-chain-laundering": {
+      "mcpLayer": ["host-orchestration"],
+      "stride": ["ElevationOfPrivilege", "Repudiation"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03", "ASI07", "ASI10"],
+      "nsaGuidance": ["AUTH", "LOG"],
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.26"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.4", "A.6.2.5", "A.9.2"]
+    },
+    "delegation-signature-forgery": {
+      "mcpLayer": ["server", "host-orchestration"],
+      "stride": ["Spoofing", "ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": [],
+      "owaspAgentic2026": ["ASI03", "ASI07"],
+      "nsaGuidance": ["AUTH", "RT"],
+      "euAiAct": ["Art.15(5)", "Art.26", "Art.55(1)(d)", "Art.73"],
+      "iso42001": ["A.6.2.6", "A.6.2.4", "A.6.2.5", "A.8.4"]
+    }
+  }
+}

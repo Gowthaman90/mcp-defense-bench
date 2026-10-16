@@ -1,0 +1,144 @@
+{
+  "vector": "delegation-signature-forgery",
+  "id": "heldout/delegation-signature-forgery/001-payload-swapped-after-signing",
+  "staged": true,
+  "heldout": true,
+  "family": "D",
+  "severity": "high",
+  "description": "A genuine Ed25519-signed intake token for one claimant has its payload replaced with another claimant's, keeping the original signature.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "claims-gateway"
+      ]
+    },
+    "upstreams": {
+      "intake": {
+        "audience": "claims-intake",
+        "incomingHeader": "x-on-behalf-of-intake",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "adjudication": {
+        "audience": "claims-adjudication",
+        "incomingHeader": "x-on-behalf-of-adjudication",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "payout": {
+        "audience": "claims-payout",
+        "incomingHeader": "x-on-behalf-of-payout",
+        "upstreamHeader": "x-end-user-token"
+      }
+    },
+    "trust": {
+      "mode": "signature",
+      "jwks": {
+        "keys": [
+          {
+            "crv": "Ed25519",
+            "x": "wJXT7nK61F6dVwDgak2HZn6uZvRMR2ExgEPHMqZY5Lo",
+            "kty": "OKP",
+            "kid": "claims-ed-1",
+            "alg": "EdDSA",
+            "use": "sig"
+          }
+        ]
+      },
+      "issuer": "https://login.claims.invalid",
+      "algorithms": [
+        "EdDSA"
+      ]
+    },
+    "policy": {
+      "maxLifetimeSeconds": 600,
+      "clockSkewSeconds": 60,
+      "allowedActors": [
+        "claims-coordinator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "intake",
+      "headers": {
+        "x-on-behalf-of-intake": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSIsImtpZCI6ImNsYWltcy1lZC0xIn0.eyJpc3MiOiJodHRwczovL2xvZ2luLmNsYWltcy5pbnZhbGlkIiwic3ViIjoic3ViLWMyMGU0NCIsImF1ZCI6ImNsYWltcy1pbnRha2UiLCJpYXQiOjE3OTE5MzU5NTUsImV4cCI6MTc5MTkzNjMwMCwianRpIjoiYy1jbGFpbXMtaW50YWtlLXN1YiIsImFjdCI6eyJzdWIiOiJjbGFpbXMtY29vcmRpbmF0b3IifX0.wLPSq1ED9y1v750yu64Eil0TrUeJXemyzKQdsVlbCch8lRt_LHzBFspGSjCNOKQm0_gRJtaiceqJXRSODxLjAA"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "signature does not cover the presented payload"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "claims-gateway"
+      ]
+    },
+    "upstreams": {
+      "intake": {
+        "audience": "claims-intake",
+        "incomingHeader": "x-on-behalf-of-intake",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "adjudication": {
+        "audience": "claims-adjudication",
+        "incomingHeader": "x-on-behalf-of-adjudication",
+        "upstreamHeader": "x-end-user-token"
+      },
+      "payout": {
+        "audience": "claims-payout",
+        "incomingHeader": "x-on-behalf-of-payout",
+        "upstreamHeader": "x-end-user-token"
+      }
+    },
+    "trust": {
+      "mode": "signature",
+      "jwks": {
+        "keys": [
+          {
+            "crv": "Ed25519",
+            "x": "wJXT7nK61F6dVwDgak2HZn6uZvRMR2ExgEPHMqZY5Lo",
+            "kty": "OKP",
+            "kid": "claims-ed-1",
+            "alg": "EdDSA",
+            "use": "sig"
+          }
+        ]
+      },
+      "issuer": "https://login.claims.invalid",
+      "algorithms": [
+        "EdDSA"
+      ]
+    },
+    "policy": {
+      "maxLifetimeSeconds": 600,
+      "clockSkewSeconds": 60,
+      "allowedActors": [
+        "claims-coordinator"
+      ],
+      "maxChainDepth": 3
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "intake",
+      "headers": {
+        "x-on-behalf-of-intake": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSIsImtpZCI6ImNsYWltcy1lZC0xIn0.eyJpc3MiOiJodHRwczovL2xvZ2luLmNsYWltcy5pbnZhbGlkIiwic3ViIjoic3ViLTdmM2E5MSIsImF1ZCI6ImNsYWltcy1pbnRha2UiLCJpYXQiOjE3OTE5MzU5NTUsImV4cCI6MTc5MTkzNjMwMCwianRpIjoiYy1jbGFpbXMtaW50YWtlLWJhc2UiLCJhY3QiOnsic3ViIjoiY2xhaW1zLWNvb3JkaW5hdG9yIn19.wLPSq1ED9y1v750yu64Eil0TrUeJXemyzKQdsVlbCch8lRt_LHzBFspGSjCNOKQm0_gRJtaiceqJXRSODxLjAA"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "signature"
+    ]
+  },
+  "provenance": "Synthetic held-out (D/E). RFC 7515."
+}

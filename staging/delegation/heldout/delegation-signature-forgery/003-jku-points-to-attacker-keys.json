@@ -1,0 +1,154 @@
+{
+  "vector": "delegation-signature-forgery",
+  "id": "heldout/delegation-signature-forgery/003-jku-points-to-attacker-keys",
+  "staged": true,
+  "heldout": true,
+  "family": "S",
+  "severity": "high",
+  "description": "The token is signed with an attacker key and its header carries a jku URL pointing at the attacker's key set plus a kid that exists only there.",
+  "fixture": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "signature",
+      "jwks": {
+        "keys": [
+          {
+            "kty": "EC",
+            "x": "Gk-18NZjdZyPLOqQYW15pJi6LXJQD7waouIn6b5ul1w",
+            "y": "Ui1I-5fbc23bVw4BrlIVWliLvVWyRcYdAsTSzoGPPEc",
+            "crv": "P-256",
+            "kid": "freight-k1",
+            "alg": "ES256",
+            "use": "sig"
+          }
+        ]
+      },
+      "issuer": "https://sso.freight.invalid",
+      "algorithms": [
+        "ES256"
+      ]
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImVkZ2Utcm90LTciLCJqa3UiOiJodHRwczovL2tleXMuZnJlaWdodC1jZG4uaW52YWxpZC9qd2tzLmpzb24ifQ.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.OFlKWMtszyPkRgSmkt7rTd7-oxCrs4P8iIopVgzZuXIYSEPfezUotbegjmrlkJ0qL-bZQDtse-El5SOYfctlNA"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "key reference (jku/kid) outside the trusted key set"
+  },
+  "benignControl": {
+    "type": "delegated-request",
+    "now": 1791936000,
+    "gateway": {
+      "audiences": [
+        "https://edge.freight.invalid/mcp",
+        "freight-edge"
+      ]
+    },
+    "upstreams": {
+      "routing": {
+        "audience": "urn:freight:routing",
+        "incomingHeader": "x-freight-delegation-routing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "customs": {
+        "audience": "urn:freight:customs",
+        "incomingHeader": "x-freight-delegation-customs",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      },
+      "billing": {
+        "audience": "urn:freight:billing",
+        "incomingHeader": "x-freight-delegation-billing",
+        "upstreamHeader": "authorization",
+        "upstreamScheme": "Bearer"
+      }
+    },
+    "trust": {
+      "mode": "signature",
+      "jwks": {
+        "keys": [
+          {
+            "kty": "EC",
+            "x": "Gk-18NZjdZyPLOqQYW15pJi6LXJQD7waouIn6b5ul1w",
+            "y": "Ui1I-5fbc23bVw4BrlIVWliLvVWyRcYdAsTSzoGPPEc",
+            "crv": "P-256",
+            "kid": "freight-k1",
+            "alg": "ES256",
+            "use": "sig"
+          }
+        ]
+      },
+      "issuer": "https://sso.freight.invalid",
+      "algorithms": [
+        "ES256"
+      ]
+    },
+    "policy": {
+      "maxLifetimeSeconds": 900,
+      "clockSkewSeconds": 30,
+      "allowedActors": [
+        "dispatch-orchestrator"
+      ],
+      "maxChainDepth": 2
+    },
+    "request": {
+      "method": "tools/call",
+      "target": "routing",
+      "headers": {
+        "x-freight-delegation-routing": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImZyZWlnaHQtazEifQ.eyJpc3MiOiJodHRwczovL3Nzby5mcmVpZ2h0LmludmFsaWQiLCJzdWIiOiJkYW5hLm9ydGl6QGZyZWlnaHQuaW52YWxpZCIsImF1ZCI6InVybjpmcmVpZ2h0OnJvdXRpbmciLCJpYXQiOjE3OTE5MzU5ODAsImV4cCI6MTc5MTkzNjYwMCwianRpIjoiZi11cm46ZnJlaWdodDpyb3V0aW5nLWJhc2UiLCJhY3QiOnsiY2xpZW50X2lkIjoiZGlzcGF0Y2gtb3JjaGVzdHJhdG9yIn19.1YRpo-97IRqbwoK4V40ps1xvAs3GObS8gpRM37ff5almVSCkkHsLJKusEIO_pGw1uI4q16RtHCNKxmht8cLqgw"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "signature"
+    ]
+  },
+  "provenance": "Synthetic held-out (S). RFC 8725 §3.10 (do not trust header-supplied key URLs)."
+}
