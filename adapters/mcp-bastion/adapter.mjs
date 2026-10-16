@@ -8,6 +8,7 @@
  *   - definition CHANGES    → hashToolDefinition     (rug-pull)
  *   - cross-server naming   → duplicate-name check   (tool shadowing, per ToolRegistry.shadowedBy)
  *   - tool RESULTS          → scanText               (response scanning, v0.3 responseScanInterceptor)
+ *   - delegate TOKENS       → checkDelegationAsync   (keyless delegation checks, v1.2 gateway mode)
  * Everything else (transport, params, registry provenance, config, consent) is NOT inspected by
  * bastion at runtime, so the adapter returns {detect:false} — honestly.
  */
@@ -50,7 +51,87 @@ const {
   checkErrorSteering,
   sealRequestState,
   openRequestState,
+  // v1.2 (unreleased, feat/delegation-checks): keyless delegation checks on forwarded delegate JWTs.
+  BastionConfigSchema,
+  checkDelegationAsync,
+  delegationKeySet,
 } = bastion;
+
+/**
+ * Rules that only warn under the default `balanced` profile (security.onDelegationChain = warn):
+ * prior actors are informational per RFC 8693 §4.1. Mirrors DELEGATION_CHAIN_RULES in bastion.
+ */
+const DELEGATION_WARN_RULES = new Set(["delegation-chain-depth", "delegation-chain-cycle"]);
+
+/**
+ * A `delegated-request` fixture through bastion's runtime path. The fixture's deployment is turned
+ * into a bastion config and validated by bastion's own schema (so its defaults, e.g.
+ * maxLifetimeSeconds 3600, and its config-load rejections apply), then the policy is built exactly
+ * as DelegationGate builds it and the request's carried headers are checked once, as the gateway
+ * does per request. The fixture's fixed clock stands in for Date.now().
+ *
+ * Runtime effect under `balanced`: any finding other than the chain rules blocks — a `tools/call`
+ * is refused before any upstream contact and a `tools/list` omits the upstream — so enforce = true.
+ */
+async function assessDelegated(input) {
+  const trust = input.trust ?? { mode: "structural" };
+  const servers = {};
+  for (const [name, u] of Object.entries(input.upstreams ?? {})) {
+    servers[name] = {
+      transport: "http",
+      url: `http://127.0.0.1:9/${encodeURIComponent(name)}`,
+      protocol: "legacy",
+      connect: "onDemand",
+      forwardHeaders: { [u.upstreamHeader]: u.incomingHeader },
+      delegation: {
+        audience: u.audience,
+        ...(input.policy ?? {}),
+        ...(trust.mode === "signature"
+          ? { verify: "signature", issuer: trust.issuer, algorithms: trust.algorithms, jwks: trust.jwks }
+          : {}),
+      },
+    };
+  }
+  const parsed = BastionConfigSchema.safeParse({
+    servers,
+    listen: { mode: "http" },
+    delegation: { gatewayAudiences: input.gateway?.audiences ?? [] },
+  });
+  if (!parsed.success) {
+    // bastion refuses to start with this deployment, so it checks nothing: an honest miss.
+    const why = parsed.error.issues.map((i) => i.message).join("; ").slice(0, 120);
+    return { detect: false, enforce: false, signal: `config rejected by bastion: ${why}` };
+  }
+  const cfg = parsed.data;
+  const upstreams = {};
+  for (const [name, server] of Object.entries(cfg.servers)) {
+    const d = server.delegation;
+    const [, incoming] = Object.entries(server.forwardHeaders)[0];
+    upstreams[name] = {
+      incomingHeader: incoming.toLowerCase(),
+      audience: d.audience,
+      maxLifetimeSeconds: d.maxLifetimeSeconds,
+      clockSkewSeconds: d.clockSkewSeconds,
+      allowedActors: d.allowedActors,
+      requireActor: d.requireActor,
+      maxChainDepth: d.maxChainDepth,
+      ...(d.verify === "signature"
+        ? { signature: { issuer: d.issuer, algorithms: d.algorithms, keys: delegationKeySet({ jwks: d.jwks }) } }
+        : {}),
+    };
+  }
+  const headers = lowerHeaders(input.request?.headers);
+  const r = await checkDelegationAsync(
+    { upstreams, gatewayAudiences: cfg.delegation.gatewayAudiences, oneUserPerRequest: cfg.delegation.oneUserPerRequest },
+    headers,
+    input.now,
+  );
+  const findings = [...(r.perUpstream[input.request?.target] ?? []), ...r.request];
+  if (findings.length === 0) return { detect: false, enforce: false };
+  const rules = [...new Set(findings.map((f) => f.rule))];
+  const blocks = findings.some((f) => !DELEGATION_WARN_RULES.has(f.rule));
+  return { detect: true, enforce: blocks, signal: `delegation (${trust.mode}): ${rules.join(", ")}${blocks ? "" : " (warn only)"}` };
+}
 
 /** Rules the HTTP listener REJECTS with 400 / -32020 (mirrors REJECTING_HEADER_RULES in bastion). */
 const REJECTING_HEADER_RULES = new Set(["header-body-mismatch", "header-invalid-value", "header-duplicate-conflict"]);
@@ -335,6 +416,9 @@ export async function assess(input, _testcase) {
       const high = findings.some((f) => f.severity === "high");
       return { detect: true, enforce: high, signal: `mrtr gate${high ? " (blocked under 'balanced')" : ""}: ${[...new Set(findings.map((f) => f.rule))].join(", ")}` };
     }
+
+    case "delegated-request":
+      return assessDelegated(input);
 
     case "tool-state-handle":
     case "task-lifecycle":

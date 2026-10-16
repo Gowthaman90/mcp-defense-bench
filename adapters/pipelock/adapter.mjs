@@ -80,6 +80,15 @@ function scanResponse(input) {
 }
 
 export async function assess(input, _testcase) {
+  if (input?.type === "delegated-request") {
+    // pipelock 3.0.0 inspects egress destinations, bodies and headers for DLP / injection. It has a
+    // "JWT Token" DLP pattern, but it parses no delegate-token claims (no aud/iss/sub/exp/act policy;
+    // its "audience" options belong to the Conductor fleet control plane). A JWT-shaped value would
+    // match that pattern on the attack and its benign control alike, so it cannot discriminate. The
+    // audience URLs in the fixture are token claims, not destinations, so they are not scanned as
+    // egress. Confirmed by inspecting the v3.0.0 binary's strings and docs — honest miss.
+    return { detect: false, enforce: false, signal: "no delegate-token parsing (JWT only as a DLP secret pattern)" };
+  }
   ensureSetup();
 
   // (a) Destination/egress scanning — a blocked URL is an outright enforce.

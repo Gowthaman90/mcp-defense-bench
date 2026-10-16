@@ -39,6 +39,7 @@ for (const d of readdirSync(join(root, "adapters"))) {
 }
 tools.sort((a, b) => a.tool.localeCompare(b.tool));
 
+const anyHeldoutCov = () => tools.some((t) => t._heldout);
 const lvl = (c, id) => c.coverage?.[id]?.level ?? "unknown";
 const cell = (c, id) => c.coverage?.[id];
 const robustOf = (cov, id) => (typeof cov?.[id]?.robustCoverage === "number" ? cov[id].robustCoverage : (WEIGHT[cov?.[id]?.level ?? "unknown"] ?? 0));
@@ -52,6 +53,11 @@ const appliesTo = (v, rev) => !Array.isArray(v.appliesTo) || v.appliesTo.include
 const idsFor = (rev) => rubric.vectors.filter((v) => appliesTo(v, rev)).map((v) => v.id);
 const newInLatest = rubric.vectors.filter((v) => Array.isArray(v.appliesTo) && v.appliesTo.length === 1 && v.appliesTo[0] === latest).map((v) => v.id);
 const original = ids.filter((id) => !newInLatest.includes(id));
+// Vector families promoted after the v0.8.0 publication (rubric `family`), so totals can be reported
+// over the previously published denominator as well as the full one (DELEGATION-PREREG §6.6).
+const familyIds = (f) => rubric.vectors.filter((v) => v.family === f).map((v) => v.id);
+const families = [...new Set(rubric.vectors.map((v) => v.family).filter(Boolean))];
+const published = ids.filter((id) => !rubric.vectors.find((v) => v.id === id).family);
 
 const L = [];
 L.push("# Leaderboard (verified)", "");
@@ -63,17 +69,39 @@ L.push(
   "**CorpusRobustCoverage** (headline) = mean detection across *all* fixtures of a vector, including evasion variants; a false positive on any benign variant scores that vector 0. **Capability** = best-case (detects ≥1 fixture). Where the two diverge, the tool is brittle to evasion. **This is a descriptive coverage measure over a fixed, non-exhaustive corpus — NOT a procurement or substitutability ranking:** a higher score does not mean a tool better closes *your* gap, and tools at different architectural layers are not substitutable. _Metric fix + scoping credited to M. Brighindi; a decision-indexed RequiredGapClosure metric is planned (see `docs/CHANGELOG-scoring.md`)._",
   "",
 );
-L.push("| Tool | Class | CorpusRobustCoverage | Capability | 🟢 enforce | 🟡 detect | · none | FP (matched controls) |");
-L.push("|---|---|--:|--:|--:|--:|--:|--:|");
+L.push("| Tool | Class | CorpusRobustCoverage | Capability | 🟢 enforce | 🟡 detect | · none | ? not wired | FP (matched controls) |");
+L.push("|---|---|--:|--:|--:|--:|--:|--:|--:|");
 for (const c of tools) {
   const r = robustW(c);
   const cap = capabilityW(c);
   const n = { enforce: 0, detect: 0, none: 0, unknown: 0 };
   for (const id of ids) n[lvl(c, id)] = (n[lvl(c, id)] ?? 0) + 1;
   const fp = c._dev ? `${c._dev.falsePositives}/${c._dev.casesRun}` : "—";
-  L.push(`| **${c.tool}** | ${c.class ?? "?"} | ${pct(r, ids.length)} (${r.toFixed(1)}/${ids.length}) | ${pct(cap, ids.length)} (${cap.toFixed(1)}/${ids.length}) | ${n.enforce} | ${n.detect} | ${n.none} | ${fp} |`);
+  const cls = `${c.class ?? "?"}${c.scope ? ` (scope: ${c.scope})` : ""}`;
+  L.push(`| **${c.tool}** | ${cls} | ${pct(r, ids.length)} (${r.toFixed(1)}/${ids.length}) | ${pct(cap, ids.length)} (${cap.toFixed(1)}/${ids.length}) | ${n.enforce} | ${n.detect} | ${n.none} | ${n.unknown} | ${fp} |`);
 }
 L.push("");
+
+if (families.length) {
+  L.push("## Two totals: previously published vectors vs all vectors", "");
+  L.push(`Families promoted after the last publication change the denominator, so both totals are reported (CorpusRobustCoverage on the development corpus; held-out over the vectors the held-out corpus covers).`, "");
+  const famCols = families.map((f) => `${f} family (${familyIds(f).length})`);
+  L.push(`| Tool | Published ${published.length} vectors | All ${ids.length} vectors | ${famCols.join(" | ")} |`);
+  L.push(`|---|--:|--:|${families.map(() => "--:").join("|")}|`);
+  for (const c of tools) {
+    const both = (sub) => {
+      const d = robustW(c, sub);
+      // Held-out is reported over the vectors the held-out corpus covers, as in the held-out table.
+      const hcov = c._heldout?.coverage ?? {};
+      const hs = sub.filter((id) => hcov[id]?.verified);
+      const h = hs.reduce((a, id) => a + robustOf(hcov, id), 0);
+      const hTxt = c._heldout && hs.length ? ` · held-out ${pct(h, hs.length)} (${h.toFixed(1)}/${hs.length})` : "";
+      return `${pct(d, sub.length)} (${d.toFixed(1)}/${sub.length})${hTxt}`;
+    };
+    L.push(`| **${c.tool}** | ${both(published)} | ${both(ids)} | ${families.map((f) => both(familyIds(f))).join(" | ")} |`);
+  }
+  L.push("");
+}
 
 // Per-revision view
 L.push("## Coverage per protocol revision", "");

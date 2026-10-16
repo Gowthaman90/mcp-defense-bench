@@ -29,6 +29,12 @@ function ensureSetup() {
 }
 
 export async function assess(input, _testcase) {
+  if (input?.type === "delegated-request") {
+    // mcp-firewall 0.1.0 is a stdio proxy: it never sees HTTP request headers, and it parses no
+    // delegate token (no aud/iss/sub/exp/act logic; its only JWT code is an outbound secret regex on
+    // server responses, pipeline/outbound/secrets.py). Confirmed by source inspection — honest miss.
+    return { detect: false, enforce: false, signal: "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)" };
+  }
   ensureSetup();
   const res = spawnSync(venvPython, [probe], {
     input: JSON.stringify(input) + "\n",

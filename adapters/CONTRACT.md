@@ -15,6 +15,15 @@ Return:
 - `enforce` — can/does the tool block or short-circuit it (not merely warn)?
 - `signal` — short human string for the results log (optional).
 
+Optional `meta` fields:
+- `fixtureTypes` — the fixture `type`s the adapter is wired for. Cases of any other type are not run:
+  their vectors stay `unknown` (not a miss), and they do not count toward the benign-corpus denominator.
+  For a peer measured on one family only.
+
+A test case may carry `"scoreCap": "detect"`: its level is capped at **detect** even when the tool
+blocks (used where an RFC says the property must not drive access control, e.g. prior actors in an
+RFC 8693 delegation chain; `docs/DELEGATION-PREREG.md` §6.4). The cap applies on every corpus.
+
 ## The integrity rule that makes scores honest
 
 > An adapter must report only what its tool **actually inspects at runtime** — never what its

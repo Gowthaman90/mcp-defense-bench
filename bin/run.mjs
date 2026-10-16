@@ -65,12 +65,21 @@ try {
   process.exit(1);
 }
 
+/**
+ * An adapter that declares the fixture types it is wired for (`meta.fixtureTypes`) is not run on
+ * other cases: their vectors stay `unknown` (scored 0, flagged), never counted as a real miss
+ * (adapters/CONTRACT.md), and they do not count toward its benign-corpus denominator.
+ */
+const wired = (tc) =>
+  !Array.isArray(adapter.meta?.fixtureTypes) || adapter.meta.fixtureTypes.includes(tc.fixture?.type);
+
 // ── Benign-only corpus: measure the false-positive rate on realistic, non-attack inputs. ──────────
 if (corpus === "benign") {
   const items = [];
   let flagged = 0;
   const byKind = {};
   for (const tc of cases) {
+    if (!wired(tc)) continue;
     const verdict = await adapter.assess(tc.fixture, tc);
     const fp = !!verdict.detect;
     if (fp) flagged++;
@@ -78,14 +87,14 @@ if (corpus === "benign") {
     if (fp) byKind[tc.kind ?? "other"].fp++;
     items.push({ id: tc.id, kind: tc.kind ?? null, source: tc.source ?? null, hardNegative: !!tc.hardNegative, falsePositive: fp, verdict });
   }
-  const ci = wilson(flagged, cases.length);
+  const ci = wilson(flagged, items.length);
   const summary = {
     tool: adapter.meta?.tool ?? tool,
     corpus: "benign",
     rubricVersion: rubric.version,
-    items: cases.length,
+    items: items.length,
     falsePositives: flagged,
-    fpRate: cases.length ? Number((flagged / cases.length).toFixed(4)) : 0,
+    fpRate: items.length ? Number((flagged / items.length).toFixed(4)) : 0,
     fpRate95ci: { lo: Number(ci.lo.toFixed(4)), hi: Number(ci.hi.toFixed(4)) },
     byKind,
     measuredAt: new Date().toISOString(),
@@ -107,13 +116,24 @@ const levelFrom = (mal, benign) => {
 const WEIGHT = { enforce: 1, detect: 0.5, observe: 0.1, none: 0, unknown: 0 };
 const rank = { none: 0, detect: 1, enforce: 2 };
 
+/**
+ * RFC-conforming score cap (docs/DELEGATION-PREREG.md §6.4): a case marked `scoreCap: "detect"` is
+ * scored at most `detect` even when the tool blocks, because the property it tests (e.g. prior
+ * actors in an RFC 8693 delegation chain) is informational and must not drive access control.
+ * Applies to every corpus.
+ */
+const capLevel = (level, tc) => (tc.scoreCap === "detect" && level === "enforce" ? "detect" : level);
+
 const perCase = [];
 const byVector = {}; // vector -> { fixtures: [ per-fixture result ] }  (ALL fixtures, not just the best)
 for (const tc of cases) {
+  if (!wired(tc)) continue;
   const mal = await adapter.assess(tc.fixture, tc);
   const benign = await adapter.assess(tc.benignControl, tc);
-  const { level, falsePositive } = levelFrom(mal, benign); // levelFrom already forces level→none on an FP
-  const rec = { id: tc.id, level, falsePositive, mal, benign, expected: tc.expected };
+  const raw = levelFrom(mal, benign); // levelFrom already forces level→none on an FP
+  const falsePositive = raw.falsePositive;
+  const level = capLevel(raw.level, tc);
+  const rec = { id: tc.id, level, falsePositive, mal, benign, expected: tc.expected, ...(level !== raw.level ? { cappedFrom: raw.level } : {}) };
   perCase.push(rec);
   (byVector[tc.vector] ||= { fixtures: [] }).fixtures.push({
     id: tc.id,
@@ -183,6 +203,8 @@ const covOut = {
   class: adapter.meta?.class ?? prev.class ?? "unknown",
   reproducible: adapter.meta?.reproducible ?? prev.reproducible ?? false,
   version: prev.version ?? "local",
+  ...(prev.scope ? { scope: prev.scope } : {}),
+  ...(prev.attribution ? { attribution: prev.attribution } : {}),
   rubricVersion: rubric.version,
   measuredBy: "bin/run.mjs",
   coverage,
@@ -199,7 +221,7 @@ const summary = {
   tool: covOut.tool,
   corpus,
   rubricVersion: rubric.version,
-  casesRun: cases.length,
+  casesRun: perCase.length,
   verifiedVectors: Object.values(coverage).filter((c) => c.verified).length,
   falsePositives: perCase.filter((c) => c.falsePositive).length,
   covered: { enforce: 0, detect: 0, none: 0, unknown: 0 },

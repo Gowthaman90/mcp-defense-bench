@@ -94,6 +94,22 @@ vector only when a fixture confirms it. `unknown` = not yet assessed (scored as 
   standalone `mcp scan` CLI, and the full DLP/tool_call eval endpoint (bearer-token HTTP server) is not
   driven — so this is still a lower bound on pipelock's total capability.
 
+## Wiring status (2026-10-15, v0.9.0 — delegation family, `delegated-request`)
+
+- **mcp-bastion** (unreleased, branch `feat/delegation-checks`, commit `c18ff0f`) — the adapter turns the
+  fixture's deployment into a bastion config, validates it with bastion's own schema (defaults and
+  config-load rejections apply), builds the policy as bastion's `DelegationGate` does, and calls
+  `checkDelegationAsync` once per request with the fixture's clock. Structural fixtures use structural
+  mode; signature fixtures use signature mode with the fixture's inline public JWKS. Any finding other
+  than the chain rules blocks under `balanced` → enforce; chain depth/cycle warn → detect.
+- **mcp-firewall** — `detect:false` after source inspection: a stdio proxy (never sees HTTP headers);
+  its only JWT code is an outbound secret regex on responses; no claim logic.
+- **pipelock** — `detect:false` after inspection of the v3.0.0 binary and docs: a "JWT Token" DLP
+  pattern but no claim policy; it would match the attack and its benign control alike. The fixture's
+  audience URLs are claims, not egress destinations, so they are not scanned as URLs.
+- **null-baseline** — `detect:false` for every input, as for every type.
+- **Scorer:** `scoreCap: "detect"` caps a case at detect on every corpus (prereg §6.4).
+
 ## Wiring status (2026-09-08, v0.7.1 — mcp-bastion v1.0.0)
 
 - **mcp-bastion v1.0.0 (SDK 2.0, dual-stack)** — adds `mrtr-retry` (requestState custody: sealed HMAC
