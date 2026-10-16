@@ -2,7 +2,7 @@
   "summary": {
     "tool": "mcp-firewall",
     "corpus": "benign",
-    "rubricVersion": "0.7.0",
+    "rubricVersion": "0.9.0",
     "items": 337,
     "falsePositives": 2,
     "fpRate": 0.0059,
@@ -64,7 +64,7 @@
         "fp": 1
       }
     },
-    "measuredAt": "2026-09-06T02:52:48.971Z"
+    "measuredAt": "2026-10-16T04:08:14.920Z"
   },
   "items": [
     {

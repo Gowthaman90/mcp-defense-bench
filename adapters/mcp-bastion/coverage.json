@@ -4,7 +4,7 @@
   "class": "runtime-proxy",
   "reproducible": true,
   "version": "0.2.0",
-  "rubricVersion": "0.8.0",
+  "rubricVersion": "0.9.0",
   "measuredBy": "bin/run.mjs",
   "coverage": {
     "tool-poisoning": {
@@ -325,6 +325,56 @@
       "fixtures": 1,
       "fpCount": 0,
       "evidence": "transport-downgrade/001-legacy-session-and-get-stream",
+      "verified": true
+    },
+    "delegation-audience-confusion": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-audience-confusion/001-hotels-token-routed-to-flights",
+      "verified": true
+    },
+    "delegation-subject-mixing": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-subject-mixing/001-two-users-two-subagents",
+      "verified": true
+    },
+    "delegation-stale-relay": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-stale-relay/001-expired-ten-minutes",
+      "verified": true
+    },
+    "delegation-chain-laundering": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.6667,
+      "guaranteed": 0.5,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-chain-laundering/001-unlisted-current-actor",
+      "verified": true
+    },
+    "delegation-signature-forgery": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-signature-forgery/001-alg-none",
       "verified": true
     }
   }

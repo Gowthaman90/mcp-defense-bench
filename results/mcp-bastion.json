@@ -2,21 +2,21 @@
   "summary": {
     "tool": "mcp-bastion",
     "corpus": "dev",
-    "rubricVersion": "0.8.0",
-    "casesRun": 51,
-    "verifiedVectors": 32,
+    "rubricVersion": "0.9.0",
+    "casesRun": 66,
+    "verifiedVectors": 37,
     "falsePositives": 0,
     "covered": {
-      "enforce": 18,
+      "enforce": 23,
       "detect": 9,
       "none": 5,
       "unknown": 0
     },
-    "overall": "62% (19.9/32 CorpusRobustCoverage)",
-    "robustCoverage": 19.92,
-    "capability": 22.5,
-    "guaranteed": 17,
-    "measuredAt": "2026-09-30T14:30:38.236Z"
+    "overall": "66% (24.6/37 CorpusRobustCoverage)",
+    "robustCoverage": 24.58,
+    "capability": 27.5,
+    "guaranteed": 21.5,
+    "measuredAt": "2026-10-16T04:07:01.192Z"
   },
   "coverage": {
     "tool-poisoning": {
@@ -338,6 +338,56 @@
       "fpCount": 0,
       "evidence": "transport-downgrade/001-legacy-session-and-get-stream",
       "verified": true
+    },
+    "delegation-audience-confusion": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-audience-confusion/001-hotels-token-routed-to-flights",
+      "verified": true
+    },
+    "delegation-subject-mixing": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-subject-mixing/001-two-users-two-subagents",
+      "verified": true
+    },
+    "delegation-stale-relay": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-stale-relay/001-expired-ten-minutes",
+      "verified": true
+    },
+    "delegation-chain-laundering": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.6667,
+      "guaranteed": 0.5,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-chain-laundering/001-unlisted-current-actor",
+      "verified": true
+    },
+    "delegation-signature-forgery": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "delegation-signature-forgery/001-alg-none",
+      "verified": true
     }
   },
   "cases": [
@@ -490,6 +540,291 @@
         "detect": true,
         "enforce": true,
         "signal": "egress to link-local/cloud-metadata address"
+      }
+    },
+    {
+      "id": "delegation-audience-confusion/001-hotels-token-routed-to-flights",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-audience-mismatch"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegate token audience (hotels) does not match the target upstream (flights)"
+      }
+    },
+    {
+      "id": "delegation-audience-confusion/002-gateway-token-passed-through",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-passthrough"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "token issued for the gateway relayed downstream (passthrough)"
+      }
+    },
+    {
+      "id": "delegation-audience-confusion/003-unscoped-token-passed-through",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-passthrough"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegate token has no audience"
+      }
+    },
+    {
+      "id": "delegation-chain-laundering/001-unlisted-current-actor",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-actor-not-allowed"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "current actor not on the allowed-actor list"
+      }
+    },
+    {
+      "id": "delegation-chain-laundering/002-deep-act-chain",
+      "level": "detect",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": false,
+        "signal": "delegation (structural): delegation-chain-depth (warn only)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "delegation chain deeper than policy (prior actors are informational: detect + audit)"
+      }
+    },
+    {
+      "id": "delegation-chain-laundering/003-cyclic-act-chain",
+      "level": "detect",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": false,
+        "signal": "delegation (structural): delegation-chain-cycle (warn only)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "cycle in the delegation chain"
+      }
+    },
+    {
+      "id": "delegation-signature-forgery/001-alg-none",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (signature): delegation-alg-disallowed"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "unsigned token (alg none)"
+      }
+    },
+    {
+      "id": "delegation-signature-forgery/002-attacker-key-same-kid",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (signature): delegation-signature-invalid"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "signature does not verify under the trusted key"
+      }
+    },
+    {
+      "id": "delegation-signature-forgery/003-hs256-public-key-confusion",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (signature): delegation-alg-disallowed"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "algorithm not allowed for this key (HS256 with an asymmetric key)"
+      }
+    },
+    {
+      "id": "delegation-stale-relay/001-expired-ten-minutes",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-expired"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegate token expired"
+      }
+    },
+    {
+      "id": "delegation-stale-relay/002-not-yet-valid",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-not-yet-valid"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegate token not yet valid (nbf)"
+      }
+    },
+    {
+      "id": "delegation-stale-relay/003-thirty-day-lifetime",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-lifetime-excess"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegate token lifetime exceeds policy"
+      }
+    },
+    {
+      "id": "delegation-subject-mixing/001-two-users-two-subagents",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-subject-mixing"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegate tokens in one request name different subjects"
+      }
+    },
+    {
+      "id": "delegation-subject-mixing/002-same-subject-foreign-issuer",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-subject-mixing"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "same subject string from different issuers"
+      }
+    },
+    {
+      "id": "delegation-subject-mixing/003-odd-one-out-of-three",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "delegation (structural): delegation-subject-mixing"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "one of three delegate tokens names a different subject"
       }
     },
     {

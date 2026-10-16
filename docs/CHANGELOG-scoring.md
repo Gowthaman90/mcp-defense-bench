@@ -1,5 +1,63 @@
 # Scoring changelog
 
+## 2026-10-16 — v0.9.0: delegation family promoted (5 vectors, pre-registered), scoreCap rule
+
+Promotion of the family registered on 2026-10-15 (`docs/DELEGATION-PREREG.md`, tag
+`delegation-prereg-2026-10-15`), in the registered order: defenders implemented blind to the held-out
+set and frozen (`staging/delegation/MANIFEST.json → defenderFreeze`), every staged file verified
+against its sha256, crosswalk adjudicated (`rubric/ratings/ADJUDICATION.md`, rubric 0.8.0 → **0.9.0**,
+32 → **37** vectors), fixtures copied byte-identical into both corpora, dev run, held-out run **once**,
+benign run. No fixture was removed (`removals` empty).
+
+**Scorer change — `scoreCap` (prereg §6.4).** A case marked `"scoreCap": "detect"` is scored at most
+`detect` even when a tool blocks, on every corpus, because RFC 8693 §4.1 makes prior actors
+informational (they must not drive access control). It marks the chain-depth and chain-cycle fixtures.
+In this run no tool blocked one, so the cap changed no score. Adapters may now also declare
+`meta.fixtureTypes`; cases of other types are not run for them and their vectors stay `unknown`
+(not counted as misses).
+
+**Peers.** mcp-firewall 0.1.0 and pipelock 3.0.0 are wired `detect:false` for `delegated-request` after
+inspecting their code (no delegate-token claim logic; JWT appears only as a secret/DLP pattern).
+mcp-bastion is measured at unreleased commit `c18ff0f` (delegation checks, structural + signature mode).
+
+**Two totals (CorpusRobustCoverage; held-out over the vectors the held-out corpus covers).**
+
+| Tool | Published 32 — dev | Published 32 — held-out | All 37 — dev | All 37 — held-out | Matched-control FP (dev / held-out) | Benign FP (337 items) |
+|---|--:|--:|--:|--:|--:|--:|
+| mcp-bastion | 62% (19.9/32) | 44% (10.5/24) | **66% (24.6/37)** | **53% (15.3/29)** | 0/66 · 0/63 | 14 (4.2%, 2.5–6.9%) |
+| mcp-firewall | 9% (3.0/32) | 10% (2.5/24) | 8% (3.0/37) | 9% (2.5/29) | 0/66 · 0/63 | 2 (0.6%, 0.2–2.1%) |
+| pipelock | 4% (1.3/32) | 0% (0.0/24) | 4% (1.3/37) | 0% (0.0/29) | 0/66 · 0/63 | 3 (0.9%, 0.3–2.6%) |
+| null-baseline | 0% | 0% | 0% (0.0/37) | 0% (0.0/29) | 0/66 · 0/63 | 0 (0.0%, 0.0–1.1%) |
+
+Every outcome on the 32 previously published vectors is unchanged for every tool (all 51 dev and 48
+held-out pre-existing cases compared case by case; benign flags identical). The changes in the "all 37"
+columns come only from the new family and the larger denominator.
+
+**Delegation family, per vector (RobustCoverage, dev → held-out; 3 + 3 fixtures each).**
+
+| Vector | mcp-bastion | mcp-firewall | pipelock | null-baseline |
+|---|--:|--:|--:|--:|
+| delegation-audience-confusion | 100% → 100% | 0 → 0 | 0 → 0 | 0 → 0 |
+| delegation-subject-mixing | 100% → 100% | 0 → 0 | 0 → 0 | 0 → 0 |
+| delegation-stale-relay | 100% → 100% | 0 → 0 | 0 → 0 | 0 → 0 |
+| delegation-chain-laundering | 67% → 83% | 0 → 0 | 0 → 0 | 0 → 0 |
+| delegation-signature-forgery | 100% → 100% | 0 → 0 | 0 → 0 | 0 → 0 |
+| **Family (5)** | **93% (4.7) → 97% (4.8); gap −3 pts** | 0 | 0 | 0 |
+
+**Read these with the limits in mind.**
+- mcp-bastion is the benchmark author's tool. The fixtures (dev and held-out) were registered before its
+  delegation code existed, and its implementer worked from the dev fixtures only, but the author knew
+  which properties a defender should check (prereg §9). The negative gap means only that the held-out
+  set was not harder for it. It is not evidence of generality beyond the registered properties.
+- Two held-out blocks came from mcp-bastion's strict decoding (`delegation-malformed`), not from the rule
+  the fixture targets: a standard-base64 (padded) payload carrying a misrouted audience, and a
+  numeric-string `exp` in the past. Both are refused fail-closed, which is the scored behaviour; the
+  prereg names `time` as the intended reading of the second.
+- The case-variant subject fixture (prereg §9's borderline case) is flagged as subject mixing:
+  mcp-bastion compares `sub` case-sensitively, as RFC 7519 StringOrURI comparison requires.
+- Chain laundering stays below 100% by design: chain depth and cycle are warn-only under `balanced`
+  (detect = 0.5), and `scoreCap` would cap a block anyway.
+
 ## 2026-09-30 — mcp-bastion v1.1.0 re-measured (no metric or corpus change)
 
 Tool change only; rubric v0.8.0, corpora and scorer unchanged. The adapter now calls `checkErrorSteering`

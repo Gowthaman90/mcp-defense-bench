@@ -1,6 +1,6 @@
 {
   "protocol": "docs/DELEGATION-PREREG.md",
-  "status": "staged-unscored",
+  "status": "promoted",
   "generatedAt": "2026-10-16T03:24:00.561Z",
   "fixtureClock": {
     "now": 1791936000,
@@ -144,5 +144,10 @@
     "staging/delegation/heldout/delegation-signature-forgery/001-payload-swapped-after-signing.json": "fe3ed640942b519d7b1fecb4973816f43fccfb9c307ac136038f9fecf9f9f5e6",
     "staging/delegation/heldout/delegation-signature-forgery/002-alg-None-casing.json": "87c330f3a3b5a0630f761fe7d99aec36588cb5b03434fa39220dc3740ef92af0",
     "staging/delegation/heldout/delegation-signature-forgery/003-jku-points-to-attacker-keys.json": "4a30873a1e2ad7650a52a103e89aff80a094a4c92affc7088a08198958734ca4"
+  },
+  "promotion": {
+    "date": "2026-10-16",
+    "rubricVersion": "0.9.0",
+    "note": "Promoted per DELEGATION-PREREG §8 after the defender freeze; held-out run once; results in results/ and results/heldout/; see docs/CHANGELOG-scoring.md 2026-10-16."
   }
 }

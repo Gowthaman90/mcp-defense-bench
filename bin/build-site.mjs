@@ -31,7 +31,7 @@ for (const d of readdirSync(join(root, "adapters"))) {
     cases = r.summary?.casesRun ?? 0;
     for (const pc of r.cases || []) byId[pc.id] = pc.level;
   }
-  tools.push({ id: d, tool: c.tool, class: c.class || "?", coverage: c.coverage || {}, fp, cases, byId });
+  tools.push({ id: d, tool: c.tool, class: c.class || "?", scope: c.scope, coverage: c.coverage || {}, fp, cases, byId });
 }
 tools.sort((a, b) => robustCov(b) - robustCov(a));
 function lvl(t, id) { return t.coverage[id]?.level ?? "unknown"; }
@@ -66,7 +66,7 @@ const rows = tools
   .map((t) => {
     const n = { enforce: 0, detect: 0, none: 0, unknown: 0 };
     for (const v of rubric.vectors) n[lvl(t, v.id)]++;
-    return `<tr><td class="tool">${esc(t.tool)}</td><td class="cls">${esc(t.class)}</td>
+    return `<tr><td class="tool">${esc(t.tool)}</td><td class="cls">${esc(t.class)}${t.scope ? `<br><span class="muted">scope: ${esc(t.scope)}</span>` : ""}</td>
       <td class="num"><b>${pct(t)}%</b> <span class="muted">(${robustCov(t).toFixed(1)}/${N})</span></td>
       <td class="num"><span class="muted">${capPct(t)}% (${capability(t).toFixed(1)})</span></td>
       <td class="num en">${n.enforce}</td><td class="num de">${n.detect}</td><td class="num">${n.none}</td>

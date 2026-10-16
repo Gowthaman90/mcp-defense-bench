@@ -2,21 +2,21 @@
   "summary": {
     "tool": "mcp-firewall",
     "corpus": "heldout",
-    "rubricVersion": "0.7.1",
-    "casesRun": 48,
-    "verifiedVectors": 24,
+    "rubricVersion": "0.9.0",
+    "casesRun": 63,
+    "verifiedVectors": 29,
     "falsePositives": 0,
     "covered": {
       "enforce": 4,
       "detect": 0,
-      "none": 20,
+      "none": 25,
       "unknown": 8
     },
-    "overall": "8% (2.5/32 CorpusRobustCoverage)",
+    "overall": "7% (2.5/37 CorpusRobustCoverage)",
     "robustCoverage": 2.5,
     "capability": 4,
     "guaranteed": 1,
-    "measuredAt": "2026-09-08T02:26:14.467Z"
+    "measuredAt": "2026-10-16T04:07:40.790Z"
   },
   "coverage": {
     "tool-poisoning": {
@@ -338,6 +338,56 @@
       "fpCount": 0,
       "evidence": null,
       "verified": false
+    },
+    "delegation-audience-confusion": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/delegation-audience-confusion/001-payout-token-sent-to-intake",
+      "verified": true
+    },
+    "delegation-subject-mixing": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/delegation-subject-mixing/001-intake-and-payout-different-claimants",
+      "verified": true
+    },
+    "delegation-stale-relay": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/delegation-stale-relay/001-claims-token-expired-an-hour",
+      "verified": true
+    },
+    "delegation-chain-laundering": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/delegation-chain-laundering/001-records-sync-bot-as-current-actor",
+      "verified": true
+    },
+    "delegation-signature-forgery": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/delegation-signature-forgery/001-payload-swapped-after-signing",
+      "verified": true
     }
   },
   "cases": [
@@ -539,6 +589,306 @@
         "detect": true,
         "enforce": true,
         "signal": "credential-shaped value flows into a public outbound sink"
+      }
+    },
+    {
+      "id": "heldout/delegation-audience-confusion/001-payout-token-sent-to-intake",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "audience is the payout service, target is intake"
+      }
+    },
+    {
+      "id": "heldout/delegation-audience-confusion/002-edge-token-on-tools-list-bearer",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "gateway-audience token relayed upstream on discovery"
+      }
+    },
+    {
+      "id": "heldout/delegation-audience-confusion/003-std-base64-payload-customs-to-routing",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "non-base64url JWS segment / wrong audience — must fail closed"
+      }
+    },
+    {
+      "id": "heldout/delegation-chain-laundering/001-records-sync-bot-as-current-actor",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "current actor not allowed"
+      }
+    },
+    {
+      "id": "heldout/delegation-chain-laundering/002-actor-named-by-client-id",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "current actor (client_id) not allowed"
+      }
+    },
+    {
+      "id": "heldout/delegation-chain-laundering/003-cycle-on-discovery",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": false,
+        "signal": "cycle in delegation chain (informational: detect + audit)"
+      }
+    },
+    {
+      "id": "heldout/delegation-signature-forgery/001-payload-swapped-after-signing",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "signature does not cover the presented payload"
+      }
+    },
+    {
+      "id": "heldout/delegation-signature-forgery/002-alg-None-casing",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "unsigned token (alg None)"
+      }
+    },
+    {
+      "id": "heldout/delegation-signature-forgery/003-jku-points-to-attacker-keys",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "key reference (jku/kid) outside the trusted key set"
+      }
+    },
+    {
+      "id": "heldout/delegation-stale-relay/001-claims-token-expired-an-hour",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "expired"
+      }
+    },
+    {
+      "id": "heldout/delegation-stale-relay/002-no-exp-claim",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "no exp claim"
+      }
+    },
+    {
+      "id": "heldout/delegation-stale-relay/003-numeric-string-exp-in-past",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "exp is not a NumericDate (and is in the past)"
+      }
+    },
+    {
+      "id": "heldout/delegation-subject-mixing/001-intake-and-payout-different-claimants",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "different subjects across delegate tokens"
+      }
+    },
+    {
+      "id": "heldout/delegation-subject-mixing/002-case-variant-email-subject",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "subjects differ (case-sensitive)"
+      }
+    },
+    {
+      "id": "heldout/delegation-subject-mixing/003-mixed-subjects-on-discovery",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "different subjects across delegate tokens (discovery)"
       }
     },
     {

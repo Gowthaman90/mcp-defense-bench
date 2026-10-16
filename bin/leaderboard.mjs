@@ -90,6 +90,7 @@ if (families.length) {
   L.push(`|---|--:|--:|${families.map(() => "--:").join("|")}|`);
   for (const c of tools) {
     const both = (sub) => {
+      if (!sub.some((id) => cell(c, id)?.verified)) return "not wired";
       const d = robustW(c, sub);
       // Held-out is reported over the vectors the held-out corpus covers, as in the held-out table.
       const hcov = c._heldout?.coverage ?? {};

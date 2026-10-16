@@ -40,21 +40,23 @@ for (const d of readdirSync(join(root, "adapters"))) {
 }
 tools.sort((a, b) => a.tool.localeCompare(b.tool));
 
-const glyph = (lvl) => (lvl === "enforce" ? "🟢" : lvl === "detect" ? "🟡" : "·");
+// A case absent from a tool's results was not run for it (adapter not wired for that fixture type).
+const glyph = (c) => (!c ? "?" : c.level === "enforce" ? "🟢" : c.level === "detect" ? "🟡" : "·");
 
 console.log("# Evasion-robustness report\n");
 console.log(`${evasion.length} evasion fixtures · ${tools.length} tools measured\n`);
 console.log(`| Attack (encoding) | ${tools.map((t) => t.tool).join(" | ")} |`);
 console.log(`|---|${tools.map(() => "--").join("|")}|`);
 for (const e of evasion) {
-  const cells = tools.map((t) => glyph(t.byId[e.id]?.level));
+  const cells = tools.map((t) => glyph(t.byId[e.id]));
   console.log(`| ${e.vector} — *${e.encoding}* | ${cells.join(" | ")} |`);
 }
 
 // Per-tool robustness ratio.
 console.log("\n**Robustness (evasion fixtures detected):**");
 for (const t of tools) {
-  const caught = evasion.filter((e) => (t.byId[e.id]?.level ?? "none") !== "none").length;
-  console.log(`- ${t.tool}: ${caught}/${evasion.length}`);
+  const run = evasion.filter((e) => t.byId[e.id]);
+  const caught = run.filter((e) => t.byId[e.id].level !== "none").length;
+  console.log(`- ${t.tool}: ${run.length ? `${caught}/${run.length}` : "not wired for these fixtures"}`);
 }
-console.log("\n🟢 enforce · 🟡 detect · · missed");
+console.log("\n🟢 enforce · 🟡 detect · · missed · ? not wired");
