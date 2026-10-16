@@ -149,5 +149,16 @@
     "date": "2026-10-16",
     "rubricVersion": "0.9.0",
     "note": "Promoted per DELEGATION-PREREG §8 after the defender freeze; held-out run once; results in results/ and results/heldout/; see docs/CHANGELOG-scoring.md 2026-10-16."
-  }
+  },
+  "deviations": [
+    {
+      "id": "D1",
+      "date": "2026-10-16",
+      "what": "Peer adapter for vaquarkhan/MCP-Bastion (prereg §6.5) removed after measurement, before publication; its adapter and results were deleted, not published.",
+      "why": "Licence caution: the peer licence grants non-commercial use only; the author chose not to rely on an interpretation of that clause for a published comparison. Not a decision about its result.",
+      "effect": "None on fixtures, scoring rules or any other tool; peers are scored independently.",
+      "history": "The unpushed commits that built and measured the peer were rebuilt before publication so its adapter and results never appear in history; dates, order and all other files unchanged; defenderFreeze.bench.commit updated to the rebuilt adapter commit 52fde33.",
+      "doc": "docs/DELEGATION-PREREG.md §10"
+    }
+  ]
 }

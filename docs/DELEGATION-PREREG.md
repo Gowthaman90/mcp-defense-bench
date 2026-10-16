@@ -142,3 +142,22 @@ open invitation.
   differs on a borderline case (for example the case-variant subject), that is reported, not hidden.
 - Structural-mode fixtures test claims a relay can check without keys. They say nothing about
   authenticating a token; that is what the signature-mode fixtures are for.
+
+## 10. Deviations from registration (logged after the fact)
+
+§1–§9 above are the registered text and are not edited. Deviations are recorded here and in
+`staging/delegation/MANIFEST.json → deviations`.
+
+**D1 (2026-10-16): one peer removed before publication.** Commitment 6.5 named a peer adapter for the
+identity adapter in `vaquarkhan/MCP-Bastion`. It was built, frozen and measured as registered, then
+removed before any result was published. Its adapter and results were deleted, not published.
+- **Why:** licence caution. That project's licence grants non-commercial use only, and the benchmark
+  author chose not to rely on an interpretation of that clause for a published comparison. The decision
+  was about the licence, not about the peer's result.
+- **Effect:** none on anything else. No fixture, scoring rule or other tool changed. Every other tool's
+  dev, held-out and benign results are the files from the single registered run, unchanged. Each peer is scored
+  independently, so removing one cannot move another's numbers.
+- **History:** the commits that built and measured the peer had not been pushed. Before publication
+  they were rebuilt so the peer's adapter and results never appear in the public history. Commit dates,
+  order and every other file are unchanged. The freeze record (`defenderFreeze.bench.commit`) now points
+  at the rebuilt adapter commit `52fde33`, which differs from the original only by the removed peer.

@@ -18,6 +18,8 @@ In this run no tool blocked one, so the cap changed no score. Adapters may now a
 
 **Peers.** mcp-firewall 0.1.0 and pipelock 3.0.0 are wired `detect:false` for `delegated-request` after
 inspecting their code (no delegate-token claim logic; JWT appears only as a secret/DLP pattern).
+The fifth peer named in the prereg (§6.5) was measured and then removed before publication for licence
+caution; see deviation D1 in `docs/DELEGATION-PREREG.md` §10. No other number below depends on it.
 mcp-bastion is measured at unreleased commit `c18ff0f` (delegation checks, structural + signature mode).
 
 **Two totals (CorpusRobustCoverage; held-out over the vectors the held-out corpus covers).**

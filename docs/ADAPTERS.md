@@ -107,6 +107,8 @@ vector only when a fixture confirms it. `unknown` = not yet assessed (scored as 
 - **pipelock** — `detect:false` after inspection of the v3.0.0 binary and docs: a "JWT Token" DLP
   pattern but no claim policy; it would match the attack and its benign control alike. The fixture's
   audience URLs are claims, not egress destinations, so they are not scanned as URLs.
+- The fifth peer named in the delegation prereg (§6.5) was removed before publication for licence
+  caution: deviation D1 in `docs/DELEGATION-PREREG.md` §10.
 - **null-baseline** — `detect:false` for every input, as for every type.
 - **Scorer:** `scoreCap: "detect"` caps a case at detect on every corpus (prereg §6.4).
 
