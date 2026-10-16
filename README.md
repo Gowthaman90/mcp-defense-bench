@@ -46,7 +46,7 @@ novelty positioning — read it before citing this anywhere.
 
 ```
  rubric/crosswalk.json         testcases/  testcases-heldout/  testcases-benign/     adapters/<tool>/
- (32 vectors + framework    →  (development · held-out · benign-only corpora)     →  (drives the tool's
+ (37 vectors + framework    →  (development · held-out · benign-only corpora)     →  (drives the tool's
   mappings + appliesTo axis)                                                          REAL code)
                                                   │
                                                   ▼
@@ -56,8 +56,9 @@ novelty positioning — read it before citing this anywhere.
              results/ · results/heldout/ · results/benign/  →  bin/leaderboard.mjs → docs/LEADERBOARD.md
 ```
 
-1. **Rubric** — [`rubric/crosswalk.json`](rubric/crosswalk.json): **32 MCP attack vectors** (24 pre-existing +
-   8 introduced by the **2026-07-28 protocol revision**), each mapped to architectural layer, STRIDE, NIST AI
+1. **Rubric** — [`rubric/crosswalk.json`](rubric/crosswalk.json): **37 MCP attack vectors** (24 pre-existing,
+   8 introduced by the **2026-07-28 protocol revision**, and the 5-vector **delegation family** added in v0.9.0),
+   each mapped to architectural layer, STRIDE, NIST AI
    RMF, NSA MCP guidance, OWASP LLM 2025, OWASP Agentic 2026, **EU AI Act obligations** (Arts. 12, 14, 15(5),
    26, 55(1)(d), 72, 73 — the language regulated buyers are audited against since GPAI enforcement began
    2026-08-02) and **ISO/IEC 42001 Annex A controls** (v0.8.0), and tagged with the protocol revisions it
@@ -66,10 +67,12 @@ novelty positioning — read it before citing this anywhere.
    [`rubric/ratings/ADJUDICATION.md`](rubric/ratings/ADJUDICATION.md). **A human third rater is invited** —
    copy `rubric/ratings/rater-TEMPLATE.json` and open a PR.
 2. **Three corpora** —
-   - `testcases/` — the **development** corpus (51 cases): used to find and fix gaps in the reference proxy.
-   - `testcases-heldout/` — the **held-out** corpus (48 cases): authored *after* every defender was frozen,
-     under the pre-registered [`docs/HELD-OUT-PROTOCOL.md`](docs/HELD-OUT-PROTOCOL.md) (domain / lexical /
-     surface / encoding shifts; no development phrasing or hosts; no iteration after the first run).
+   - `testcases/` — the **development** corpus (66 cases): used to find and fix gaps in the reference proxy.
+   - `testcases-heldout/` — the **held-out** corpus (63 cases): authored blind to every defender's detection
+     code, under the pre-registered [`docs/HELD-OUT-PROTOCOL.md`](docs/HELD-OUT-PROTOCOL.md) (domain / lexical /
+     surface / encoding shifts; no development phrasing or hosts; no iteration after the first run). The 15
+     delegation held-out cases go further: they were registered before any measured defender had delegation
+     code at all ([`docs/DELEGATION-PREREG.md`](docs/DELEGATION-PREREG.md)).
    - `testcases-benign/` — the **benign-only** corpus (337 items): 256 *verbatim* tool definitions harvested
      from 21 public MCP servers + 81 authored hard negatives. Every flag is a false positive.
 3. **Adapters** — `adapters/<tool>/`: a thin driver that runs a defender's real code against fixtures, under
@@ -79,41 +82,55 @@ novelty positioning — read it before citing this anywhere.
    protocol revision**, development **and** held-out side by side with the generalisation gap, and the
    benign-corpus FP rate with a Wilson 95% interval.
 
-## Status — v0.8.0 (2026-09-08)
+## Status — v0.9.0 (2026-10-16)
 
 Full board: [docs/LEADERBOARD.md](docs/LEADERBOARD.md) · live site:
 [gowthaman90.github.io/mcp-defense-bench](https://gowthaman90.github.io/mcp-defense-bench/).
 
-**CorpusRobustCoverage on the 24 pre-existing vectors — development vs. held-out:**
+**New in v0.9.0: a pre-registered delegation family (5 vectors).** When one agent calls several sub-agent
+MCP servers for a signed-in user, a relay carries one short-lived token per sub-agent. The family asks
+whether a defender stops a token reaching a party it was not issued for (including passthrough of the
+relay's own token), several users' tokens mixed in one request, stale or over-long tokens, laundered
+delegation chains (RFC 8693 `act`), and forged signatures. The vectors and both corpora were registered (tag [`delegation-prereg-2026-10-15`](https://github.com/Gowthaman90/mcp-defense-bench/tree/delegation-prereg-2026-10-15))
+before any measured defender had delegation code, then published and measured once. See
+[`docs/DELEGATION-PREREG.md`](docs/DELEGATION-PREREG.md), including its logged deviation D1.
 
-| Tool | Class | Dev (24) | **Held-out (24)** | Gap | 2026-07-28-only (8) | Benign FP (n=337) |
-|---|---|--:|--:|--:|--:|--:|
-| `mcp-bastion` v1.1.0 | runtime proxy | 57% | **44%** | 14 pts | **77%** | 14 (4.2%, CI 2.5–6.9%) |
-| `mcp-firewall` 0.1.0 | runtime proxy | 8% | **10%** | −2 pts | 13% | 2 (0.6%) |
-| `pipelock` 3.0.0 | egress firewall | 6% | **0%** | 6 pts | 0% | 3 (0.9%) |
-| `null-baseline` | control | 0% | 0% | 0 | 0% | 0 |
+**CorpusRobustCoverage — development vs. held-out:**
 
-Matched-control false positives: 0/51 (dev) and 0/48 (held-out) for every tool.
+| Tool | Class | Dev (24) | **Held-out (24)** | Gap | 2026-07-28-only (8) | Delegation (5): dev → held-out | Benign FP (n=337) |
+|---|---|--:|--:|--:|--:|--:|--:|
+| `mcp-bastion` v1.2.0 | runtime proxy | 57% | **44%** | 14 pts | **77%** | **93% → 97%** | 14 (4.2%, CI 2.5–6.9%) |
+| `mcp-firewall` 0.1.0 | runtime proxy | 8% | **10%** | −2 pts | 13% | 0% → 0% | 2 (0.6%) |
+| `pipelock` 3.0.0 | egress firewall | 6% | **0%** | 6 pts | 0% | 0% → 0% | 3 (0.9%) |
+| `null-baseline` | control | 0% | 0% | 0 | 0% | 0% → 0% | 0 |
+
+Over all 37 vectors, mcp-bastion scores **66%** on development (24.6/37) and **53%** held-out (15.3/29, the
+vectors the held-out corpus covers). Over the 32 vectors published in v0.8.0 it is unchanged at 62%, and
+every pre-existing case outcome is identical for every tool. Matched-control false positives: 0/66 (dev)
+and 0/63 (held-out) for every tool.
 
 **What the numbers say.**
-- **The held-out gap is the headline.** mcp-bastion's structural checks (hash pinning, schema validation,
-  data-flow tracking, command-injection parsing) hold on held-out fixtures; its *phrase heuristics* do not —
-  four vectors it covered in development (tool poisoning, ShareLock split poisoning, transport MITM,
-  system-prompt leakage) drop to zero. pipelock's development coverage was entirely corpus-specific.
+- **The held-out gap is still the headline.** mcp-bastion's structural checks hold on held-out fixtures; its
+  *phrase heuristics* do not — tool poisoning, ShareLock split poisoning, transport MITM and system-prompt
+  leakage drop to zero. pipelock's development coverage was entirely corpus-specific.
+- **Delegation: read the 97% with care.** mcp-bastion is the benchmark author's tool. Its delegation checks
+  (v1.2.0) were written from the development fixtures only, after the held-out set was registered, and frozen
+  before the single run. The author still knew which properties a defender should check, so a held-out score
+  above the development score shows the held-out set was not harder for it, not that it generalises. Every
+  other measured tool scores 0 because none parses delegate tokens; one peer that does was measured and then
+  removed before publication for licence caution (deviation D1).
+- **Some delegation checks only a gateway can make.** Two tokens for different users in one request each look
+  valid to the sub-agent that receives them; only a component that sees the whole request can refuse the mix.
+  Chain-depth and cycle checks are scored at most *detect* (`scoreCap`), because RFC 8693 makes prior actors
+  informational: a tool is not rewarded for blocking on them.
 - **Coverage is quoted per protocol revision.** The 8 vectors introduced on 2026-07-28 did not exist before
-  it. mcp-bastion v0.9.0 covered 44% of them; the benchmark named the rest and v1.0.0 (rebuilt on the
-  2026-07-28 SDK line: `requestState` custody, an in-band consent gate, legacy-transport refusal) covers
-  **77%**. Still honest misses: Tasks (not served on the new era), MCP Apps, and the non-normative
-  tool-state-handle case. The 24 pre-existing vectors and the held-out results are byte-identical across
-  that rebuild — and the matched controls caught a real false positive in the new gate before release.
-- **Benign FP has a denominator now.** 4 of mcp-bastion's 14 are the by-design cost of trust-on-first-use
-  pinning flagging benign definition updates (reported in their own row, not excluded); 1/256 verbatim
-  third-party definitions is flagged. 1 is new in v1.1.0: the false-error rule flags a genuine EACCES error
-  that suggests "elevated privileges" (kept, not tuned away).
-- **5 of 32 vectors are covered by no measured tool** — four pre-existing registry/isolation/consent gaps
-  plus MCP Apps conformance. mcp-bastion v1.1.0 closed false-error escalation at detect level (dev 50%,
-  held-out 25%: the plain held-out case is caught, its evasion variants are not). A proxy is necessary but
-  not sufficient.
+  it; mcp-bastion covers **77%** of them. Still honest misses: Tasks, MCP Apps, and the non-normative
+  tool-state-handle case.
+- **Benign FP has a denominator.** 4 of mcp-bastion's 14 are the by-design cost of trust-on-first-use pinning
+  flagging benign definition updates; 1/256 verbatim third-party definitions is flagged; 1 is a genuine
+  EACCES error that suggests "elevated privileges" (kept, not tuned away).
+- **5 of 37 vectors are covered by no measured tool** — package squatting, supply-chain poisoning, sandbox
+  escape, consent fatigue, and MCP Apps sandbox bypass. A proxy is necessary but not sufficient.
 
 **Why v0.7+ looks like this.** The v0.4 paper was reviewed at AISec 2026; the expert reviewer asked for a
 held-out set, more attack variants and benign cases, and a second-rater agreement measure. All three are
