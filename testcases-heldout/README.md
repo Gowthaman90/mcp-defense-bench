@@ -8,3 +8,5 @@ Authored 2026-09-05 after the defender freeze recorded in `../results/heldout/MA
 Run: `node bin/run.mjs <tool> --corpus heldout`.
 
 **Delegation family (v0.9.0):** the 5 delegation vectors' held-out fixtures were registered before any defender had delegation code (`../docs/DELEGATION-PREREG.md`) and are copied byte-identical from `../staging/delegation/heldout/`; their sha256s are in `../staging/delegation/MANIFEST.json`.
+
+**Authorization family (v0.10.0):** the 4 authorization vectors' held-out fixtures were registered before any defender had per-caller authorization code (`../docs/AUTHORIZATION-PREREG.md`) and are copied byte-identical from `../staging/authorization/heldout/`; their sha256s are in `../staging/authorization/MANIFEST.json`.

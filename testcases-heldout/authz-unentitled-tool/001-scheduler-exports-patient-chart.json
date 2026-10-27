@@ -1,0 +1,346 @@
+{
+  "vector": "authz-unentitled-tool",
+  "id": "heldout/authz-unentitled-tool/001-scheduler-exports-patient-chart",
+  "staged": true,
+  "heldout": true,
+  "family": "D",
+  "severity": "high",
+  "description": "A hospital's appointment-scheduling app, allowed only to view appointments, calls the chart export tool. Only the medical-records app may export charts.",
+  "fixture": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "ehr__export_chart",
+        "description": "Export a patient's chart.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string",
+              "description": "Patient id."
+            },
+            "format": {
+              "type": "string",
+              "description": "pdf or fhir."
+            }
+          },
+          "required": [
+            "patientId",
+            "format"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "ehr__view_appointments",
+        "description": "List a patient's appointments.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string",
+              "description": "Patient id."
+            }
+          },
+          "required": [
+            "patientId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "rx__draft",
+        "description": "Draft a prescription for clinician review.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string",
+              "description": "Patient id."
+            },
+            "drug": {
+              "type": "string",
+              "description": "Drug."
+            },
+            "doseMg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "patientId",
+            "drug",
+            "doseMg"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "rx__prescribe",
+        "description": "Sign and send a prescription to the pharmacy.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string",
+              "description": "Patient id."
+            },
+            "drug": {
+              "type": "string",
+              "description": "Drug."
+            },
+            "doseMg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "patientId",
+            "drug",
+            "doseMg"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "medical-records-app"
+          },
+          "tools": [
+            "ehr__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "appointment-scheduler"
+          },
+          "tools": [
+            "ehr__view_appointments"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "clin-2207"
+          },
+          "tools": [
+            "ehr__*",
+            "rx__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "clinical-orchestrator"
+          },
+          "tools": [
+            "rx__*",
+            "ehr__view_appointments"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "rx-drafting-agent"
+          },
+          "tools": [
+            "rx__draft"
+          ]
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "appointment-scheduler"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "ehr__export_chart",
+      "arguments": {
+        "patientId": "P-20817",
+        "format": "pdf"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "caller appointment-scheduler has no grant for ehr__export_chart"
+  },
+  "benignControl": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "ehr__export_chart",
+        "description": "Export a patient's chart.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string",
+              "description": "Patient id."
+            },
+            "format": {
+              "type": "string",
+              "description": "pdf or fhir."
+            }
+          },
+          "required": [
+            "patientId",
+            "format"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "ehr__view_appointments",
+        "description": "List a patient's appointments.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string",
+              "description": "Patient id."
+            }
+          },
+          "required": [
+            "patientId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "rx__draft",
+        "description": "Draft a prescription for clinician review.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string",
+              "description": "Patient id."
+            },
+            "drug": {
+              "type": "string",
+              "description": "Drug."
+            },
+            "doseMg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "patientId",
+            "drug",
+            "doseMg"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "rx__prescribe",
+        "description": "Sign and send a prescription to the pharmacy.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string",
+              "description": "Patient id."
+            },
+            "drug": {
+              "type": "string",
+              "description": "Drug."
+            },
+            "doseMg": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "patientId",
+            "drug",
+            "doseMg"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "medical-records-app"
+          },
+          "tools": [
+            "ehr__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "appointment-scheduler"
+          },
+          "tools": [
+            "ehr__view_appointments"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "clin-2207"
+          },
+          "tools": [
+            "ehr__*",
+            "rx__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "clinical-orchestrator"
+          },
+          "tools": [
+            "rx__*",
+            "ehr__view_appointments"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "rx-drafting-agent"
+          },
+          "tools": [
+            "rx__draft"
+          ]
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "medical-records-app"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "ehr__export_chart",
+      "arguments": {
+        "patientId": "P-20817",
+        "format": "pdf"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "client:no-grant"
+    ]
+  },
+  "provenance": "Synthetic. OWASP API5; CWE-862; HIPAA minimum-necessary standard (45 CFR 164.502(b)) as domain motivation."
+}

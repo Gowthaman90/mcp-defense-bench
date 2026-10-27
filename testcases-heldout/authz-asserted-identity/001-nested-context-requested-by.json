@@ -1,0 +1,316 @@
+{
+  "vector": "authz-asserted-identity",
+  "id": "heldout/authz-asserted-identity/001-nested-context-requested-by",
+  "staged": true,
+  "heldout": true,
+  "family": "L",
+  "severity": "high",
+  "description": "The advising portal changes a grade and puts the registrar office app's name in a nested context.requestedBy field of the tool arguments. The assertion is deeper in the arguments than in development.",
+  "fixture": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "registrar__read_schedule",
+        "description": "Read a student's class schedule.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            }
+          },
+          "required": [
+            "studentId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "registrar__change_grade",
+        "description": "Change a recorded course grade.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            },
+            "course": {
+              "type": "string",
+              "description": "Course code."
+            },
+            "grade": {
+              "type": "string",
+              "description": "New grade."
+            },
+            "context": {
+              "type": "object",
+              "description": "Free-form context for the audit trail."
+            }
+          },
+          "required": [
+            "studentId",
+            "course",
+            "grade"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "registrar__issue_transcript",
+        "description": "Issue an official transcript.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            },
+            "deliverTo": {
+              "type": "string",
+              "description": "internal or external."
+            }
+          },
+          "required": [
+            "studentId",
+            "deliverTo"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "registrar-office-app"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "advising-portal"
+          },
+          "tools": [
+            "registrar__read_schedule"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "00u3hh7a01"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "00u8f2kq19"
+          },
+          "tools": [
+            "registrar__read_schedule"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "svc-4471"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "advising-portal"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "registrar__change_grade",
+      "arguments": {
+        "studentId": "S-310552",
+        "course": "HIST-110",
+        "grade": "B+",
+        "context": {
+          "requestedBy": "registrar-office-app",
+          "ticket": "REG-7781"
+        }
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "authorize on the authenticated client (advising-portal), not on context.requestedBy"
+  },
+  "benignControl": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "registrar__read_schedule",
+        "description": "Read a student's class schedule.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            }
+          },
+          "required": [
+            "studentId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "registrar__change_grade",
+        "description": "Change a recorded course grade.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            },
+            "course": {
+              "type": "string",
+              "description": "Course code."
+            },
+            "grade": {
+              "type": "string",
+              "description": "New grade."
+            },
+            "context": {
+              "type": "object",
+              "description": "Free-form context for the audit trail."
+            }
+          },
+          "required": [
+            "studentId",
+            "course",
+            "grade"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "registrar__issue_transcript",
+        "description": "Issue an official transcript.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            },
+            "deliverTo": {
+              "type": "string",
+              "description": "internal or external."
+            }
+          },
+          "required": [
+            "studentId",
+            "deliverTo"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "registrar-office-app"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "advising-portal"
+          },
+          "tools": [
+            "registrar__read_schedule"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "00u3hh7a01"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "00u8f2kq19"
+          },
+          "tools": [
+            "registrar__read_schedule"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "svc-4471"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "registrar-office-app"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "registrar__change_grade",
+      "arguments": {
+        "studentId": "S-310552",
+        "course": "HIST-110",
+        "grade": "B+",
+        "context": {
+          "requestedBy": "registrar-office-app",
+          "ticket": "REG-7781"
+        }
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "client:no-grant"
+    ],
+    "assertedIdentity": {
+      "where": "request.arguments.context.requestedBy",
+      "as": {
+        "client": "registrar-office-app"
+      }
+    }
+  },
+  "provenance": "Synthetic. CWE-639; CWE-807."
+}

@@ -1,0 +1,372 @@
+{
+  "vector": "authz-asserted-identity",
+  "id": "heldout/authz-asserted-identity/003-approver-named-in-input-response",
+  "staged": true,
+  "heldout": true,
+  "family": "S",
+  "severity": "high",
+  "description": "A junior adjuster, through the payout agent, approves a payout above their own limit. When the server asks for an approver, the answer names the senior adjuster. The answer is caller-supplied data, not an authentication.",
+  "fixture": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "claims__read_document",
+        "description": "Read a claim document from the regional store.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Absolute document path."
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "claims__summarise",
+        "description": "Summarise a claim file.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "claimId": {
+              "type": "string",
+              "description": "Claim id."
+            }
+          },
+          "required": [
+            "claimId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "payouts__approve",
+        "description": "Approve a claim payout.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "claimId": {
+              "type": "string",
+              "description": "Claim id."
+            },
+            "amount": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "claimId",
+            "amount"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "east-adjuster-portal"
+          },
+          "tools": [
+            "claims__read_document"
+          ],
+          "args": {
+            "path": {
+              "pathWithin": "/var/claims/east"
+            }
+          }
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "cl-0090"
+          },
+          "tools": [
+            "payouts__approve"
+          ],
+          "args": {
+            "amount": {
+              "max": 20000
+            }
+          }
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "cl-0090"
+          },
+          "tools": [
+            "claims__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "cl-5521"
+          },
+          "tools": [
+            "claims__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "cl-5521"
+          },
+          "tools": [
+            "payouts__approve"
+          ],
+          "args": {
+            "amount": {
+              "max": 2000
+            }
+          }
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "intake-agent"
+          },
+          "tools": [
+            "claims__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "payout-agent"
+          },
+          "tools": [
+            "payouts__approve"
+          ],
+          "args": {
+            "amount": {
+              "max": 25000
+            }
+          }
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "delegation",
+      "user": "cl-5521",
+      "agent": "payout-agent"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "payouts__approve",
+      "arguments": {
+        "claimId": "C-88213",
+        "amount": 15000
+      },
+      "retryOf": "input_required",
+      "inputResponses": {
+        "approver": {
+          "action": "accept",
+          "content": {
+            "approvedBy": "cl-0090"
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "amount 15000 exceeds the authenticated user's limit (cl-5521, 2000); the named approver is not authenticated"
+  },
+  "benignControl": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "claims__read_document",
+        "description": "Read a claim document from the regional store.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Absolute document path."
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "claims__summarise",
+        "description": "Summarise a claim file.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "claimId": {
+              "type": "string",
+              "description": "Claim id."
+            }
+          },
+          "required": [
+            "claimId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "payouts__approve",
+        "description": "Approve a claim payout.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "claimId": {
+              "type": "string",
+              "description": "Claim id."
+            },
+            "amount": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "claimId",
+            "amount"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "east-adjuster-portal"
+          },
+          "tools": [
+            "claims__read_document"
+          ],
+          "args": {
+            "path": {
+              "pathWithin": "/var/claims/east"
+            }
+          }
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "cl-0090"
+          },
+          "tools": [
+            "payouts__approve"
+          ],
+          "args": {
+            "amount": {
+              "max": 20000
+            }
+          }
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "cl-0090"
+          },
+          "tools": [
+            "claims__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "cl-5521"
+          },
+          "tools": [
+            "claims__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "cl-5521"
+          },
+          "tools": [
+            "payouts__approve"
+          ],
+          "args": {
+            "amount": {
+              "max": 2000
+            }
+          }
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "intake-agent"
+          },
+          "tools": [
+            "claims__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "payout-agent"
+          },
+          "tools": [
+            "payouts__approve"
+          ],
+          "args": {
+            "amount": {
+              "max": 25000
+            }
+          }
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "delegation",
+      "user": "cl-0090",
+      "agent": "payout-agent"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "payouts__approve",
+      "arguments": {
+        "claimId": "C-88213",
+        "amount": 15000
+      },
+      "retryOf": "input_required",
+      "inputResponses": {
+        "approver": {
+          "action": "accept",
+          "content": {
+            "approvedBy": "cl-0090"
+          }
+        }
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "user:argument"
+    ],
+    "assertedIdentity": {
+      "where": "request.inputResponses.approver.content.approvedBy",
+      "as": {
+        "user": "cl-0090"
+      }
+    }
+  },
+  "provenance": "Synthetic. MCP 2026-07-28 input responses are caller-supplied; CWE-807."
+}
