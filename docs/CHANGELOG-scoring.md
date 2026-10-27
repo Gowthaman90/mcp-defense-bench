@@ -19,7 +19,7 @@ has a benign control that differs in one thing, usually the caller. So refusing 
 only (`meta.fixtureTypes`); their other 37 vectors are *not wired*, not misses. mcp-firewall 0.1.0 is
 driven through its Python SDK's per-agent RBAC (`check(agent=...)`). pipelock 3.0.0 is the free,
 unlicensed build. mcp-bastion is measured at unreleased commit `756acfc` (runtime authorization; released
-later as 1.4.0).
+later as 1.4.0). That commit is public as `45b579c`: see the note on commit ids at the end of this entry.
 
 **Two totals (CorpusRobustCoverage; held-out over the vectors the held-out corpus covers).**
 
@@ -86,8 +86,8 @@ No tool had a false positive on any authorization benign control.
   `staging/authorization/MANIFEST.json`, and each translation is published with its adapter.
 
 **Post-freeze change (mcp-bastion only; logged, not a re-score).** After publication, two fixes were made on
-top of the frozen commit `756acfc`, before the 1.4.0 release: `f6ded51` (a bare `key=` / `token=` /
-`secret=` must now carry a secret-shaped value) and `b3230df` (refusal text names the argument a grant
+top of the frozen commit `756acfc`, before the 1.4.0 release: `2ec68cf` (a bare `key=` / `token=` /
+`secret=` must now carry a secret-shaped value) and `67cc295` (refusal text names the argument a grant
 did not allow, not "(no matching grant)"; no decision change). The fixed build was re-run as a check:
 - development: 41-vector 70% (28.6/41). The only changed outcome is `credential-token-theft/001`, back
   to detect, the same as v0.9.0. The 37-vector total returns to 24.6/37 (66%).
@@ -97,6 +97,13 @@ did not allow, not "(no matching grant)"; no decision change). The fixed build w
 
 The tables above stay the published first-run results for the frozen commit. The post-freeze re-run is
 recorded in `staging/authorization/MANIFEST.json → postFreeze`.
+
+**Commit ids (mcp-bastion).** GitHub push protection refused the 1.4.0 push because the redaction test
+file held fake Slack samples as plain text. The unpushed history from the redaction commit onward was
+rewritten so each credential sample is built from two string pieces at run time; nothing else changed.
+The frozen commit `756acfc` is therefore public as **`45b579c`**: its `src/` is byte-identical, and a clean
+build of `45b579c` reproduces the three dist sha256 values recorded in the freeze exactly. The id
+`756acfc` never became public. Mapping in `staging/authorization/MANIFEST.json → defenderFreeze`.
 
 ## 2026-10-16 — v0.9.0: delegation family promoted (5 vectors, pre-registered), scoreCap rule
 

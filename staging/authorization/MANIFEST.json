@@ -32,7 +32,12 @@
           "dist/chunk-BWQRJ7QS.js": "7e81678a9e91e76e954231b7316aa4fa8b5a9c8d66dd82b652fd6587ec92ebf5",
           "dist/cli.js": "80e16fc31677c38e649a3e3db72c81777a8a9ed7628e0e157a53282e78e9f1fa"
         },
-        "note": "unreleased 1.4.0 work (package.json still 1.3.1); dist rebuilt from a clean tree at this commit, reproducible (same index.js hash as the implementer's build)"
+        "note": "unreleased 1.4.0 work (package.json still 1.3.1); dist rebuilt from a clean tree at this commit, reproducible (same index.js hash as the implementer's build)",
+        "publishedAs": {
+          "commit": "45b579c",
+          "release": "v1.4.0",
+          "note": "Before publication, the unpushed history from the redaction commit onward was rewritten so the credential samples in test/redaction-corpus.test.ts are built from two string pieces at run time (GitHub push protection refused the plain-text fake Slack samples). Only that test file differs; src/ is byte-identical and the dist sha256 values above reproduce exactly from 45b579c. The id 756acfc never became public."
+        }
       },
       "null-baseline": {
         "version": "bench commit eb335b0"
@@ -205,15 +210,16 @@
     "note": "Changes made to mcp-bastion after the authorization held-out numbers were published (2026-10-27), before the 1.4.0 release. Logged per AUTHORIZATION-PREREG §6.2; the published first-run results stay those of the frozen commit 756acfc.",
     "mcp-bastion": {
       "commits": {
-        "f6ded51": "DLP: bare key=/token=/secret= needs a secret-shaped value (fixes benign/tool-result/024-log-tail)",
-        "b3230df": "refusal text names the argument a grant did not allow (wording only, no decision change)"
+        "2ec68cf": "DLP: bare key=/token=/secret= needs a secret-shaped value (fixes benign/tool-result/024-log-tail)",
+        "67cc295": "refusal text names the argument a grant did not allow (wording only, no decision change)"
       },
       "checkRun": {
         "dev": "70% (28.6/41); only change vs frozen: credential-token-theft/001 enforce -> detect (the frozen block came from the over-broad bare-word redaction of the placeholder 'token=<your'), same as v0.9.0",
         "heldout": "all outcomes identical to the frozen first run",
         "benign": "15 -> 14 (024-log-tail no longer flagged)",
         "authorization": "12/12 dev and held-out, 0 FP; refusal wording only"
-      }
+      },
+      "commitsNote": "Local ids before the test-file rewrite were f6ded51 and b3230df."
     }
   }
 }

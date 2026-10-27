@@ -101,7 +101,7 @@ held-out set once.
 
 | Tool | Policy language | Authorization (4): dev → held-out | FP on benign controls (dev + held-out) |
 |---|---|--:|--:|
-| `mcp-bastion` (unreleased `756acfc`) | bastion policy | **100% → 100%** | 0/24 |
+| `mcp-bastion` 1.4.0 (`45b579c`, frozen as `756acfc`) | bastion policy | **100% → 100%** | 0/24 |
 | `agentgateway` v1.6.0 | CEL | **100% → 100%** | 0/24 |
 | `ToolHive` v0.57.0 | Cedar | **100% → 100%** | 0/24 |
 | `mcp-firewall` 0.1.0 | per-agent RBAC (Python SDK) | 42% → 42% | 0/24 |

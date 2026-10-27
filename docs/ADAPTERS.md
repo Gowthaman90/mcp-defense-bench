@@ -99,7 +99,7 @@ vector only when a fixture confirms it. `unknown` = not yet assessed (scored as 
 Each adapter translates the fixture's policy into the tool's own policy language and maps the caller to
 credentials the tool verifies natively (`docs/AUTHORIZATION-PREREG.md` §6.6). The translation is published
 next to each adapter in `AUTHORIZATION-TRANSLATION.md`.
-- **mcp-bastion** (unreleased commit `756acfc`) — the fixture policy becomes bastion's `authorization`
+- **mcp-bastion** (commit `45b579c`, measured under its pre-publication id `756acfc`; released as 1.4.0) — the fixture policy becomes bastion's `authorization`
   config, and calls go through its real gateway path.
 - **agentgateway v1.6.0** — the pinned binary in front of a local mock MCP server that counts hits; callers
   are ES256 JWTs from a local JWKS; the policy is compiled to CEL. Scoped to this family (`fixtureTypes`).
