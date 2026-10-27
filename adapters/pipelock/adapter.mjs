@@ -12,12 +12,33 @@
  */
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 
 /**
- * pipelock 3.0.0 has per-agent features (agent identification via `X-Pipelock-Agent`, per-agent MCP tool-call contracts). Commitment 6.5 of docs/AUTHORIZATION-PREREG.md allows `detect:false` only after confirming a peer has no per-caller authorization, so `authorized-call` stays unknown until a real adapter is built (by an implementer blind to the held-out set).
+ * `authorized-call` (docs/AUTHORIZATION-PREREG.md, commitment 6.5): wired as a confirmed miss.
+ *
+ * The benchmark measures the freely available pipelock 3.0.0 binary with NO licence key. Checked on
+ * that binary on 2026-10-27 (commands and outputs in AUTHORIZATION-TRANSLATION.md):
+ *   - Named agent profiles (per-agent identity, MCP tool policy, listeners) need the paid `agents`
+ *     licence feature (ELv2 `enterprise/`). Without a key the binary strips them with a warning,
+ *     refuses `pipelock mcp proxy --agent <name>` ("unknown agent profile"), and never binds the
+ *     per-agent listener ports.
+ *   - Free-edition MCP tool-call decisions (tool policy, input scanning, learn-and-lock contracts)
+ *     are made per listener, never per caller: `X-Pipelock-Agent` and `?agent=` do not change them,
+ *     and the contract gate always resolves the listener's profile, which without a licence is
+ *     `_default`.
+ * So the free edition has no per-caller tool authorization, and no translation of the fixture
+ * policy is possible. The adapter does not approximate one (no per-caller routing done by the
+ * adapter itself). It refuses to run if the binary is not the pinned 3.0.0 build or if pipelock
+ * reports any licence, because the finding holds only for the free, unlicensed build.
  */
-export const meta = { tool: "pipelock", class: "egress-firewall", reproducible: true, unwiredFixtureTypes: ["authorized-call"] };
+export const meta = { tool: "pipelock", class: "egress-firewall", reproducible: true };
+
+/** sha256 of `.tools/pipelock/pipelock` from pipelock_3.0.0_darwin_arm64.tar.gz (git 9d2e37d). */
+const PINNED_SHA256 = "96843f7f3b5415384230b9e1b8ecfb925d89df2e57849ee74ab63c15b6d02444";
+const AUTHZ_MISS_SIGNAL =
+  "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)";
 
 const bin = fileURLToPath(new URL("../../.tools/pipelock/pipelock", import.meta.url));
 const URL_RE = /https?:\/\/[^\s"'<>)\]]+/g;
@@ -31,6 +52,29 @@ function ensureSetup() {
     );
   }
   checked = true;
+}
+
+let freeEditionChecked = false;
+/**
+ * The authorized-call finding is about the unlicensed 3.0.0 build. Check that this is the build in
+ * .tools (pinned darwin-arm64 hash, or on another platform the 3.0.0 version line and git commit)
+ * and that pipelock itself reports no licence (it reads PIPELOCK_LICENSE_KEY and its home dir).
+ */
+function ensureFreeEdition() {
+  if (freeEditionChecked) return;
+  ensureSetup();
+  const sha = createHash("sha256").update(readFileSync(bin)).digest("hex");
+  if (sha !== PINNED_SHA256) {
+    const v = spawnSync(bin, ["version"], { encoding: "utf8", timeout: 15000 }).stdout || "";
+    if (!/pipelock version 3\.0\.0\b/.test(v) || !/git commit: 9d2e37d\b/.test(v)) {
+      throw new Error(`pipelock binary is not the pinned 3.0.0 build (sha256 ${sha}); authorized-call was assessed on 3.0.0 only`);
+    }
+  }
+  const lic = spawnSync(bin, ["license", "status"], { encoding: "utf8", timeout: 15000 });
+  if (!/License status: missing/.test(`${lic.stdout}${lic.stderr}`)) {
+    throw new Error("pipelock reports a licence; the benchmark measures the free, unlicensed edition only");
+  }
+  freeEditionChecked = true;
 }
 
 /** Destination URLs a fixture implies: URL literals + a URL built from an outbound `endpoint` field. */
@@ -83,6 +127,12 @@ function scanResponse(input) {
 }
 
 export async function assess(input, _testcase) {
+  if (input?.type === "authorized-call") {
+    // No caller-dependent decision exists in the free edition, so there is nothing to translate the
+    // fixture policy into (prereg 6.5, 6.6). Same answer for the attack and its benign control.
+    ensureFreeEdition();
+    return { detect: false, enforce: false, signal: AUTHZ_MISS_SIGNAL };
+  }
   if (input?.type === "delegated-request") {
     // pipelock 3.0.0 inspects egress destinations, bodies and headers for DLP / injection. It has a
     // "JWT Token" DLP pattern, but it parses no delegate-token claims (no aud/iss/sub/exp/act policy;
