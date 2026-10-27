@@ -1,5 +1,86 @@
 # Scoring changelog
 
+## 2026-10-27 — authorization family promoted (4 vectors, pre-registered); two authorization peers added
+
+Promotion of the family registered on 2026-10-26 (`docs/AUTHORIZATION-PREREG.md`, tag
+`authorization-prereg-2026-10-26`), in the registered order. Each `authorized-call` adapter was written
+by an implementer who saw only the prereg, the crosswalk rows and the development fixtures. Each was then
+frozen (`staging/authorization/MANIFEST.json → defenderFreeze`), every staged file was checked against its
+sha256, and the crosswalk was adjudicated (rubric 0.9.0 → **0.10.0**, 37 → **41** vectors; three Rater B
+proposals adopted as unions, `rubric/ratings/ADJUDICATION.md`). Fixtures were copied byte-identical into
+both corpora, then dev was run and held-out was run **once** per defender. The benign corpus was re-run for
+every tool that inspects it. No fixture was removed (`removals` empty).
+
+The fixture states a deployment policy, an already-authenticated caller (client, user, agent) and one
+`tools/call`. A defender scores `enforce` only if it refuses before any upstream contact, and every attack
+has a benign control that differs in one thing, usually the caller. So refusing by tool name alone fails.
+
+**Peers (prereg §6.5).** agentgateway v1.6.0 (CEL) and ToolHive v0.57.0 (Cedar) are measured on this family
+only (`meta.fixtureTypes`); their other 37 vectors are *not wired*, not misses. mcp-firewall 0.1.0 is
+driven through its Python SDK's per-agent RBAC (`check(agent=...)`). pipelock 3.0.0 is the free,
+unlicensed build. mcp-bastion is measured at unreleased commit `756acfc` (runtime authorization; released
+later as 1.4.0).
+
+**Two totals (CorpusRobustCoverage; held-out over the vectors the held-out corpus covers).**
+
+| Tool | Published 37 — dev | Published 37 — held-out | All 41 — dev | All 41 — held-out | Matched-control FP (dev / held-out) | Benign FP (337 items) |
+|---|--:|--:|--:|--:|--:|--:|
+| mcp-bastion | 67% (24.8/37) | 53% (15.3/29) | **70% (28.8/41)** | **59% (19.3/33)** | 0/78 · 0/75 | 15 (4.5%, 2.7–7.2%) |
+| mcp-firewall | 8% (3.0/37) | 9% (2.5/29) | 11% (4.7/41) | 13% (4.2/33) | 0/78 · 0/75 | 2 (0.6%, 0.2–2.1%) |
+| pipelock | 4% (1.3/37) | 0% (0.0/29) | 3% (1.3/41) | 0% (0.0/33) | 0/78 · 0/75 | 3 (0.9%, 0.3–2.6%) |
+| null-baseline | 0% | 0% | 0% (0.0/41) | 0% (0.0/33) | 0/78 · 0/75 | 0 (0.0%, 0.0–1.1%) |
+| agentgateway | not wired | not wired | authorization only | authorization only | 0/12 · 0/12 | not wired |
+| ToolHive | not wired | not wired | authorization only | authorization only | 0/12 · 0/12 | not wired |
+
+Compared case by case with the v0.9.0 results, every pre-existing outcome is unchanged except one:
+mcp-bastion's `credential-token-theft/001-token-passthrough-leak` moves from detect to **enforce**, because
+its new secret-in-result check refuses the response. The credential-token-theft vector goes from 0.75 to
+1.0 on dev, which is the 24.6 → 24.8 change on the 37. Held-out outcomes are identical for all four tools.
+
+**Authorization family, per vector (RobustCoverage, dev → held-out; 3 + 3 fixtures each).**
+
+| Vector | mcp-bastion | agentgateway | ToolHive | mcp-firewall | pipelock | null-baseline |
+|---|--:|--:|--:|--:|--:|--:|
+| authz-unentitled-tool | 100% → 100% | 100% → 100% | 100% → 100% | 100% → 100% | 0 → 0 | 0 → 0 |
+| authz-argument-overreach | 100% → 100% | 100% → 100% | 100% → 100% | 0 → 0 | 0 → 0 | 0 → 0 |
+| authz-delegated-agent-overreach | 100% → 100% | 100% → 100% | 100% → 100% | 0 → 0 | 0 → 0 | 0 → 0 |
+| authz-asserted-identity | 100% → 100% | 100% → 100% | 100% → 100% | 67% → 67% | 0 → 0 | 0 → 0 |
+| **Family (4)** | **100% → 100%** | **100% → 100%** | **100% → 100%** | 42% → 42% | 0 | 0 |
+
+No tool had a false positive on any authorization benign control.
+
+**Read these with the limits in mind.**
+- **Three tools at 100% means the family does not separate policy engines.** It separates tools that have a
+  per-caller, argument-aware policy engine from tools that do not. It does not rank mcp-bastion above
+  agentgateway or ToolHive. mcp-bastion is the benchmark author's tool. Its authorization code was written
+  after the fixtures were registered, from the development fixtures only, but the author knew which
+  properties a defender should check (prereg §9).
+- **agentgateway's path results depend on the adapter.** CEL has no path normalisation, so the adapter
+  compiles `pathWithin` into a 64-pass `regexReplace` normalisation. A plain `startsWith` rule, which is
+  what most deployments would write, accepts `..` escapes and sibling-prefix paths. See
+  `adapters/agentgateway/AUTHORIZATION-TRANSLATION.md`.
+- **ToolHive's path rule fails closed.** Cedar has no path normalisation either, so the translation refuses
+  any path containing `.`, `..` or empty segments. That is safe against traversal but would refuse a
+  legitimate `docs/./a.md`. No benign control in either corpus has such a path, so the 0 false positives do
+  not test this cost.
+- **ToolHive deployment.** The measured path is the direct proxy, `thv run <remote URL>`, with incoming OIDC
+  and a Cedar authz config. thv v0.57.0 requires a reachable container runtime even for a remote URL,
+  although it creates no container. The bench uses a dedicated Colima profile. Its runtime-free vMCP mode
+  was tried and not scored: it decides which tools a session may see by evaluating `call_tool` without
+  arguments, so a tool granted only under argument conditions disappears and every call to it fails.
+- **mcp-firewall's per-agent rules exist only for SDK embedders.** Its stdio proxy never sets an agent id.
+  Argument constraints, the user+agent intersection and a separate client identity are not expressible, and
+  those fixtures are misses with the reason in `signal`.
+- **pipelock: the paid tier was not measured.** Per-agent profiles are an Elastic License 2.0 feature that
+  needs a licence key. The free build makes MCP decisions per listener and ignores the caller-asserted
+  `X-Pipelock-Agent` header and `?agent=` parameter, so it has no per-caller authorization to translate into.
+  The licensed tier may do better; it was not obtained or measured.
+- **mcp-bastion benign corpus 14 → 15.** 1.4.0 widened its `NAME=secret` redaction to bare names, so the log
+  line `cache invalidated key=users:*` (`benign/tool-result/024-log-tail`) is redacted. This is a new false
+  positive, reported as a cost and not tuned away before the run.
+- **Peer results are for the versions pinned here.** Binaries are checked by sha256 in
+  `staging/authorization/MANIFEST.json`, and each translation is published with its adapter.
+
 ## 2026-10-16 — v0.9.0: delegation family promoted (5 vectors, pre-registered), scoreCap rule
 
 Promotion of the family registered on 2026-10-15 (`docs/DELEGATION-PREREG.md`, tag

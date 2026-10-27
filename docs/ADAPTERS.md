@@ -94,6 +94,28 @@ vector only when a fixture confirms it. `unknown` = not yet assessed (scored as 
   standalone `mcp scan` CLI, and the full DLP/tool_call eval endpoint (bearer-token HTTP server) is not
   driven — so this is still a lower bound on pipelock's total capability.
 
+## Wiring status (2026-10-27, rubric 0.10.0 — authorization family, `authorized-call`)
+
+Each adapter translates the fixture's policy into the tool's own policy language and maps the caller to
+credentials the tool verifies natively (`docs/AUTHORIZATION-PREREG.md` §6.6). The translation is published
+next to each adapter in `AUTHORIZATION-TRANSLATION.md`.
+- **mcp-bastion** (unreleased commit `756acfc`) — the fixture policy becomes bastion's `authorization`
+  config, and calls go through its real gateway path.
+- **agentgateway v1.6.0** — the pinned binary in front of a local mock MCP server that counts hits; callers
+  are ES256 JWTs from a local JWKS; the policy is compiled to CEL. Scoped to this family (`fixtureTypes`).
+- **ToolHive v0.57.0** — `thv run <remote URL> --foreground` with incoming OIDC (local JWKS) and a
+  `cedarv1` authz config. Needs a container runtime even for a remote URL; the bench uses
+  `colima start --profile mcpbench --cpu 2 --memory 2 --disk 10`. Isolated config/state directories.
+  Scoped to this family.
+- **mcp-firewall 0.1.0** — per-agent RBAC through the Python SDK, `check(tool, arguments, agent=...)`.
+- **pipelock 3.0.0** — `detect:false` after checking the free, unlicensed binary: per-agent profiles need a
+  paid licence; free-edition MCP decisions are per listener, not per caller. The adapter refuses to run on
+  another build or when a licence is present.
+- **null-baseline** — `detect:false`.
+
+Run the two authorization-only peers with `npm run bench:authz-peers` (dev) and
+`npm run bench:authz-peers:heldout`.
+
 ## Wiring status (2026-10-15, v0.9.0 — delegation family, `delegated-request`)
 
 - **mcp-bastion** (unreleased, branch `feat/delegation-checks`, commit `c18ff0f`) — the adapter turns the

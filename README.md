@@ -46,7 +46,7 @@ novelty positioning — read it before citing this anywhere.
 
 ```
  rubric/crosswalk.json         testcases/  testcases-heldout/  testcases-benign/     adapters/<tool>/
- (37 vectors + framework    →  (development · held-out · benign-only corpora)     →  (drives the tool's
+ (41 vectors + framework    →  (development · held-out · benign-only corpora)     →  (drives the tool's
   mappings + appliesTo axis)                                                          REAL code)
                                                   │
                                                   ▼
@@ -56,8 +56,9 @@ novelty positioning — read it before citing this anywhere.
              results/ · results/heldout/ · results/benign/  →  bin/leaderboard.mjs → docs/LEADERBOARD.md
 ```
 
-1. **Rubric** — [`rubric/crosswalk.json`](rubric/crosswalk.json): **37 MCP attack vectors** (24 pre-existing,
-   8 introduced by the **2026-07-28 protocol revision**, and the 5-vector **delegation family** added in v0.9.0),
+1. **Rubric** — [`rubric/crosswalk.json`](rubric/crosswalk.json): **41 MCP attack vectors** (24 pre-existing,
+   8 introduced by the **2026-07-28 protocol revision**, the 5-vector **delegation family** added in v0.9.0,
+   and the 4-vector **authorization family** added in rubric 0.10.0),
    each mapped to architectural layer, STRIDE, NIST AI
    RMF, NSA MCP guidance, OWASP LLM 2025, OWASP Agentic 2026, **EU AI Act obligations** (Arts. 12, 14, 15(5),
    26, 55(1)(d), 72, 73 — the language regulated buyers are audited against since GPAI enforcement began
@@ -67,12 +68,13 @@ novelty positioning — read it before citing this anywhere.
    [`rubric/ratings/ADJUDICATION.md`](rubric/ratings/ADJUDICATION.md). **A human third rater is invited** —
    copy `rubric/ratings/rater-TEMPLATE.json` and open a PR.
 2. **Three corpora** —
-   - `testcases/` — the **development** corpus (66 cases): used to find and fix gaps in the reference proxy.
-   - `testcases-heldout/` — the **held-out** corpus (63 cases): authored blind to every defender's detection
+   - `testcases/` — the **development** corpus (78 cases): used to find and fix gaps in the reference proxy.
+   - `testcases-heldout/` — the **held-out** corpus (75 cases): authored blind to every defender's detection
      code, under the pre-registered [`docs/HELD-OUT-PROTOCOL.md`](docs/HELD-OUT-PROTOCOL.md) (domain / lexical /
      surface / encoding shifts; no development phrasing or hosts; no iteration after the first run). The 15
      delegation held-out cases go further: they were registered before any measured defender had delegation
-     code at all ([`docs/DELEGATION-PREREG.md`](docs/DELEGATION-PREREG.md)).
+     code at all ([`docs/DELEGATION-PREREG.md`](docs/DELEGATION-PREREG.md)); the 12 authorization held-out cases
+     likewise ([`docs/AUTHORIZATION-PREREG.md`](docs/AUTHORIZATION-PREREG.md)).
    - `testcases-benign/` — the **benign-only** corpus (337 items): 256 *verbatim* tool definitions harvested
      from 21 public MCP servers + 81 authored hard negatives. Every flag is a false positive.
 3. **Adapters** — `adapters/<tool>/`: a thin driver that runs a defender's real code against fixtures, under
@@ -82,10 +84,39 @@ novelty positioning — read it before citing this anywhere.
    protocol revision**, development **and** held-out side by side with the generalisation gap, and the
    benign-corpus FP rate with a Wilson 95% interval.
 
-## Status — v0.9.0 (2026-10-16)
+## Status — rubric 0.10.0 (2026-10-27)
 
 Full board: [docs/LEADERBOARD.md](docs/LEADERBOARD.md) · live site:
 [gowthaman90.github.io/mcp-defense-bench](https://gowthaman90.github.io/mcp-defense-bench/).
+
+**New: a pre-registered authorization family (4 vectors).** A deployment says which application, user and
+agent may call which tool with which arguments. The family asks whether a defender refuses, before any
+upstream contact, a caller with no grant for the tool, a permitted tool called with out-of-policy arguments
+(including `..` path escapes), an agent acting for a user when only one of the two is permitted, and an
+identity asserted in arguments, headers or `_meta` instead of the authenticated one. Each attack has a
+benign control that differs in one thing, usually the caller. The vectors and both corpora were registered
+(tag [`authorization-prereg-2026-10-26`](https://github.com/Gowthaman90/mcp-defense-bench/tree/authorization-prereg-2026-10-26))
+before any measured defender's authorization code or adapter existed, and each defender was run on the
+held-out set once.
+
+| Tool | Policy language | Authorization (4): dev → held-out | FP on benign controls (dev + held-out) |
+|---|---|--:|--:|
+| `mcp-bastion` (unreleased `756acfc`) | bastion policy | **100% → 100%** | 0/24 |
+| `agentgateway` v1.6.0 | CEL | **100% → 100%** | 0/24 |
+| `ToolHive` v0.57.0 | Cedar | **100% → 100%** | 0/24 |
+| `mcp-firewall` 0.1.0 | per-agent RBAC (Python SDK) | 42% → 42% | 0/24 |
+| `pipelock` 3.0.0 (free build) | — | 0% → 0% | 0/24 |
+| `null-baseline` | — | 0% → 0% | 0/24 |
+
+Three tools at 100% means the family separates tools that have a per-caller, argument-aware policy engine
+from tools that do not. It does not rank them. Path containment needs care in both peers: agentgateway's
+result depends on a CEL path normalisation the adapter builds, and ToolHive's translation refuses any path
+with `.`/`..` segments. pipelock's paid per-agent tier was not measured. Over all 41 vectors mcp-bastion
+scores **70%** on development and **59%** held-out (19.3/33); its benign-corpus flags rise from 14 to 15
+(a log line `key=users:*` now redacted). Details and every caveat:
+[`docs/CHANGELOG-scoring.md`](docs/CHANGELOG-scoring.md).
+
+### v0.9.0 (2026-10-16)
 
 **New in v0.9.0: a pre-registered delegation family (5 vectors).** When one agent calls several sub-agent
 MCP servers for a signed-in user, a relay carries one short-lived token per sub-agent. The family asks
