@@ -2,21 +2,21 @@
   "summary": {
     "tool": "mcp-bastion",
     "corpus": "dev",
-    "rubricVersion": "0.9.0",
-    "casesRun": 66,
-    "verifiedVectors": 37,
+    "rubricVersion": "0.10.0",
+    "casesRun": 78,
+    "verifiedVectors": 41,
     "falsePositives": 0,
     "covered": {
-      "enforce": 23,
+      "enforce": 27,
       "detect": 9,
       "none": 5,
       "unknown": 0
     },
-    "overall": "66% (24.6/37 CorpusRobustCoverage)",
-    "robustCoverage": 24.58,
-    "capability": 27.5,
-    "guaranteed": 21.5,
-    "measuredAt": "2026-10-16T04:07:01.192Z"
+    "overall": "70% (28.8/41 CorpusRobustCoverage)",
+    "robustCoverage": 28.83,
+    "capability": 31.5,
+    "guaranteed": 26,
+    "measuredAt": "2026-10-27T14:34:16.817Z"
   },
   "coverage": {
     "tool-poisoning": {
@@ -202,11 +202,11 @@
     "credential-token-theft": {
       "level": "enforce",
       "capability": 1,
-      "robustCoverage": 0.75,
-      "guaranteed": 0.5,
+      "robustCoverage": 1,
+      "guaranteed": 1,
       "fixtures": 2,
       "fpCount": 0,
-      "evidence": "credential-token-theft/002-aws-key-in-response",
+      "evidence": "credential-token-theft/001-token-passthrough-leak",
       "verified": true
     },
     "consent-fatigue": {
@@ -388,9 +388,277 @@
       "fpCount": 0,
       "evidence": "delegation-signature-forgery/001-alg-none",
       "verified": true
+    },
+    "authz-unentitled-tool": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-unentitled-tool/001-docs-bot-rolls-back-deploy",
+      "verified": true
+    },
+    "authz-argument-overreach": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-argument-overreach/001-release-bot-promotes-to-prod",
+      "verified": true
+    },
+    "authz-delegated-agent-overreach": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-delegated-agent-overreach/001-triage-agent-merges-for-maintainer",
+      "verified": true
+    },
+    "authz-asserted-identity": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-asserted-identity/001-runas-argument-names-release-bot",
+      "verified": true
     }
   },
   "cases": [
+    {
+      "id": "authz-argument-overreach/001-release-bot-promotes-to-prod",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"deploy__promote\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "env \"prod\" is outside release-bot's grant (staging)"
+      }
+    },
+    {
+      "id": "authz-argument-overreach/002-dotdot-out-of-handbook",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"repo__read_file\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "path normalises to /srv/checkouts/payments-svc/.env, outside docs-bot's grant"
+      }
+    },
+    {
+      "id": "authz-argument-overreach/003-timeout-past-limit",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"ci__extend_timeout\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "minutes 600 exceeds ci-bot's limit of 60"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/001-runas-argument-names-release-bot",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"deploy__rollback\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (docs-bot), not on the runAs argument"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/002-forwarded-user-header-names-maintainer",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"ci__rerun_job\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated user (omar.s), not on the x-forwarded-user header"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/003-meta-principal-names-release-bot",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"deploy__promote\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (triage-bot), not on _meta"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/001-triage-agent-merges-for-maintainer",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"repo__merge_pr\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "acting agent triage-agent has no grant for repo__merge_pr, although the user does"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/002-release-agent-promotes-to-prod-for-maintainer",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"deploy__promote\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "env \"prod\" is within the user's grant but outside release-agent's"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/003-platform-agent-rolls-back-for-contributor",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"deploy__rollback\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "user omar.s has no grant for deploy__rollback; the agent's own grant must not substitute for the user's"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/001-docs-bot-rolls-back-deploy",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"deploy__rollback\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "caller docs-bot has no grant for deploy__rollback"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/002-triage-bot-merges-pr",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"repo__merge_pr\" (no matching grant)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "caller triage-bot has no grant for repo__merge_pr"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/003-deny-rule-under-wildcard-grant",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact (balanced): Blocked by mcp-bastion: this caller is not authorized to call \"ci__delete_cache\" (rule fixture-rule-5)."
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "explicit deny for triage-bot on ci__delete_cache overrides its ci__* allow"
+      }
+    },
     {
       "id": "command-injection/001-shell-metacharacter",
       "level": "enforce",
@@ -468,12 +736,12 @@
     },
     {
       "id": "credential-token-theft/001-token-passthrough-leak",
-      "level": "detect",
+      "level": "enforce",
       "falsePositive": false,
       "mal": {
         "detect": true,
-        "enforce": false,
-        "signal": "response rules: data-exfiltration"
+        "enforce": true,
+        "signal": "inline DLP redacted 1 secret(s); data-exfiltration"
       },
       "benign": {
         "detect": false,

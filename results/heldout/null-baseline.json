@@ -2,21 +2,21 @@
   "summary": {
     "tool": "null-baseline",
     "corpus": "heldout",
-    "rubricVersion": "0.9.0",
-    "casesRun": 63,
-    "verifiedVectors": 29,
+    "rubricVersion": "0.10.0",
+    "casesRun": 75,
+    "verifiedVectors": 33,
     "falsePositives": 0,
     "covered": {
       "enforce": 0,
       "detect": 0,
-      "none": 29,
+      "none": 33,
       "unknown": 8
     },
-    "overall": "0% (0.0/37 CorpusRobustCoverage)",
+    "overall": "0% (0.0/41 CorpusRobustCoverage)",
     "robustCoverage": 0,
     "capability": 0,
     "guaranteed": 0,
-    "measuredAt": "2026-10-16T04:07:32.525Z"
+    "measuredAt": "2026-10-27T14:34:37.214Z"
   },
   "coverage": {
     "tool-poisoning": {
@@ -388,9 +388,289 @@
       "fpCount": 0,
       "evidence": "heldout/delegation-signature-forgery/001-payload-swapped-after-signing",
       "verified": true
+    },
+    "authz-unentitled-tool": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/authz-unentitled-tool/001-scheduler-exports-patient-chart",
+      "verified": true
+    },
+    "authz-argument-overreach": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/authz-argument-overreach/001-sibling-dir-shares-prefix",
+      "verified": true
+    },
+    "authz-delegated-agent-overreach": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/authz-delegated-agent-overreach/001-intake-agent-approves-payout",
+      "verified": true
+    },
+    "authz-asserted-identity": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/authz-asserted-identity/001-nested-context-requested-by",
+      "verified": true
     }
   },
   "cases": [
+    {
+      "id": "heldout/authz-argument-overreach/001-sibling-dir-shares-prefix",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "/var/claims/east-archive is not below /var/claims/east (boundary is a path separator, not a string prefix)"
+      }
+    },
+    {
+      "id": "heldout/authz-argument-overreach/002-load-limit-eight-times-grant",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "megawatts 400 exceeds load-balancer-svc's limit of 50"
+      }
+    },
+    {
+      "id": "heldout/authz-argument-overreach/003-homoglyph-carrier-code",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "carrier \"M\\u0410EU\" is not exactly an approved code"
+      }
+    },
+    {
+      "id": "heldout/authz-asserted-identity/001-nested-context-requested-by",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (advising-portal), not on context.requestedBy"
+      }
+    },
+    {
+      "id": "heldout/authz-asserted-identity/002-mixed-case-acting-as-header",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (field-crew-tablet), not on X-Acting-As"
+      }
+    },
+    {
+      "id": "heldout/authz-asserted-identity/003-approver-named-in-input-response",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "amount 15000 exceeds the authenticated user's limit (cl-5521, 2000); the named approver is not authenticated"
+      }
+    },
+    {
+      "id": "heldout/authz-delegated-agent-overreach/001-intake-agent-approves-payout",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "acting agent intake-agent has no grant for payouts__approve, although the user does"
+      }
+    },
+    {
+      "id": "heldout/authz-delegated-agent-overreach/002-opaque-ids-transcript-confused-deputy",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "user 00u8f2kq19 has no grant for registrar__issue_transcript; the agent's grant must not substitute"
+      }
+    },
+    {
+      "id": "heldout/authz-delegated-agent-overreach/003-prior-actor-grant-not-inherited",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "current actor rx-drafting-agent has no grant for rx__prescribe; the prior actor's grant is not inherited"
+      }
+    },
+    {
+      "id": "heldout/authz-unentitled-tool/001-scheduler-exports-patient-chart",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "caller appointment-scheduler has no grant for ehr__export_chart"
+      }
+    },
+    {
+      "id": "heldout/authz-unentitled-tool/002-breaker-deny-beside-grid-wildcard",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "explicit deny for field-crew-tablet on grid__open_breaker overrides its wildcard allow"
+      }
+    },
+    {
+      "id": "heldout/authz-unentitled-tool/003-grade-change-on-input-retry",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "no protection"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "the input_required retry is a tools/call by advising-portal, which has no grant for registrar__change_grade"
+      }
+    },
     {
       "id": "heldout/command-injection/001-and-chain-wget-bash",
       "level": "none",

@@ -109,6 +109,26 @@
       "falsePositives": 0,
       "firstRun": false,
       "note": "re-run under mcp-bastion v1.0.0; outcomes identical"
+    },
+    {
+      "tool": "mcp-bastion",
+      "measuredAt": "2026-10-27T14:34:37.181Z",
+      "casesRun": 75,
+      "robustCoverage": 19.33,
+      "capability": 22,
+      "falsePositives": 0,
+      "firstRun": false,
+      "note": "rubric 0.10.0: first and only held-out run of the authorization family for this defender (AUTHORIZATION-PREREG §6.3), after the freeze in staging/authorization/MANIFEST.json; 12/12 authorization fixtures enforce, 0 false positives"
+    },
+    {
+      "tool": "null-baseline",
+      "measuredAt": "2026-10-27T14:34:37.214Z",
+      "casesRun": 75,
+      "robustCoverage": 0,
+      "capability": 0,
+      "falsePositives": 0,
+      "firstRun": false,
+      "note": "rubric 0.10.0; authorization family 0/12, as expected for the control"
     }
   ],
   "redactions": [
