@@ -9,11 +9,14 @@
  *   - cross-server naming   → duplicate-name check   (tool shadowing, per ToolRegistry.shadowedBy)
  *   - tool RESULTS          → scanText               (response scanning, v0.3 responseScanInterceptor)
  *   - delegate TOKENS       → checkDelegationAsync   (keyless delegation checks, v1.2 gateway mode)
+ *   - per-caller AUTHZ      → UpstreamManager + HTTP listener (runtime authorization, v1.4)
  * Everything else (transport, params, registry provenance, config, consent) is NOT inspected by
  * bastion at runtime, so the adapter returns {detect:false} — honestly.
  */
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
+import { createServer } from "node:http";
+import { generateKeyPairSync, randomBytes, sign as cryptoSign } from "node:crypto";
 
 const require = createRequire(import.meta.url);
 
@@ -55,6 +58,11 @@ const {
   BastionConfigSchema,
   checkDelegationAsync,
   delegationKeySet,
+  // v1.4 (unreleased, feat/runtime-authorization): runtime authorization, driven end to end.
+  UpstreamManager,
+  startHttpServer,
+  resolveListenClients,
+  logger: bastionLogger,
 } = bastion;
 
 /**
@@ -131,6 +139,361 @@ async function assessDelegated(input) {
   const rules = [...new Set(findings.map((f) => f.rule))];
   const blocks = findings.some((f) => !DELEGATION_WARN_RULES.has(f.rule));
   return { detect: true, enforce: blocks, signal: `delegation (${trust.mode}): ${rules.join(", ")}${blocks ? "" : " (warn only)"}` };
+}
+
+// ------------------------------------------------------------------------------------------------
+// authorized-call (docs/AUTHORIZATION-PREREG.md §4). Translation: AUTHORIZATION-TRANSLATION.md.
+// ------------------------------------------------------------------------------------------------
+/**
+ * An `authorized-call` fixture through bastion's REAL gateway path, not the bare evaluator: the
+ * fixture's deployment becomes a bastion config (validated by BastionConfigSchema; a rejected config
+ * is an honest miss), a bastion UpstreamManager + HTTP listener is started on loopback with one
+ * dependency-free HTTP upstream per `<server>` tool group (connected on demand), and the request is
+ * sent over HTTP exactly as a client would send it:
+ *   - `caller.client`  → that client's bearer token (`listen.clients`, token from a synthetic env);
+ *   - `caller.user` / `caller.agent` / `caller.priorAgents` → one ES256-signed delegate JWT per
+ *     upstream (`sub`, `act.sub`, nested `act`), verified by bastion in signature mode against an
+ *     inline public JWK set. A caller with no `client` is sent through a host client
+ *     (HOST_CLIENT) that the translation grants every tool, since bastion always authenticates a
+ *     transport client; that grant adds a permit for the host and removes none;
+ *   - `request.headers` → HTTP headers; `request.meta` → `params._meta`;
+ *   - `request.retryOf: "input_required"` → a real 2026-07-28 MRTR exchange (see modernRetry):
+ *     round 1 obtains bastion's sealed `requestState` when bastion lets it through, and the judged
+ *     round 2 carries `inputResponses` and that state.
+ * Default `balanced` profile (onAuthorization: block). Detect = enforce = bastion answered the
+ * judged request with a refusal and no `tools/call` reached any upstream during it.
+ */
+const HOST_CLIENT = "bench-agent-host";
+const AUTHZ_ISSUER = "https://idp.bench.invalid";
+
+const b64url = (v) => Buffer.from(typeof v === "string" ? v : JSON.stringify(v)).toString("base64url");
+
+/** An ES256 JWS compact token (node:crypto only, so the bench needs no JOSE dependency). */
+function signEs256(privateKey, payload) {
+  const input = `${b64url({ alg: "ES256", kid: "bench-k1", typ: "JWT" })}.${b64url(payload)}`;
+  const sig = cryptoSign("sha256", Buffer.from(input), { key: privateKey, dsaEncoding: "ieee-p1363" });
+  return `${input}.${sig.toString("base64url")}`;
+}
+
+/** The caller's delegate token for one upstream: `sub` = user, `act` = current agent ⊃ prior agents. */
+function delegateToken(privateKey, audience, caller) {
+  const now = Math.floor(Date.now() / 1000);
+  let act;
+  for (const prior of [...(caller.priorAgents ?? [])].reverse()) act = { sub: prior, ...(act ? { act } : {}) };
+  if (caller.agent !== undefined) act = { sub: caller.agent, ...(act ? { act } : {}) };
+  return signEs256(privateKey, {
+    iss: AUTHZ_ISSUER,
+    ...(caller.user !== undefined ? { sub: caller.user } : {}),
+    aud: audience,
+    iat: now - 5,
+    exp: now + 300,
+    jti: randomBytes(8).toString("hex"),
+    ...(act ? { act } : {}),
+  });
+}
+
+/**
+ * A stateless JSON-RPC upstream (protocol 2025-06-18) serving `tools`. It records every
+ * `tools/call`.
+ */
+async function startAuthzUpstream(tools) {
+  const calls = [];
+  const server = createServer(async (req, res) => {
+    if (req.method !== "POST") return void res.writeHead(405, { allow: "POST" }).end();
+    const chunks = [];
+    for await (const c of req) chunks.push(c);
+    let msg;
+    try {
+      msg = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    } catch {
+      return void res.writeHead(400).end();
+    }
+    if (msg.id === undefined) return void res.writeHead(202).end();
+    let result;
+    if (msg.method === "initialize") {
+      result = {
+        protocolVersion: "2025-06-18",
+        capabilities: { tools: {} },
+        serverInfo: { name: "bench-authz-upstream", version: "0.0.0" },
+      };
+    } else if (msg.method === "ping") {
+      result = {};
+    } else if (msg.method === "tools/list") {
+      result = { tools: tools.map((t) => ({ name: t.name, description: t.description ?? "", inputSchema: t.inputSchema ?? { type: "object" } })) };
+    } else if (msg.method === "tools/call") {
+      const p = msg.params ?? {};
+      calls.push({ name: p.name, arguments: p.arguments ?? {} });
+      result = { content: [{ type: "text", text: `ran ${p.name}` }] };
+    } else {
+      return void res
+        .writeHead(200, { "content-type": "application/json" })
+        .end(JSON.stringify({ jsonrpc: "2.0", id: msg.id, error: { code: -32601, message: "Method not found" } }));
+    }
+    res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ jsonrpc: "2.0", id: msg.id, result }));
+  });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  return {
+    url: `http://127.0.0.1:${server.address().port}/mcp`,
+    calls,
+    close: () => new Promise((r) => server.close(() => r())),
+  };
+}
+
+/** One JSON-RPC request to bastion's HTTP listener; returns the response message for `id`. */
+async function rpc(url, headers, id, method, params) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...headers,
+      "content-type": "application/json",
+      accept: "application/json, text/event-stream",
+      "mcp-protocol-version": "2025-06-18",
+    },
+    body: JSON.stringify({ jsonrpc: "2.0", id, method, params }),
+  });
+  const text = await res.text();
+  if (!res.ok) return { httpStatus: res.status, error: { message: text.slice(0, 120) } };
+  const messages = (res.headers.get("content-type") ?? "").includes("text/event-stream")
+    ? text.split("\n").filter((l) => l.startsWith("data:")).map((l) => JSON.parse(l.slice(5)))
+    : [JSON.parse(text)];
+  return messages.find((m) => m.id === id) ?? { error: { message: "no response" } };
+}
+
+const resultText = (msg) =>
+  (msg?.result?.content ?? []).map((c) => (c?.type === "text" ? c.text : "")).join("") || msg?.error?.message || "";
+
+/**
+ * MRTR exists only in the 2026-07-28 era (a legacy-era hop rejects an `input_required` result), so a
+ * `retryOf: "input_required"` fixture is driven with a 2026-07-28 client and upstream built from the
+ * same MCP SDK packages mcp-bastion ships with (loaded from the sibling repo, retry fixtures only).
+ */
+let mcpSdk;
+async function loadMcpSdk() {
+  if (!mcpSdk) {
+    const pkg = (name) => fileURLToPath(new URL(`../../../mcp_bastion/node_modules/@modelcontextprotocol/${name}/dist/index.mjs`, import.meta.url));
+    const [server, client] = await Promise.all([import(pkg("server")), import(pkg("client"))]);
+    mcpSdk = { server, client };
+  }
+  return mcpSdk;
+}
+
+/** A 2026-07-28 MRTR upstream: `input_required` until the retry carries input responses. */
+async function startModernAuthzUpstream(tools) {
+  const { Server, createMcpHandler, inputRequired } = (await loadMcpSdk()).server;
+  const calls = [];
+  const handler = createMcpHandler(
+    () => {
+      const s = new Server({ name: "bench-authz-upstream", version: "0.0.0" }, { capabilities: { tools: {} } });
+      s.setRequestHandler("tools/list", async () => ({
+        tools: tools.map((t) => ({ name: t.name, description: t.description ?? "", inputSchema: t.inputSchema ?? { type: "object" } })),
+      }));
+      s.setRequestHandler("tools/call", async (req, ctx) => {
+        calls.push({ name: req.params.name, arguments: req.params.arguments ?? {} });
+        const responses = ctx.mcpReq.inputResponses;
+        if (responses && Object.keys(responses).length > 0) {
+          return { content: [{ type: "text", text: `ran ${req.params.name}` }] };
+        }
+        return inputRequired({
+          inputRequests: {
+            confirm: inputRequired.elicit({
+              message: "Confirm?",
+              requestedSchema: { type: "object", properties: { ok: { type: "boolean" } } },
+            }),
+          },
+          requestState: "bench-upstream-state",
+        });
+      });
+      return s;
+    },
+    { legacy: "stateless" },
+  );
+  const server = createServer(async (req, res) => {
+    try {
+      const chunks = [];
+      for await (const c of req) chunks.push(c);
+      const raw = Buffer.concat(chunks).toString("utf8");
+      const headers = new Headers();
+      for (const [k, v] of Object.entries(req.headers)) if (typeof v === "string") headers.set(k, v);
+      const url = `http://127.0.0.1${req.url ?? "/"}`;
+      const resp = await handler.fetch(
+        new Request(url, { method: req.method, headers, ...(req.method === "POST" ? { body: raw } : {}) }),
+        raw ? { parsedBody: JSON.parse(raw) } : {},
+      );
+      const out = {};
+      resp.headers.forEach((v, k) => (out[k] = v));
+      res.writeHead(resp.status, out).end(Buffer.from(await resp.arrayBuffer()));
+    } catch {
+      if (!res.headersSent) res.writeHead(500).end();
+    }
+  });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  return {
+    url: `http://127.0.0.1:${server.address().port}/mcp`,
+    calls,
+    close: async () => {
+      await handler.close().catch(() => undefined);
+      await new Promise((r) => server.close(() => r()));
+    },
+  };
+}
+
+/**
+ * The judged request of a retry fixture, with a 2026-07-28 client: round 1 (same caller, same
+ * arguments, no input responses) obtains bastion's sealed `requestState` if bastion lets it through;
+ * round 2 carries the fixture's input responses and that state. Returns the round-2 outcome.
+ */
+async function modernRetry(url, headers, params, inputResponses, countCalls) {
+  const { Client, StreamableHTTPClientTransport } = (await loadMcpSdk()).client;
+  const c = new Client(
+    { name: "mcp-defense-bench", version: "0" },
+    { versionNegotiation: { mode: "auto" }, inputRequired: { autoFulfill: false }, capabilities: { elicitation: { form: {} } } },
+  );
+  await c.connect(new StreamableHTTPClientTransport(new URL(url), { requestInit: { headers } }));
+  const allow = { allowInputRequired: true };
+  try {
+    const first = await c.callTool(params, allow).catch((err) => ({ isError: true, content: [{ type: "text", text: String(err?.message ?? err) }] }));
+    const requestState = typeof first?.requestState === "string" ? first.requestState : undefined;
+    const before = countCalls();
+    const judged = await c
+      .callTool({ ...params, ...(inputResponses !== undefined ? { inputResponses } : {}), ...(requestState !== undefined ? { requestState } : {}) }, allow)
+      .catch((err) => ({ isError: true, content: [{ type: "text", text: String(err?.message ?? err) }] }));
+    return { result: judged, reached: countCalls() > before };
+  } finally {
+    await c.close().catch(() => undefined);
+  }
+}
+
+/** Translate the fixture into a bastion config (see AUTHORIZATION-TRANSLATION.md). */
+function authzConfig(input, upstreamUrls, jwk, modern) {
+  const sep = input.separator ?? "__";
+  const servers = {};
+  for (const [server, url] of Object.entries(upstreamUrls)) {
+    servers[server] = {
+      transport: "http",
+      url,
+      protocol: modern ? "2026-07-28" : "legacy",
+      connect: "onDemand",
+      forwardHeaders: { "x-bench-delegate": `x-bench-delegate-${server}` },
+      onMissingForwardedHeader: "omit",
+      delegation: { audience: server, verify: "signature", issuer: AUTHZ_ISSUER, algorithms: ["ES256"], jwks: { keys: [jwk] } },
+    };
+  }
+  const rules = (input.policy?.rules ?? []).map((r, i) => ({
+    id: `fixture-rule-${i + 1}`,
+    effect: r.effect,
+    principal: r.principal,
+    tools: r.tools,
+    ...(r.args !== undefined ? { args: r.args } : {}),
+  }));
+  if (input.caller?.client === undefined) {
+    rules.push({ id: "host-client", effect: "allow", principal: { client: HOST_CLIENT }, tools: ["*"] });
+  }
+  const clients = new Set([input.caller?.client ?? HOST_CLIENT]);
+  for (const r of input.policy?.rules ?? []) {
+    const named = r?.principal?.client;
+    for (const c of Array.isArray(named) ? named : named !== undefined ? [named] : []) clients.add(c);
+  }
+  const env = {};
+  const listenClients = {};
+  for (const c of clients) {
+    const envName = `BENCH_TOKEN_${Object.keys(listenClients).length}`;
+    listenClients[c] = { tokenEnv: envName };
+    env[envName] = `bench-${randomBytes(16).toString("hex")}`;
+  }
+  return {
+    raw: {
+      servers,
+      namespace: { separator: sep },
+      listen: { mode: "http", clients: listenClients },
+      authorization: { enabled: true, default: input.policy?.default ?? "deny", rules },
+      reconnect: { auto: false },
+      healthCheck: { enabled: false },
+    },
+    env,
+  };
+}
+
+async function assessAuthorized(input) {
+  const sep = input.separator ?? "__";
+  const groups = new Map();
+  for (const t of input.tools ?? []) {
+    const i = t.name.indexOf(sep);
+    if (i <= 0) continue; // not a namespaced tool: no upstream can expose it under this name
+    const server = t.name.slice(0, i);
+    groups.set(server, [...(groups.get(server) ?? []), { ...t, name: t.name.slice(i + sep.length) }]);
+  }
+  const req = input.request ?? {};
+  const retry = req.retryOf === "input_required";
+  const cleanups = [];
+  const previousLevel = bastionLogger.level;
+  bastionLogger.level = "silent";
+  try {
+    const upstreams = new Map();
+    for (const [server, tools] of groups) {
+      const up = retry ? await startModernAuthzUpstream(tools) : await startAuthzUpstream(tools);
+      cleanups.push(() => up.close());
+      upstreams.set(server, up);
+    }
+    const { publicKey, privateKey } = generateKeyPairSync("ec", { namedCurve: "P-256" });
+    const jwk = { ...publicKey.export({ format: "jwk" }), kid: "bench-k1", alg: "ES256", use: "sig" };
+    const { raw, env } = authzConfig(
+      input,
+      Object.fromEntries([...upstreams].map(([s, u]) => [s, u.url])),
+      jwk,
+      retry,
+    );
+    const parsed = BastionConfigSchema.safeParse(raw);
+    if (!parsed.success) {
+      // bastion refuses to start with this policy, so it enforces nothing: an honest miss.
+      const why = parsed.error.issues.map((i) => i.message).join("; ").slice(0, 160);
+      return { detect: false, enforce: false, signal: `config rejected by bastion: ${why}` };
+    }
+    const config = parsed.data;
+    const mgr = new UpstreamManager(config);
+    cleanups.push(() => mgr.closeAll());
+    const listener = await startHttpServer(mgr, {
+      host: "127.0.0.1",
+      port: 0,
+      path: "/mcp",
+      clients: resolveListenClients(config.listen, env),
+    });
+    cleanups.push(() => listener.close());
+
+    const caller = input.caller ?? {};
+    const headers = { ...lowerHeaders(req.headers) };
+    const client = caller.client ?? HOST_CLIENT;
+    const clientEnv = config.listen.clients[client].tokenEnv;
+    headers.authorization = `Bearer ${env[clientEnv]}`;
+    if (caller.user !== undefined || caller.agent !== undefined) {
+      for (const server of groups.keys()) headers[`x-bench-delegate-${server}`] = delegateToken(privateKey, server, caller);
+    }
+
+    const params = { name: req.name, arguments: req.arguments ?? {}, ...(req.meta ? { _meta: req.meta } : {}) };
+    const countCalls = () => [...upstreams.values()].reduce((n, u) => n + u.calls.length, 0);
+    let judged;
+    let reached;
+    if (retry) {
+      const out = await modernRetry(listener.url, headers, params, req.inputResponses, countCalls);
+      judged = { result: out.result };
+      reached = out.reached;
+    } else {
+      await rpc(listener.url, headers, 1, "initialize", {
+        protocolVersion: "2025-06-18",
+        capabilities: {},
+        clientInfo: { name: "mcp-defense-bench", version: "0" },
+      });
+      const before = countCalls();
+      judged = await rpc(listener.url, headers, 2, "tools/call", params);
+      reached = countCalls() > before;
+    }
+    const text = resultText(judged);
+    const refused = !reached && (judged.error !== undefined || judged.result?.isError === true);
+    if (!refused) return { detect: false, enforce: false };
+    return { detect: true, enforce: true, signal: `refused before upstream contact (balanced): ${text.slice(0, 140)}` };
+  } finally {
+    for (const fn of cleanups.reverse()) await fn().catch(() => undefined);
+    bastionLogger.level = previousLevel;
+  }
 }
 
 /** Rules the HTTP listener REJECTS with 400 / -32020 (mirrors REJECTING_HEADER_RULES in bastion). */
@@ -419,6 +782,11 @@ export async function assess(input, _testcase) {
 
     case "delegated-request":
       return assessDelegated(input);
+
+    case "authorized-call":
+      // Runtime authorization (v1.4), driven through bastion's real HTTP gateway path. The policy
+      // translation (commitment 6.6) is documented in AUTHORIZATION-TRANSLATION.md.
+      return assessAuthorized(input);
 
     case "tool-state-handle":
     case "task-lifecycle":
