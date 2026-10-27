@@ -50,8 +50,12 @@
       "pipelock": {
         "version": "3.0.0",
         "binarySha256": "96843f7f3b5415384230b9e1b8ecfb925d89df2e57849ee74ab63c15b6d02444",
-        "authorizedCall": "unknown (per-agent identity and contracts; prereg 6.5)",
-        "note": "Adapter not yet written. Written later by an implementer blind to the held-out set (dev fixtures only), at this pinned version; held-out run once after its adapter commit is added here."
+        "authorizedCall": "wired as confirmed miss (adapter 7cfdd38, written blind)",
+        "note": "Free, unlicensed 3.0.0 build only. Named agent profiles need the paid ELv2 'agents' licence feature and are stripped without a key; free-edition MCP decisions (including learn-and-lock contracts) are per listener and ignore X-Pipelock-Agent and ?agent=. So no per-caller authorization exists to translate into (prereg 6.5); the adapter returns detect:false and refuses to run on another build or if a licence is present. The paid tier was not measured. Adapter written blind, dev fixtures only; frozen before its single held-out run.",
+        "adapter": {
+          "commit": "7cfdd38",
+          "frozenAt": "2026-10-27T16:16:33.446803Z"
+        }
       },
       "agentgateway": {
         "version": "v1.6.0 (released 2026-10-02)",
@@ -67,7 +71,17 @@
       "toolhive": {
         "version": "v0.57.0 (released 2026-10-26)",
         "repo": "https://github.com/stacklok/toolhive",
-        "note": "Adapter not yet written. Written later by an implementer blind to the held-out set (dev fixtures only), at this pinned version; held-out run once after its adapter commit is added here."
+        "note": "Adapter written by an implementer blind to the held-out set, dev fixtures only; frozen at this commit before its single held-out run. Measured path is the direct proxy `thv run <remote URL> --foreground` with incoming OIDC (local ES256 JWKS) and a cedarv1 authz config. thv v0.57.0 requires a reachable container runtime even for a remote URL (no container is created); the run uses a dedicated Colima profile 'mcpbench' via DOCKER_HOST only. vMCP (`thv vmcp serve`) was tried and not scored: its tool admission evaluates call_tool without arguments, so argument-scoped grants are dropped at initialize. pathWithin fails closed in the translation (Cedar has no path normalisation); see adapters/toolhive/AUTHORIZATION-TRANSLATION.md.",
+        "binarySha256": {
+          "darwin-arm64": "327906368a1756380fe8bd7f1530b181251821a8c6a25f9131840ff0cec51698"
+        },
+        "releaseChecksumVerified": true,
+        "authorizedCall": "wired (adapter 6dd66eb, written blind)",
+        "adapter": {
+          "commit": "6dd66eb",
+          "frozenAt": "2026-10-27T16:16:33.446803Z",
+          "runtime": "colima 0.10.3, profile mcpbench (2 CPU, 2 GiB, 10 GiB)"
+        }
       }
     },
     "node": "v24.16.0"
