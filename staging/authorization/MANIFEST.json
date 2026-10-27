@@ -110,7 +110,7 @@
   "promotion": {
     "date": "2026-10-27",
     "rubricVersion": "0.10.0",
-    "note": "Promoted per AUTHORIZATION-PREREG §8 after the defender freeze; mcp-bastion and null-baseline held-out run once; other peers pending (pinned in defenderFreeze). Results in results/ and results/heldout/; not yet published (leaderboard and CHANGELOG-scoring wait for the peers)."
+    "note": "Promoted per AUTHORIZATION-PREREG §8. Held-out run once each: mcp-bastion, null-baseline, mcp-firewall, agentgateway. Pending: ToolHive v0.57.0 and pipelock 3.0.0 (pinned). Not yet published."
   },
   "heldoutRuns": [
     {
@@ -134,6 +134,28 @@
       },
       "overall41": "0% (0.0/41 CorpusRobustCoverage)",
       "logSha256": "cc87a8062a0a90f4d4f7a30ac9a0ab451ed681962313265651b2388c6614f1e7"
+    },
+    {
+      "tool": "mcp-firewall",
+      "measuredAt": "2026-10-27T14:55:11.647Z",
+      "authorization": {
+        "fixtures": 12,
+        "enforce": 5,
+        "falsePositives": 0
+      },
+      "overall41": "10% (4.2/41 CorpusRobustCoverage)",
+      "logSha256": "de7960c0f7b966222d427c48777a63e08ae3829038e3ddf3e4d0d801d3656624"
+    },
+    {
+      "tool": "agentgateway",
+      "measuredAt": "2026-10-27T14:55:12.572Z",
+      "authorization": {
+        "fixtures": 12,
+        "enforce": 12,
+        "falsePositives": 0
+      },
+      "overall41": "10% (4.0/41 CorpusRobustCoverage)",
+      "logSha256": "3c4fe61cf8d71f10a7b157d440fdc7fc7f03f1390367295aedd695834ae9a63a"
     }
   ],
   "observations": [

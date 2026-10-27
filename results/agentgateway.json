@@ -1,0 +1,663 @@
+{
+  "summary": {
+    "tool": "agentgateway",
+    "corpus": "dev",
+    "rubricVersion": "0.10.0",
+    "casesRun": 12,
+    "verifiedVectors": 4,
+    "falsePositives": 0,
+    "covered": {
+      "enforce": 4,
+      "detect": 0,
+      "none": 0,
+      "unknown": 37
+    },
+    "overall": "10% (4.0/41 CorpusRobustCoverage)",
+    "robustCoverage": 4,
+    "capability": 4,
+    "guaranteed": 4,
+    "measuredAt": "2026-10-27T14:54:50.052Z"
+  },
+  "coverage": {
+    "tool-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "tool-shadowing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "rug-pull": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "out-of-scope-params": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "response-injection": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "indirect-retrieval-injection": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "cross-tool-exfiltration": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "tool-transfer": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "false-error-escalation": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "package-squatting": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "supply-chain-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "config-drift": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "sandbox-escape": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "schema-bypass": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mitm-transport": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "dns-rebinding": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "server-impersonation": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "excessive-permission": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "credential-token-theft": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "consent-fatigue": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "command-injection": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "system-prompt-leakage": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mid-session-tool-injection": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "multi-tool-split-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "header-body-desync": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "requeststate-forgery": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "list-cache-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mrtr-input-phishing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "task-authz-bypass": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mcp-app-sandbox-bypass": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "roots-scope-gap": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "transport-downgrade": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-audience-confusion": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-subject-mixing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-stale-relay": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-chain-laundering": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-signature-forgery": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "authz-unentitled-tool": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-unentitled-tool/001-docs-bot-rolls-back-deploy",
+      "verified": true
+    },
+    "authz-argument-overreach": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-argument-overreach/001-release-bot-promotes-to-prod",
+      "verified": true
+    },
+    "authz-delegated-agent-overreach": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-delegated-agent-overreach/001-triage-agent-merges-for-maintainer",
+      "verified": true
+    },
+    "authz-asserted-identity": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-asserted-identity/001-runas-argument-names-release-bot",
+      "verified": true
+    }
+  },
+  "cases": [
+    {
+      "id": "authz-argument-overreach/001-release-bot-promotes-to-prod",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by route authorization (arguments) before upstream contact: HTTP 403 authorization failed"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "env \"prod\" is outside release-bot's grant (staging)"
+      }
+    },
+    {
+      "id": "authz-argument-overreach/002-dotdot-out-of-handbook",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by route authorization (arguments) before upstream contact: HTTP 403 authorization failed"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "path normalises to /srv/checkouts/payments-svc/.env, outside docs-bot's grant"
+      }
+    },
+    {
+      "id": "authz-argument-overreach/003-timeout-past-limit",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by route authorization (arguments) before upstream contact: HTTP 403 authorization failed"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "minutes 600 exceeds ci-bot's limit of 60"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/001-runas-argument-names-release-bot",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by mcpAuthorization before upstream contact: HTTP 400 Unknown tool: deploy__rollback"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (docs-bot), not on the runAs argument"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/002-forwarded-user-header-names-maintainer",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by mcpAuthorization before upstream contact: HTTP 400 Unknown tool: ci__rerun_job"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated user (omar.s), not on the x-forwarded-user header"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/003-meta-principal-names-release-bot",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by mcpAuthorization before upstream contact: HTTP 400 Unknown tool: deploy__promote"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (triage-bot), not on _meta"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/001-triage-agent-merges-for-maintainer",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by mcpAuthorization before upstream contact: HTTP 400 Unknown tool: repo__merge_pr"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "acting agent triage-agent has no grant for repo__merge_pr, although the user does"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/002-release-agent-promotes-to-prod-for-maintainer",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by route authorization (arguments) before upstream contact: HTTP 403 authorization failed"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "env \"prod\" is within the user's grant but outside release-agent's"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/003-platform-agent-rolls-back-for-contributor",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by mcpAuthorization before upstream contact: HTTP 400 Unknown tool: deploy__rollback"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "user omar.s has no grant for deploy__rollback; the agent's own grant must not substitute for the user's"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/001-docs-bot-rolls-back-deploy",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by mcpAuthorization before upstream contact: HTTP 400 Unknown tool: deploy__rollback"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "caller docs-bot has no grant for deploy__rollback"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/002-triage-bot-merges-pr",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by mcpAuthorization before upstream contact: HTTP 400 Unknown tool: repo__merge_pr"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "caller triage-bot has no grant for repo__merge_pr"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/003-deny-rule-under-wildcard-grant",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused by mcpAuthorization before upstream contact: HTTP 400 Unknown tool: ci__delete_cache"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "explicit deny for triage-bot on ci__delete_cache overrides its ci__* allow"
+      }
+    }
+  ]
+}

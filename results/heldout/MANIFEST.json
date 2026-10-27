@@ -129,6 +129,26 @@
       "falsePositives": 0,
       "firstRun": false,
       "note": "rubric 0.10.0; authorization family 0/12, as expected for the control"
+    },
+    {
+      "tool": "mcp-firewall",
+      "measuredAt": "2026-10-27T14:55:11.647Z",
+      "casesRun": 75,
+      "robustCoverage": 4.17,
+      "capability": 6,
+      "falsePositives": 0,
+      "firstRun": false,
+      "note": "rubric 0.10.0: first and only held-out run of the authorization family for this defender (AUTHORIZATION-PREREG §6.3), after its freeze; authorization 5/12 enforce, 0 false positives"
+    },
+    {
+      "tool": "agentgateway",
+      "measuredAt": "2026-10-27T14:55:12.572Z",
+      "casesRun": 12,
+      "robustCoverage": 4,
+      "capability": 4,
+      "falsePositives": 0,
+      "firstRun": true,
+      "note": "rubric 0.10.0: first and only held-out run of the authorization family for this defender (AUTHORIZATION-PREREG §6.3), after its freeze; authorization 12/12 enforce, 0 false positives"
     }
   ],
   "redactions": [
