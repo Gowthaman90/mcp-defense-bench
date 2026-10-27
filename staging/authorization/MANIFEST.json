@@ -170,10 +170,35 @@
       },
       "overall41": "10% (4.0/41 CorpusRobustCoverage)",
       "logSha256": "3c4fe61cf8d71f10a7b157d440fdc7fc7f03f1390367295aedd695834ae9a63a"
+    },
+    {
+      "tool": "pipelock",
+      "measuredAt": "2026-10-27T16:17:42.623Z",
+      "authorization": {
+        "fixtures": 12,
+        "enforce": 0,
+        "falsePositives": 0
+      },
+      "overall41": "0% (0.0/41 CorpusRobustCoverage)",
+      "logSha256": "1a0bbaec99a3e6e78fdca3a623e8a78cf96dc33a9b98770023706d4563a1a59d"
+    },
+    {
+      "tool": "toolhive",
+      "measuredAt": "2026-10-27T16:17:44.546Z",
+      "authorization": {
+        "fixtures": 12,
+        "enforce": 12,
+        "falsePositives": 0
+      },
+      "overall41": "10% (4.0/41 CorpusRobustCoverage)",
+      "logSha256": "f7bd1bf9485fa4c2f52ceeccd91d4df671035e35261f8b64ed9b10c7245c4247"
     }
   ],
   "observations": [
     "The adapter's signal records bastion's refusal message, not its violation list; for argument-constraint refusals that message reads '(no matching grant)'. Scoring is unaffected (detect/enforce, with clean benign controls). Recorded here rather than changing the frozen adapter.",
-    "agentgateway's path results depend on the adapter's regexReplace-based normalisation, which an ordinary deployment is unlikely to write; the published result must say so."
+    "agentgateway's path results depend on the adapter's regexReplace-based normalisation, which an ordinary deployment is unlikely to write; the published result must say so.",
+    "ToolHive v0.57.0 translates pathWithin to fail closed on any path containing '.', '..' or empty segments, because Cedar has no path normalisation. That is safe against traversal, but it would refuse a legitimate path such as 'docs/./a.md'. No benign control in either corpus has such a path, so the 0 false positives do not test this; the published result must say so.",
+    "ToolHive v0.57.0 `thv run` needs a reachable container runtime even for a remote URL (no container is created); measured through a dedicated Colima profile. The runtime-free vMCP mode was not scored: it admits tools by evaluating call_tool without arguments, so argument-scoped grants vanish at initialize.",
+    "pipelock 3.0.0 was measured as the free, unlicensed build only. Per-agent profiles are a paid ELv2 feature and were not obtained or measured; in the free build MCP decisions are per listener and ignore the caller-asserted X-Pipelock-Agent header and ?agent= parameter."
   ]
 }

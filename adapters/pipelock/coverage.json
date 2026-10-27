@@ -4,7 +4,7 @@
   "class": "egress-firewall",
   "reproducible": true,
   "version": "TBD",
-  "rubricVersion": "0.9.0",
+  "rubricVersion": "0.10.0",
   "measuredBy": "bin/run.mjs",
   "coverage": {
     "tool-poisoning": {
@@ -375,6 +375,46 @@
       "fixtures": 3,
       "fpCount": 0,
       "evidence": "delegation-signature-forgery/001-alg-none",
+      "verified": true
+    },
+    "authz-unentitled-tool": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-unentitled-tool/001-docs-bot-rolls-back-deploy",
+      "verified": true
+    },
+    "authz-argument-overreach": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-argument-overreach/001-release-bot-promotes-to-prod",
+      "verified": true
+    },
+    "authz-delegated-agent-overreach": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-delegated-agent-overreach/001-triage-agent-merges-for-maintainer",
+      "verified": true
+    },
+    "authz-asserted-identity": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-asserted-identity/001-runas-argument-names-release-bot",
       "verified": true
     }
   }

@@ -2,21 +2,21 @@
   "summary": {
     "tool": "pipelock",
     "corpus": "dev",
-    "rubricVersion": "0.9.0",
-    "casesRun": 66,
-    "verifiedVectors": 37,
+    "rubricVersion": "0.10.0",
+    "casesRun": 78,
+    "verifiedVectors": 41,
     "falsePositives": 0,
     "covered": {
       "enforce": 1,
       "detect": 3,
-      "none": 33,
+      "none": 37,
       "unknown": 0
     },
-    "overall": "4% (1.3/37 CorpusRobustCoverage)",
+    "overall": "3% (1.3/41 CorpusRobustCoverage)",
     "robustCoverage": 1.33,
     "capability": 2.5,
     "guaranteed": 0,
-    "measuredAt": "2026-10-16T04:07:10.704Z"
+    "measuredAt": "2026-10-27T16:17:12.878Z"
   },
   "coverage": {
     "tool-poisoning": {
@@ -388,9 +388,289 @@
       "fpCount": 0,
       "evidence": "delegation-signature-forgery/001-alg-none",
       "verified": true
+    },
+    "authz-unentitled-tool": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-unentitled-tool/001-docs-bot-rolls-back-deploy",
+      "verified": true
+    },
+    "authz-argument-overreach": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-argument-overreach/001-release-bot-promotes-to-prod",
+      "verified": true
+    },
+    "authz-delegated-agent-overreach": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-delegated-agent-overreach/001-triage-agent-merges-for-maintainer",
+      "verified": true
+    },
+    "authz-asserted-identity": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "authz-asserted-identity/001-runas-argument-names-release-bot",
+      "verified": true
     }
   },
   "cases": [
+    {
+      "id": "authz-argument-overreach/001-release-bot-promotes-to-prod",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "env \"prod\" is outside release-bot's grant (staging)"
+      }
+    },
+    {
+      "id": "authz-argument-overreach/002-dotdot-out-of-handbook",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "path normalises to /srv/checkouts/payments-svc/.env, outside docs-bot's grant"
+      }
+    },
+    {
+      "id": "authz-argument-overreach/003-timeout-past-limit",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "minutes 600 exceeds ci-bot's limit of 60"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/001-runas-argument-names-release-bot",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (docs-bot), not on the runAs argument"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/002-forwarded-user-header-names-maintainer",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated user (omar.s), not on the x-forwarded-user header"
+      }
+    },
+    {
+      "id": "authz-asserted-identity/003-meta-principal-names-release-bot",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (triage-bot), not on _meta"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/001-triage-agent-merges-for-maintainer",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "acting agent triage-agent has no grant for repo__merge_pr, although the user does"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/002-release-agent-promotes-to-prod-for-maintainer",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "env \"prod\" is within the user's grant but outside release-agent's"
+      }
+    },
+    {
+      "id": "authz-delegated-agent-overreach/003-platform-agent-rolls-back-for-contributor",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "user omar.s has no grant for deploy__rollback; the agent's own grant must not substitute for the user's"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/001-docs-bot-rolls-back-deploy",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "caller docs-bot has no grant for deploy__rollback"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/002-triage-bot-merges-pr",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "caller triage-bot has no grant for repo__merge_pr"
+      }
+    },
+    {
+      "id": "authz-unentitled-tool/003-deny-rule-under-wildcard-grant",
+      "level": "none",
+      "falsePositive": false,
+      "mal": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "free edition, no licence: no per-caller tool authorization (agent profiles need the paid 'agents' feature; MCP decisions are per listener, not per caller)"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "explicit deny for triage-bot on ci__delete_cache overrides its ci__* allow"
+      }
+    },
     {
       "id": "command-injection/001-shell-metacharacter",
       "level": "none",

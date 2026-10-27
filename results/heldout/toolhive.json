@@ -1,0 +1,675 @@
+{
+  "summary": {
+    "tool": "toolhive",
+    "corpus": "heldout",
+    "rubricVersion": "0.10.0",
+    "casesRun": 12,
+    "verifiedVectors": 4,
+    "falsePositives": 0,
+    "covered": {
+      "enforce": 4,
+      "detect": 0,
+      "none": 0,
+      "unknown": 37
+    },
+    "overall": "10% (4.0/41 CorpusRobustCoverage)",
+    "robustCoverage": 4,
+    "capability": 4,
+    "guaranteed": 4,
+    "measuredAt": "2026-10-27T16:17:44.546Z"
+  },
+  "coverage": {
+    "tool-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "tool-shadowing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "rug-pull": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "out-of-scope-params": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "response-injection": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "indirect-retrieval-injection": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "cross-tool-exfiltration": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "tool-transfer": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "false-error-escalation": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "package-squatting": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "supply-chain-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "config-drift": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "sandbox-escape": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "schema-bypass": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mitm-transport": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "dns-rebinding": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "server-impersonation": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "excessive-permission": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "credential-token-theft": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "consent-fatigue": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "command-injection": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "system-prompt-leakage": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mid-session-tool-injection": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "multi-tool-split-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "header-body-desync": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "requeststate-forgery": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "list-cache-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mrtr-input-phishing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "task-authz-bypass": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mcp-app-sandbox-bypass": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "roots-scope-gap": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "transport-downgrade": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-audience-confusion": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-subject-mixing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-stale-relay": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-chain-laundering": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-signature-forgery": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "authz-unentitled-tool": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/authz-unentitled-tool/001-scheduler-exports-patient-chart",
+      "verified": true
+    },
+    "authz-argument-overreach": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/authz-argument-overreach/001-sibling-dir-shares-prefix",
+      "verified": true
+    },
+    "authz-delegated-agent-overreach": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/authz-delegated-agent-overreach/001-intake-agent-approves-payout",
+      "verified": true
+    },
+    "authz-asserted-identity": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "heldout/authz-asserted-identity/001-nested-context-requested-by",
+      "verified": true
+    }
+  },
+  "cases": [
+    {
+      "id": "heldout/authz-argument-overreach/001-sibling-dir-shares-prefix",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized [pathWithin fails closed on paths with ./../empty segments (no path normalisation in Cedar)]"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200 [pathWithin fails closed on paths with ./../empty segments (no path normalisation in Cedar)]"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "/var/claims/east-archive is not below /var/claims/east (boundary is a path separator, not a string prefix)"
+      }
+    },
+    {
+      "id": "heldout/authz-argument-overreach/002-load-limit-eight-times-grant",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "megawatts 400 exceeds load-balancer-svc's limit of 50"
+      }
+    },
+    {
+      "id": "heldout/authz-argument-overreach/003-homoglyph-carrier-code",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "carrier \"M\\u0410EU\" is not exactly an approved code"
+      }
+    },
+    {
+      "id": "heldout/authz-asserted-identity/001-nested-context-requested-by",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (advising-portal), not on context.requestedBy"
+      }
+    },
+    {
+      "id": "heldout/authz-asserted-identity/002-mixed-case-acting-as-header",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "authorize on the authenticated client (field-crew-tablet), not on X-Acting-As"
+      }
+    },
+    {
+      "id": "heldout/authz-asserted-identity/003-approver-named-in-input-response",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized [pathWithin fails closed on paths with ./../empty segments (no path normalisation in Cedar)]"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200 [pathWithin fails closed on paths with ./../empty segments (no path normalisation in Cedar)]"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "amount 15000 exceeds the authenticated user's limit (cl-5521, 2000); the named approver is not authenticated"
+      }
+    },
+    {
+      "id": "heldout/authz-delegated-agent-overreach/001-intake-agent-approves-payout",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized [pathWithin fails closed on paths with ./../empty segments (no path normalisation in Cedar)]"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200 [pathWithin fails closed on paths with ./../empty segments (no path normalisation in Cedar)]"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "acting agent intake-agent has no grant for payouts__approve, although the user does"
+      }
+    },
+    {
+      "id": "heldout/authz-delegated-agent-overreach/002-opaque-ids-transcript-confused-deputy",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "user 00u8f2kq19 has no grant for registrar__issue_transcript; the agent's grant must not substitute"
+      }
+    },
+    {
+      "id": "heldout/authz-delegated-agent-overreach/003-prior-actor-grant-not-inherited",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "current actor rx-drafting-agent has no grant for rx__prescribe; the prior actor's grant is not inherited"
+      }
+    },
+    {
+      "id": "heldout/authz-unentitled-tool/001-scheduler-exports-patient-chart",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "caller appointment-scheduler has no grant for ehr__export_chart"
+      }
+    },
+    {
+      "id": "heldout/authz-unentitled-tool/002-breaker-deny-beside-grid-wildcard",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "explicit deny for field-crew-tablet on grid__open_breaker overrides its wildcard allow"
+      }
+    },
+    {
+      "id": "heldout/authz-unentitled-tool/003-grade-change-on-input-retry",
+      "level": "enforce",
+      "falsePositive": false,
+      "mal": {
+        "detect": true,
+        "enforce": true,
+        "signal": "refused before upstream contact: HTTP 403 Unauthorized"
+      },
+      "benign": {
+        "detect": false,
+        "enforce": false,
+        "signal": "forwarded to upstream: HTTP 200"
+      },
+      "expected": {
+        "detect": true,
+        "enforce": true,
+        "signal": "the input_required retry is a tools/call by advising-portal, which has no grant for registrar__change_grade"
+      }
+    }
+  ]
+}
