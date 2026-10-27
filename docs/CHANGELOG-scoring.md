@@ -33,9 +33,13 @@ later as 1.4.0).
 | ToolHive | not wired | not wired | authorization only | authorization only | 0/12 · 0/12 | not wired |
 
 Compared case by case with the v0.9.0 results, every pre-existing outcome is unchanged except one:
-mcp-bastion's `credential-token-theft/001-token-passthrough-leak` moves from detect to **enforce**, because
-its new secret-in-result check refuses the response. The credential-token-theft vector goes from 0.75 to
-1.0 on dev, which is the 24.6 → 24.8 change on the 37. Held-out outcomes are identical for all four tools.
+mcp-bastion's `credential-token-theft/001-token-passthrough-leak` moves from detect to **enforce**. The
+credential-token-theft vector goes from 0.75 to 1.0 on dev, which is the 24.6 → 24.8 change on the 37.
+Held-out outcomes are identical for all four tools. _Corrected 2026-10-27:_ this entry first credited
+bastion's new secret-in-result check. The cause is the same widened `NAME=secret` rule as the new benign
+flag below: it redacted the placeholder in `token=<your current OAuth access token>`, and the adapter
+counts a redaction as enforce. That block was accidental. See the post-freeze note at the end of this
+entry.
 
 **Authorization family, per vector (RobustCoverage, dev → held-out; 3 + 3 fixtures each).**
 
@@ -80,6 +84,19 @@ No tool had a false positive on any authorization benign control.
   positive, reported as a cost and not tuned away before the run.
 - **Peer results are for the versions pinned here.** Binaries are checked by sha256 in
   `staging/authorization/MANIFEST.json`, and each translation is published with its adapter.
+
+**Post-freeze change (mcp-bastion only; logged, not a re-score).** After publication, two fixes were made on
+top of the frozen commit `756acfc`, before the 1.4.0 release: `f6ded51` (a bare `key=` / `token=` /
+`secret=` must now carry a secret-shaped value) and `b3230df` (refusal text names the argument a grant
+did not allow, not "(no matching grant)"; no decision change). The fixed build was re-run as a check:
+- development: 41-vector 70% (28.6/41). The only changed outcome is `credential-token-theft/001`, back
+  to detect, the same as v0.9.0. The 37-vector total returns to 24.6/37 (66%).
+- held-out: every outcome identical (47% of 41; 19.3/33 over the vectors it covers).
+- benign corpus: 15 → **14** (`024-log-tail` no longer flagged; the same 14 items as v0.9.0).
+- authorization: 12/12 on dev and held-out, unchanged; only the refusal wording in `signal` differs.
+
+The tables above stay the published first-run results for the frozen commit. The post-freeze re-run is
+recorded in `staging/authorization/MANIFEST.json → postFreeze`.
 
 ## 2026-10-16 — v0.9.0: delegation family promoted (5 vectors, pre-registered), scoreCap rule
 

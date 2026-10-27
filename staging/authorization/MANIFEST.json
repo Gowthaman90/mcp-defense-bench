@@ -200,5 +200,20 @@
     "ToolHive v0.57.0 translates pathWithin to fail closed on any path containing '.', '..' or empty segments, because Cedar has no path normalisation. That is safe against traversal, but it would refuse a legitimate path such as 'docs/./a.md'. No benign control in either corpus has such a path, so the 0 false positives do not test this; the published result must say so.",
     "ToolHive v0.57.0 `thv run` needs a reachable container runtime even for a remote URL (no container is created); measured through a dedicated Colima profile. The runtime-free vMCP mode was not scored: it admits tools by evaluating call_tool without arguments, so argument-scoped grants vanish at initialize.",
     "pipelock 3.0.0 was measured as the free, unlicensed build only. Per-agent profiles are a paid ELv2 feature and were not obtained or measured; in the free build MCP decisions are per listener and ignore the caller-asserted X-Pipelock-Agent header and ?agent= parameter."
-  ]
+  ],
+  "postFreeze": {
+    "note": "Changes made to mcp-bastion after the authorization held-out numbers were published (2026-10-27), before the 1.4.0 release. Logged per AUTHORIZATION-PREREG §6.2; the published first-run results stay those of the frozen commit 756acfc.",
+    "mcp-bastion": {
+      "commits": {
+        "f6ded51": "DLP: bare key=/token=/secret= needs a secret-shaped value (fixes benign/tool-result/024-log-tail)",
+        "b3230df": "refusal text names the argument a grant did not allow (wording only, no decision change)"
+      },
+      "checkRun": {
+        "dev": "70% (28.6/41); only change vs frozen: credential-token-theft/001 enforce -> detect (the frozen block came from the over-broad bare-word redaction of the placeholder 'token=<your'), same as v0.9.0",
+        "heldout": "all outcomes identical to the frozen first run",
+        "benign": "15 -> 14 (024-log-tail no longer flagged)",
+        "authorization": "12/12 dev and held-out, 0 FP; refusal wording only"
+      }
+    }
+  }
 }
