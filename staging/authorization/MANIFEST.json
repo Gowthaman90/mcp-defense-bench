@@ -15,7 +15,52 @@
       "E": 3
     }
   },
-  "defenderFreeze": null,
+  "defenderFreeze": {
+    "frozenAt": "2026-10-27T14:33:50.896614Z",
+    "rule": "No defender or adapter change between this record and publication of the held-out numbers (AUTHORIZATION-PREREG §6.2). Peers whose adapters are pending are pinned here and frozen at the version shown.",
+    "bench": {
+      "commit": "eb335b0",
+      "note": "mcp-bastion authorized-call adapter 7f197fe (written blind, dev fixtures only), contract + unwiredFixtureTypes c2b7a68, generators eb335b0"
+    },
+    "defenders": {
+      "mcp-bastion": {
+        "repo": "https://github.com/Gowthaman90/mcp-bastion",
+        "branch": "feat/runtime-authorization",
+        "commit": "756acfc44d6dbbe64e419db71b9886a247375ef8",
+        "distSha256": {
+          "dist/index.js": "db0de4b30c035c9376e64720e3c8e29cdf41dec3c438d3784e1dad2f517a5734",
+          "dist/chunk-BWQRJ7QS.js": "7e81678a9e91e76e954231b7316aa4fa8b5a9c8d66dd82b652fd6587ec92ebf5",
+          "dist/cli.js": "80e16fc31677c38e649a3e3db72c81777a8a9ed7628e0e157a53282e78e9f1fa"
+        },
+        "note": "unreleased 1.4.0 work (package.json still 1.3.1); dist rebuilt from a clean tree at this commit, reproducible (same index.js hash as the implementer's build)"
+      },
+      "null-baseline": {
+        "version": "bench commit eb335b0"
+      },
+      "mcp-firewall": {
+        "version": "0.1.0 (PyPI)",
+        "authorizedCall": "unknown (per-agent RBAC via SDK; prereg 6.5)",
+        "note": "Adapter not yet written. Written later by an implementer blind to the held-out set (dev fixtures only), at this pinned version; held-out run once after its adapter commit is added here."
+      },
+      "pipelock": {
+        "version": "3.0.0",
+        "binarySha256": "96843f7f3b5415384230b9e1b8ecfb925d89df2e57849ee74ab63c15b6d02444",
+        "authorizedCall": "unknown (per-agent identity and contracts; prereg 6.5)",
+        "note": "Adapter not yet written. Written later by an implementer blind to the held-out set (dev fixtures only), at this pinned version; held-out run once after its adapter commit is added here."
+      },
+      "agentgateway": {
+        "version": "v1.6.0 (released 2026-10-02)",
+        "repo": "https://github.com/agentgateway/agentgateway",
+        "note": "Adapter not yet written. Written later by an implementer blind to the held-out set (dev fixtures only), at this pinned version; held-out run once after its adapter commit is added here."
+      },
+      "toolhive": {
+        "version": "v0.57.0 (released 2026-10-26)",
+        "repo": "https://github.com/stacklok/toolhive",
+        "note": "Adapter not yet written. Written later by an implementer blind to the held-out set (dev fixtures only), at this pinned version; held-out run once after its adapter commit is added here."
+      }
+    },
+    "node": "v24.16.0"
+  },
   "removals": [],
   "deviations": [],
   "generators": {
