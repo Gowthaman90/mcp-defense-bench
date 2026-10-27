@@ -1,0 +1,54 @@
+{
+  "protocol": "docs/AUTHORIZATION-PREREG.md",
+  "status": "staged-unscored",
+  "generatedAt": "2026-10-27T02:17:33.513Z",
+  "node": "v24.16.0",
+  "deterministic": true,
+  "counts": {
+    "vectors": 4,
+    "dev": 12,
+    "heldout": 12,
+    "heldoutFamilies": {
+      "D": 3,
+      "L": 3,
+      "S": 3,
+      "E": 3
+    }
+  },
+  "defenderFreeze": null,
+  "removals": [],
+  "deviations": [],
+  "generators": {
+    "scripts/gen-authorization.mjs": "28651670d8d915a9230eddcb2644df61e283035266e0b242ccd2a0bb60e7820a",
+    "scripts/authorization/policy.mjs": "c537eaebdb2ea5e1e491fdb4dfca8e57418f06f829872d75bd30a04675f68d7c",
+    "scripts/authorization/dev-cases.mjs": "e020c026a273cc41faa7991f65da3a6e856e669fa0a31c6300f77d1b2484e0b0",
+    "scripts/authorization/heldout-cases.mjs": "c5ee1ba4b17d987cfb4efaf23123cee6cc7ab73b70c1692c68a08dd2e28eecf2"
+  },
+  "crosswalkRows": "1d59c583c3fd083897641687a07d5742d58fa917f07b22aa116fdb821439673b",
+  "files": {
+    "staging/authorization/dev/authz-unentitled-tool/001-docs-bot-rolls-back-deploy.json": "da6d1356c76347f0e920cf356174ac7eff85c23995252fcfad8cd6d184d6ff61",
+    "staging/authorization/dev/authz-unentitled-tool/002-triage-bot-merges-pr.json": "96515777e4522975ece877dcdfe558b89c885814822808ada364c45cea1e7713",
+    "staging/authorization/dev/authz-unentitled-tool/003-deny-rule-under-wildcard-grant.json": "9036df00c67edbdf5b94d328c588938893ea1363709e43ae622d923604c26c7e",
+    "staging/authorization/dev/authz-argument-overreach/001-release-bot-promotes-to-prod.json": "cd7a58efad20f41a0c5cca9a8392b4167d53b1b1fc3cdc6bcc9a6dc9c566ffa4",
+    "staging/authorization/dev/authz-argument-overreach/002-dotdot-out-of-handbook.json": "3abca827ba988e525d581fd8d6bff99b79c582bb2b65b6fc0b17f665c2cdb555",
+    "staging/authorization/dev/authz-argument-overreach/003-timeout-past-limit.json": "1d1b819461d448198282be17eadfbba33a5f31e2348fde9dcf818abd02f8a724",
+    "staging/authorization/dev/authz-delegated-agent-overreach/001-triage-agent-merges-for-maintainer.json": "e5e88b420f9720ef38958dfea48477a712a5c8ab5afa3912f38f3656c4882ad4",
+    "staging/authorization/dev/authz-delegated-agent-overreach/002-release-agent-promotes-to-prod-for-maintainer.json": "e651c3fa8ca9beeaa560530449736763d36207b28fba25cd496ee55351a5259f",
+    "staging/authorization/dev/authz-delegated-agent-overreach/003-platform-agent-rolls-back-for-contributor.json": "73abcf6e96c9b6d9dc53e60d83de46739f5c39638b6ed984faba85913caad14c",
+    "staging/authorization/dev/authz-asserted-identity/001-runas-argument-names-release-bot.json": "3f326e8cdadbb9dd919967653b93861139f2e599635e8908aaf202c65e10ac9e",
+    "staging/authorization/dev/authz-asserted-identity/002-forwarded-user-header-names-maintainer.json": "b582ff6ce6e982806476533b3a39d3c53d239c3d548905a5a861b6b461c208cc",
+    "staging/authorization/dev/authz-asserted-identity/003-meta-principal-names-release-bot.json": "ae1d9b38edd29533742f9cec17841a734601b6acbd9083f4becc558460595161",
+    "staging/authorization/heldout/authz-unentitled-tool/001-scheduler-exports-patient-chart.json": "8c8fe6cc97c90f94f70f9a209d943f52e8c011798a98094241840f8b08a5d24f",
+    "staging/authorization/heldout/authz-unentitled-tool/002-breaker-deny-beside-grid-wildcard.json": "d0f83e78c9500da9f62b3c68226df3adc0eee772ff1b3f9873d4ce1f5532579e",
+    "staging/authorization/heldout/authz-unentitled-tool/003-grade-change-on-input-retry.json": "373a7097901623e869d91ec87f2bb28519ea915360689d140f2591566aafcf5e",
+    "staging/authorization/heldout/authz-argument-overreach/001-sibling-dir-shares-prefix.json": "8cff9279f242a2ca6bb9e3cb7e4f747cef3b0ac1bc391466f47cd17ada621209",
+    "staging/authorization/heldout/authz-argument-overreach/002-load-limit-eight-times-grant.json": "06147b64a79f697c2de0e8d6daac8f3f6649c66770cb791351de23ba4ebc06f9",
+    "staging/authorization/heldout/authz-argument-overreach/003-homoglyph-carrier-code.json": "836d38be1033aca952588f57eba47c4755f8361d8cd8b5a4bd8217cbdbdf9467",
+    "staging/authorization/heldout/authz-delegated-agent-overreach/001-intake-agent-approves-payout.json": "1c11a428b2196c252fd375e76e3eec6764693956fcc95685bc35dbbfc8744c12",
+    "staging/authorization/heldout/authz-delegated-agent-overreach/002-opaque-ids-transcript-confused-deputy.json": "9884430992a9348f6d4e87d34e6f8abe0b8fb1bf9b9767640efe0df2f59ad522",
+    "staging/authorization/heldout/authz-delegated-agent-overreach/003-prior-actor-grant-not-inherited.json": "6c27318c9f84765cd003b55c0aaa5da77ff697153abc3a9c799830a7973c836f",
+    "staging/authorization/heldout/authz-asserted-identity/001-nested-context-requested-by.json": "0ff62bb7591f175e1228babbf56010af86850000042db7cef3b7b5a389cef6d4",
+    "staging/authorization/heldout/authz-asserted-identity/002-mixed-case-acting-as-header.json": "0620869d5704f10bcba450a73ec70b19dee742a31f394536d3621edbc615437f",
+    "staging/authorization/heldout/authz-asserted-identity/003-approver-named-in-input-response.json": "cf3163db92d6c5bd195fc613feeaee3f766cfda4f5f712f03eee65a88599a6c9"
+  }
+}

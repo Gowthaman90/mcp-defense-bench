@@ -1,0 +1,302 @@
+{
+  "vector": "authz-delegated-agent-overreach",
+  "id": "heldout/authz-delegated-agent-overreach/002-opaque-ids-transcript-confused-deputy",
+  "staged": true,
+  "heldout": true,
+  "family": "L",
+  "severity": "high",
+  "description": "Identity shape differs from development: the user is an opaque IdP subject and the agent a numbered service id. The agent holds every registrar tool; the student worker it acts for may only read schedules. It issues an official transcript to an external party for them.",
+  "fixture": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "registrar__read_schedule",
+        "description": "Read a student's class schedule.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            }
+          },
+          "required": [
+            "studentId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "registrar__change_grade",
+        "description": "Change a recorded course grade.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            },
+            "course": {
+              "type": "string",
+              "description": "Course code."
+            },
+            "grade": {
+              "type": "string",
+              "description": "New grade."
+            },
+            "context": {
+              "type": "object",
+              "description": "Free-form context for the audit trail."
+            }
+          },
+          "required": [
+            "studentId",
+            "course",
+            "grade"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "registrar__issue_transcript",
+        "description": "Issue an official transcript.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            },
+            "deliverTo": {
+              "type": "string",
+              "description": "internal or external."
+            }
+          },
+          "required": [
+            "studentId",
+            "deliverTo"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "registrar-office-app"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "advising-portal"
+          },
+          "tools": [
+            "registrar__read_schedule"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "00u3hh7a01"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "00u8f2kq19"
+          },
+          "tools": [
+            "registrar__read_schedule"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "svc-4471"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "delegation",
+      "user": "00u8f2kq19",
+      "agent": "svc-4471"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "registrar__issue_transcript",
+      "arguments": {
+        "studentId": "S-310552",
+        "deliverTo": "external"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "user 00u8f2kq19 has no grant for registrar__issue_transcript; the agent's grant must not substitute"
+  },
+  "benignControl": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "registrar__read_schedule",
+        "description": "Read a student's class schedule.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            }
+          },
+          "required": [
+            "studentId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "registrar__change_grade",
+        "description": "Change a recorded course grade.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            },
+            "course": {
+              "type": "string",
+              "description": "Course code."
+            },
+            "grade": {
+              "type": "string",
+              "description": "New grade."
+            },
+            "context": {
+              "type": "object",
+              "description": "Free-form context for the audit trail."
+            }
+          },
+          "required": [
+            "studentId",
+            "course",
+            "grade"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "registrar__issue_transcript",
+        "description": "Issue an official transcript.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "studentId": {
+              "type": "string",
+              "description": "Student id."
+            },
+            "deliverTo": {
+              "type": "string",
+              "description": "internal or external."
+            }
+          },
+          "required": [
+            "studentId",
+            "deliverTo"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "registrar-office-app"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "advising-portal"
+          },
+          "tools": [
+            "registrar__read_schedule"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "00u3hh7a01"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "user": "00u8f2kq19"
+          },
+          "tools": [
+            "registrar__read_schedule"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "agent": "svc-4471"
+          },
+          "tools": [
+            "registrar__*"
+          ]
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "delegation",
+      "user": "00u3hh7a01",
+      "agent": "svc-4471"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "registrar__issue_transcript",
+      "arguments": {
+        "studentId": "S-310552",
+        "deliverTo": "external"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "user:no-grant"
+    ]
+  },
+  "provenance": "Synthetic. CWE-441 (Confused Deputy); FERPA (34 CFR 99.31) as domain motivation."
+}

@@ -1,0 +1,125 @@
+{
+  "_note": "For an independent rater of the STAGED authorization family. Contains NO framework mappings. Follow rubric/RATING-CODEBOOK.md v1.2. Do not open staging/authorization/crosswalk-rows.json before rating.",
+  "_frameworks": {
+    "mcpLayer": [
+      "host-orchestration",
+      "client",
+      "transport",
+      "server",
+      "tool",
+      "registry-supply-chain"
+    ],
+    "stride": [
+      "Spoofing",
+      "Tampering",
+      "Repudiation",
+      "InformationDisclosure",
+      "DenialOfService",
+      "ElevationOfPrivilege"
+    ],
+    "nistAiRmf": [
+      "GOVERN",
+      "MAP",
+      "MEASURE",
+      "MANAGE"
+    ],
+    "owaspLlm2025": {
+      "LLM01": "Prompt Injection",
+      "LLM02": "Sensitive Information Disclosure",
+      "LLM03": "Supply Chain",
+      "LLM04": "Data and Model Poisoning",
+      "LLM05": "Improper Output Handling",
+      "LLM06": "Excessive Agency",
+      "LLM07": "System Prompt Leakage",
+      "LLM08": "Vector and Embedding Weaknesses",
+      "LLM09": "Misinformation",
+      "LLM10": "Unbounded Consumption"
+    },
+    "owaspAgentic2026": {
+      "ASI01": "Agent Goal Hijack",
+      "ASI02": "Tool Misuse and Exploitation",
+      "ASI03": "Identity and Privilege Abuse",
+      "ASI04": "Agentic Supply Chain Vulnerabilities",
+      "ASI05": "Unexpected Code Execution (RCE)",
+      "ASI06": "Memory & Context Poisoning",
+      "ASI07": "Insecure Inter-Agent Communication",
+      "ASI08": "Cascading Failures",
+      "ASI09": "Human-Agent Trust Exploitation",
+      "ASI10": "Rogue Agents"
+    },
+    "nsaGuidance": {
+      "AUTH": "Authentication & Access Control (verify every session; least-privilege tokens per action/tool; signed provenance for discovered servers)",
+      "LOG": "Monitoring & Logging (log all tool/model invocations with parameters, identities, and result hashes)",
+      "SEG": "Data Classification & Segmentation (align tools/models to data-classification zones)",
+      "RT": "Runtime Controls (egress-filtering proxy, DLP, sandboxing, message integrity, output filtering, local MCP scans)"
+    },
+    "euAiAct": {
+      "_scope": "Regulation (EU) 2024/1689. Articles 9–15 bind PROVIDERS of high-risk AI systems (Annex III), Art. 26 binds DEPLOYERS of high-risk systems, Arts. 53/55 bind providers of general-purpose AI models (GPAI obligations enforceable since 2026-08-02). An MCP deployment engages these only when the surrounding AI system is in scope; the mapping says which obligation a vector's defence serves, not that every MCP deployment is regulated.",
+      "Art.12": "Record-keeping — automatic logging of events over the system's lifetime (traceability)",
+      "Art.14": "Human oversight — measures enabling natural persons to oversee, understand, and intervene",
+      "Art.15(5)": "Accuracy, robustness and cybersecurity — resilience against unauthorised third parties altering use, outputs or performance by exploiting vulnerabilities (incl. data/model poisoning, adversarial examples, confidentiality attacks)",
+      "Art.26": "Obligations of deployers of high-risk AI systems — use per instructions, assign human oversight, monitor operation, keep logs",
+      "Art.55(1)(d)": "GPAI with systemic risk — ensure an adequate level of cybersecurity protection for the model and its physical infrastructure",
+      "Art.72": "Post-market monitoring — actively and systematically collect and analyse performance data over the lifetime",
+      "Art.73": "Reporting of serious incidents — track, document and report incidents and corrective measures"
+    },
+    "iso42001": {
+      "_scope": "ISO/IEC 42001:2023 Annex A reference controls (AI management system). Control titles per the standard; an organisation selects controls via its Statement of Applicability, so these are the controls a vector's defence would evidence.",
+      "A.4.4": "Tooling resources — document the tools and resources used by the AI system",
+      "A.6.2.4": "AI system verification and validation",
+      "A.6.2.5": "AI system deployment — deployment requirements incl. security configuration",
+      "A.6.2.6": "AI system operation and monitoring",
+      "A.6.2.8": "AI system recording of event logs",
+      "A.7.5": "Data provenance — provenance of data used by the AI system",
+      "A.8.4": "Communication of incidents",
+      "A.9.2": "Processes for responsible use of AI systems",
+      "A.10.3": "Suppliers — manage risks from third-party suppliers of components and services"
+    }
+  },
+  "vectors": [
+    {
+      "id": "authz-unentitled-tool",
+      "name": "Unentitled tool call (per-caller function-level authorization)",
+      "aliases": [
+        "broken function level authorization",
+        "missing per-caller tool authorization",
+        "default-allow tool access",
+        "deny rule not enforced"
+      ],
+      "description": "Several callers (client applications, users, or agents acting for users) share one MCP gateway or server. A caller invokes a tool that the deployment's policy grants to other callers but not to it, or that an explicit deny rule removes from its grant. Without a per-caller, per-tool decision made on every call, any authenticated caller can use every tool the gateway exposes."
+    },
+    {
+      "id": "authz-argument-overreach",
+      "name": "Argument overreach beyond the caller's grant",
+      "aliases": [
+        "broken object level authorization on tool arguments",
+        "parameter-scoped grant escape",
+        "path grant escape",
+        "limit overrun"
+      ],
+      "description": "A caller is entitled to a tool only for some argument values: certain environments, repositories, paths below a directory, or amounts up to a limit. The call uses the tool with a value outside that caller's grant, sometimes encoded to slip past a naive comparison (a '..' path segment, a sibling directory sharing a name prefix, a number sent as a string, a look-alike character). The same value may be legitimately allowed for another caller, so the decision depends on who is calling, unlike a fixed server boundary."
+    },
+    {
+      "id": "authz-delegated-agent-overreach",
+      "name": "Delegated agent overreach (confused deputy)",
+      "aliases": [
+        "agent acting beyond its delegation",
+        "confused deputy through an agent",
+        "privilege union instead of intersection",
+        "service-account privilege used for a user"
+      ],
+      "description": "An agent calls tools on behalf of a signed-in user. The call should succeed only if both the user and the acting agent are entitled to it. It goes wrong in two directions: the agent uses a tool or argument the user may use but the agent was never granted, or the agent's own broad service grant is used for a user who lacks that entitlement (a confused deputy). Prior agents earlier in a delegation chain are informational and grant nothing."
+    },
+    {
+      "id": "authz-asserted-identity",
+      "name": "Authorization on self-asserted identity",
+      "aliases": [
+        "user-controlled authorization key",
+        "acting-as header spoofing",
+        "identity claimed in tool arguments",
+        "unverified on-behalf-of assertion"
+      ],
+      "description": "The authenticated caller is not entitled to a call, but the request names a different, entitled principal in a place the caller controls: a tool argument, an HTTP header, request metadata, or an answer to an input request. A gateway or server that authorizes on that asserted identity instead of the authenticated one lets any caller borrow another's privileges."
+    }
+  ]
+}

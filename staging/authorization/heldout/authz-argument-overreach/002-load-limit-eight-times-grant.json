@@ -1,0 +1,272 @@
+{
+  "vector": "authz-argument-overreach",
+  "id": "heldout/authz-argument-overreach/002-load-limit-eight-times-grant",
+  "staged": true,
+  "heldout": true,
+  "family": "D",
+  "severity": "high",
+  "description": "A utility's load-balancing service may set feeder limits up to 50 MW. It sets 400 MW, past the feeder's thermal rating.",
+  "fixture": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "grid__read_load",
+        "description": "Read a substation's current load.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            }
+          },
+          "required": [
+            "substation"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__open_breaker",
+        "description": "Open a feeder breaker (de-energises the feeder).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            },
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            }
+          },
+          "required": [
+            "substation",
+            "feeder"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__set_load_limit",
+        "description": "Set a feeder's load limit.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            },
+            "megawatts": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "feeder",
+            "megawatts"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "deny",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__open_breaker"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "dispatch-console"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "load-balancer-svc"
+          },
+          "tools": [
+            "grid__set_load_limit"
+          ],
+          "args": {
+            "megawatts": {
+              "max": 50
+            }
+          }
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "load-balancer-svc"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "grid__set_load_limit",
+      "arguments": {
+        "feeder": "F7",
+        "megawatts": 400
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "megawatts 400 exceeds load-balancer-svc's limit of 50"
+  },
+  "benignControl": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "grid__read_load",
+        "description": "Read a substation's current load.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            }
+          },
+          "required": [
+            "substation"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__open_breaker",
+        "description": "Open a feeder breaker (de-energises the feeder).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            },
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            }
+          },
+          "required": [
+            "substation",
+            "feeder"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__set_load_limit",
+        "description": "Set a feeder's load limit.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            },
+            "megawatts": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "feeder",
+            "megawatts"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "deny",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__open_breaker"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "dispatch-console"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "load-balancer-svc"
+          },
+          "tools": [
+            "grid__set_load_limit"
+          ],
+          "args": {
+            "megawatts": {
+              "max": 50
+            }
+          }
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "load-balancer-svc"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "grid__set_load_limit",
+      "arguments": {
+        "feeder": "F7",
+        "megawatts": 35
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "client:argument"
+    ]
+  },
+  "provenance": "Synthetic. OWASP API1; NERC CIP-007 (system access controls) as domain motivation."
+}

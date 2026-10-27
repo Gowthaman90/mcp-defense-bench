@@ -1,0 +1,272 @@
+{
+  "vector": "authz-unentitled-tool",
+  "id": "heldout/authz-unentitled-tool/002-breaker-deny-beside-grid-wildcard",
+  "staged": true,
+  "heldout": true,
+  "family": "L",
+  "severity": "high",
+  "description": "A field-crew tablet may use every grid tool except opening breakers, which a deny rule removes. Policy shape differs from development: the deny sits next to a wildcard allow for the same client, and another client holds the same wildcard without a deny.",
+  "fixture": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "grid__read_load",
+        "description": "Read a substation's current load.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            }
+          },
+          "required": [
+            "substation"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__open_breaker",
+        "description": "Open a feeder breaker (de-energises the feeder).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            },
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            }
+          },
+          "required": [
+            "substation",
+            "feeder"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__set_load_limit",
+        "description": "Set a feeder's load limit.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            },
+            "megawatts": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "feeder",
+            "megawatts"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "deny",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__open_breaker"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "dispatch-console"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "load-balancer-svc"
+          },
+          "tools": [
+            "grid__set_load_limit"
+          ],
+          "args": {
+            "megawatts": {
+              "max": 50
+            }
+          }
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "field-crew-tablet"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "grid__open_breaker",
+      "arguments": {
+        "substation": "SS-14",
+        "feeder": "F3"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "explicit deny for field-crew-tablet on grid__open_breaker overrides its wildcard allow"
+  },
+  "benignControl": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "grid__read_load",
+        "description": "Read a substation's current load.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            }
+          },
+          "required": [
+            "substation"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__open_breaker",
+        "description": "Open a feeder breaker (de-energises the feeder).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            },
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            }
+          },
+          "required": [
+            "substation",
+            "feeder"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__set_load_limit",
+        "description": "Set a feeder's load limit.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            },
+            "megawatts": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "feeder",
+            "megawatts"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "deny",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__open_breaker"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "dispatch-console"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "load-balancer-svc"
+          },
+          "tools": [
+            "grid__set_load_limit"
+          ],
+          "args": {
+            "megawatts": {
+              "max": 50
+            }
+          }
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "dispatch-console"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "grid__open_breaker",
+      "arguments": {
+        "substation": "SS-14",
+        "feeder": "F3"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "client:denied"
+    ]
+  },
+  "provenance": "Synthetic. CWE-863; deny-overrides combining (XACML 3.0 §C)."
+}

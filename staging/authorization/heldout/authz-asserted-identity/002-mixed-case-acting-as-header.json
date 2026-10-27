@@ -1,0 +1,284 @@
+{
+  "vector": "authz-asserted-identity",
+  "id": "heldout/authz-asserted-identity/002-mixed-case-acting-as-header",
+  "staged": true,
+  "heldout": true,
+  "family": "E",
+  "severity": "high",
+  "description": "The field-crew tablet, denied breaker operations, opens a breaker while sending an X-Acting-As header in mixed case that names the dispatch console.",
+  "fixture": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "grid__read_load",
+        "description": "Read a substation's current load.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            }
+          },
+          "required": [
+            "substation"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__open_breaker",
+        "description": "Open a feeder breaker (de-energises the feeder).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            },
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            }
+          },
+          "required": [
+            "substation",
+            "feeder"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__set_load_limit",
+        "description": "Set a feeder's load limit.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            },
+            "megawatts": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "feeder",
+            "megawatts"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "deny",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__open_breaker"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "dispatch-console"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "load-balancer-svc"
+          },
+          "tools": [
+            "grid__set_load_limit"
+          ],
+          "args": {
+            "megawatts": {
+              "max": 50
+            }
+          }
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "field-crew-tablet"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "grid__open_breaker",
+      "arguments": {
+        "substation": "SS-09",
+        "feeder": "F1"
+      },
+      "headers": {
+        "X-Acting-As": "dispatch-console"
+      }
+    }
+  },
+  "expected": {
+    "detect": true,
+    "enforce": true,
+    "signal": "authorize on the authenticated client (field-crew-tablet), not on X-Acting-As"
+  },
+  "benignControl": {
+    "type": "authorized-call",
+    "separator": "__",
+    "tools": [
+      {
+        "name": "grid__read_load",
+        "description": "Read a substation's current load.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            }
+          },
+          "required": [
+            "substation"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__open_breaker",
+        "description": "Open a feeder breaker (de-energises the feeder).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "substation": {
+              "type": "string",
+              "description": "Substation id."
+            },
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            }
+          },
+          "required": [
+            "substation",
+            "feeder"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "grid__set_load_limit",
+        "description": "Set a feeder's load limit.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "feeder": {
+              "type": "string",
+              "description": "Feeder id."
+            },
+            "megawatts": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "feeder",
+            "megawatts"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "policy": {
+      "default": "deny",
+      "rules": [
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "deny",
+          "principal": {
+            "client": "field-crew-tablet"
+          },
+          "tools": [
+            "grid__open_breaker"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "dispatch-console"
+          },
+          "tools": [
+            "grid__*"
+          ]
+        },
+        {
+          "effect": "allow",
+          "principal": {
+            "client": "load-balancer-svc"
+          },
+          "tools": [
+            "grid__set_load_limit"
+          ],
+          "args": {
+            "megawatts": {
+              "max": 50
+            }
+          }
+        }
+      ]
+    },
+    "caller": {
+      "authenticatedBy": "bearer-client",
+      "client": "dispatch-console"
+    },
+    "request": {
+      "method": "tools/call",
+      "name": "grid__open_breaker",
+      "arguments": {
+        "substation": "SS-09",
+        "feeder": "F1"
+      },
+      "headers": {
+        "X-Acting-As": "dispatch-console"
+      }
+    },
+    "expected": {
+      "detect": false,
+      "enforce": false
+    }
+  },
+  "intent": {
+    "violates": [
+      "client:denied"
+    ],
+    "assertedIdentity": {
+      "where": "request.headers.X-Acting-As",
+      "as": {
+        "client": "dispatch-console"
+      }
+    }
+  },
+  "provenance": "Synthetic. CWE-290; CWE-807; RFC 9110 §5.1 (header names are case-insensitive)."
+}

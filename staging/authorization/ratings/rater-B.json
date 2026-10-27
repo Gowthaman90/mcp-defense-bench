@@ -1,0 +1,52 @@
+{
+  "_rater": {
+    "id": "B",
+    "who": "Claude (LLM), blind pass",
+    "date": "2026-10-26",
+    "blind": true,
+    "notes": "I put the defence for all four vectors at the server layer, treating the shared gateway as the server that callers reach. That is the only point that sees the authenticated caller on every call. I left out a second host-orchestration layer, including for the delegated-agent vector, because a caller or agent can bypass the host, so a host filter is not independently sufficient. Art.73/A.8.4 appear only on authz-asserted-identity, the one vector I read as 'authorization forgery'; the other three are authorization bypasses, so I did not put them in the reportable-incident set. I left out LLM01, because none of the descriptions requires injection, and SEG, because none names data-classification zones."
+  },
+  "_disclosure": "Rater B is an LLM performing a blind pass from the codebook and vector descriptions only.",
+  "ratings": {
+    "authz-unentitled-tool": {
+      "mcpLayer": ["server"],
+      "stride": ["ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03", "ASI02"],
+      "nsaGuidance": ["AUTH", "LOG"],
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.26", "Art.55(1)(d)"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.5", "A.9.2"]
+    },
+    "authz-argument-overreach": {
+      "mcpLayer": ["server"],
+      "stride": ["ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06", "LLM05"],
+      "owaspAgentic2026": ["ASI02", "ASI03"],
+      "nsaGuidance": ["AUTH", "LOG"],
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.26", "Art.55(1)(d)"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.4", "A.6.2.5", "A.9.2"]
+    },
+    "authz-delegated-agent-overreach": {
+      "mcpLayer": ["server"],
+      "stride": ["ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03", "ASI02", "ASI07"],
+      "nsaGuidance": ["AUTH", "LOG"],
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.26", "Art.55(1)(d)"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.5", "A.9.2"]
+    },
+    "authz-asserted-identity": {
+      "mcpLayer": ["server"],
+      "stride": ["Spoofing", "ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03", "ASI07"],
+      "nsaGuidance": ["AUTH", "LOG", "RT"],
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.26", "Art.55(1)(d)", "Art.73"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.4", "A.6.2.5", "A.9.2", "A.8.4"]
+    }
+  }
+}

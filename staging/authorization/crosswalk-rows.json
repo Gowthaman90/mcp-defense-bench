@@ -1,0 +1,98 @@
+{
+  "_note": "STAGED, UNSCORED. Rater A (primary) crosswalk rows for the authorization family, pre-registered in docs/AUTHORIZATION-PREREG.md. Merged into rubric/crosswalk.json only at promotion (after the defender freeze and the single held-out run). Fields and value sets follow rubric/RATING-CODEBOOK.md v1.2.",
+  "version": "0.10.0-staged",
+  "vectors": [
+    {
+      "id": "authz-unentitled-tool",
+      "name": "Unentitled tool call (per-caller function-level authorization)",
+      "aliases": [
+        "broken function level authorization",
+        "missing per-caller tool authorization",
+        "default-allow tool access",
+        "deny rule not enforced"
+      ],
+      "description": "Several callers (client applications, users, or agents acting for users) share one MCP gateway or server. A caller invokes a tool that the deployment's policy grants to other callers but not to it, or that an explicit deny rule removes from its grant. Without a per-caller, per-tool decision made on every call, any authenticated caller can use every tool the gateway exposes.",
+      "mcpLayer": ["host-orchestration", "server"],
+      "stride": ["ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI02", "ASI03"],
+      "nsaGuidance": ["AUTH", "LOG"],
+      "provenance": "OWASP API Security Top 10 2023, API5 Broken Function Level Authorization; CWE-862 Missing Authorization and CWE-863 Incorrect Authorization; NIST SP 800-207 §2.1 tenets 3 and 4 (per-session access to each resource, decided by dynamic policy). Distinct from excessive-permission (a privilege the tool or server holds for everyone) and task-authz-bypass (task-ID addressing): here the same call is correct for one caller and wrong for another.",
+      "priorArtCoverage": [],
+      "appliesTo": ["2025-03-26", "2025-06-18", "2025-11-25", "2026-07-28"],
+      "revisionNotes": "Independent of protocol revision. The MCP authorization specification authenticates the client to the server; which tools an authenticated caller may invoke is left to the deployment.",
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.26"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.5", "A.9.2"]
+    },
+    {
+      "id": "authz-argument-overreach",
+      "name": "Argument overreach beyond the caller's grant",
+      "aliases": [
+        "broken object level authorization on tool arguments",
+        "parameter-scoped grant escape",
+        "path grant escape",
+        "limit overrun"
+      ],
+      "description": "A caller is entitled to a tool only for some argument values: certain environments, repositories, paths below a directory, or amounts up to a limit. The call uses the tool with a value outside that caller's grant, sometimes encoded to slip past a naive comparison (a '..' path segment, a sibling directory sharing a name prefix, a number sent as a string, a look-alike character). The same value may be legitimately allowed for another caller, so the decision depends on who is calling, unlike a fixed server boundary.",
+      "mcpLayer": ["host-orchestration", "server"],
+      "stride": ["ElevationOfPrivilege", "InformationDisclosure"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI02", "ASI03"],
+      "nsaGuidance": ["AUTH", "LOG"],
+      "provenance": "OWASP API Security Top 10 2023, API1 Broken Object Level Authorization; CWE-639 Authorization Bypass Through User-Controlled Key; CWE-22 Path Traversal; CWE-1289 Improper Validation of Unsafe Equivalence in Input. Distinct from roots-scope-gap (one fixed filesystem boundary for every caller) and out-of-scope-params (parameters outside the declared schema): here every argument is schema-valid and the boundary is the caller's own grant.",
+      "priorArtCoverage": [],
+      "appliesTo": ["2025-03-26", "2025-06-18", "2025-11-25", "2026-07-28"],
+      "revisionNotes": "Independent of protocol revision; with Roots deprecated in 2026-07-28, argument-level boundaries move into server or gateway configuration, which is where per-caller grants live.",
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.26"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.4", "A.6.2.5", "A.9.2"]
+    },
+    {
+      "id": "authz-delegated-agent-overreach",
+      "name": "Delegated agent overreach (confused deputy)",
+      "aliases": [
+        "agent acting beyond its delegation",
+        "confused deputy through an agent",
+        "privilege union instead of intersection",
+        "service-account privilege used for a user"
+      ],
+      "description": "An agent calls tools on behalf of a signed-in user. The call should succeed only if both the user and the acting agent are entitled to it. It goes wrong in two directions: the agent uses a tool or argument the user may use but the agent was never granted, or the agent's own broad service grant is used for a user who lacks that entitlement (a confused deputy). Prior agents earlier in a delegation chain are informational and grant nothing.",
+      "mcpLayer": ["host-orchestration"],
+      "stride": ["ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03", "ASI07"],
+      "nsaGuidance": ["AUTH", "LOG"],
+      "provenance": "RFC 8693 §1.1 (delegation: the actor acts for the subject with its own identity) and §4.1 (only the current actor is relevant to access control); CWE-441 Unintended Proxy or Intermediary ('Confused Deputy'); OWASP Agentic Top 10 2026 ASI03. Distinct from delegation-chain-laundering, which asks whether the current actor may present tokens to an upstream at all; here the actor is accepted and the question is which tools and arguments it may use for this user.",
+      "priorArtCoverage": [],
+      "appliesTo": ["2025-03-26", "2025-06-18", "2025-11-25", "2026-07-28"],
+      "revisionNotes": "Independent of protocol revision. Identity of the user and the acting agent is assumed already authenticated (by the delegation family's checks or the deployment's identity provider).",
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.26"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.5", "A.9.2"]
+    },
+    {
+      "id": "authz-asserted-identity",
+      "name": "Authorization on self-asserted identity",
+      "aliases": [
+        "user-controlled authorization key",
+        "acting-as header spoofing",
+        "identity claimed in tool arguments",
+        "unverified on-behalf-of assertion"
+      ],
+      "description": "The authenticated caller is not entitled to a call, but the request names a different, entitled principal in a place the caller controls: a tool argument, an HTTP header, request metadata, or an answer to an input request. A gateway or server that authorizes on that asserted identity instead of the authenticated one lets any caller borrow another's privileges.",
+      "mcpLayer": ["host-orchestration", "server"],
+      "stride": ["Spoofing", "ElevationOfPrivilege"],
+      "nistAiRmf": ["GOVERN", "MEASURE", "MANAGE"],
+      "owaspLlm2025": ["LLM06"],
+      "owaspAgentic2026": ["ASI03"],
+      "nsaGuidance": ["AUTH", "LOG"],
+      "provenance": "CWE-639 Authorization Bypass Through User-Controlled Key; CWE-290 Authentication Bypass by Spoofing; CWE-807 Reliance on Untrusted Inputs in a Security Decision. Distinct from delegation-subject-mixing (several tokens naming different users) and server-impersonation: here exactly one caller is authenticated and the asserted identity is plain request data.",
+      "priorArtCoverage": [],
+      "appliesTo": ["2025-03-26", "2025-06-18", "2025-11-25", "2026-07-28"],
+      "revisionNotes": "Independent of protocol revision. In 2026-07-28 request metadata (_meta) and input responses are additional caller-controlled places an identity can be asserted.",
+      "euAiAct": ["Art.15(5)", "Art.12", "Art.73"],
+      "iso42001": ["A.6.2.6", "A.6.2.8", "A.6.2.4", "A.8.4", "A.9.2"]
+    }
+  ]
+}
