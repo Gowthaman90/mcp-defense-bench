@@ -12,12 +12,18 @@ import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
 
 /**
- * mcp-firewall 0.1.0 has per-agent RBAC (`agents: { <id>: { allow, deny } }`), reachable through its Python SDK (`check(agent=...)`); its stdio proxy never sets an agent id. Commitment 6.5 of docs/AUTHORIZATION-PREREG.md allows `detect:false` only after confirming a peer has no per-caller authorization, so `authorized-call` stays unknown until a real SDK-path adapter is built (by an implementer blind to the held-out set).
+ * `authorized-call` (docs/AUTHORIZATION-PREREG.md): mcp-firewall 0.1.0 has per-agent RBAC
+ * (`agents: { <id>: { allow, deny } }`), reachable through its Python SDK (`check(agent=...)`); its stdio
+ * proxy never sets an agent id, so the SDK path is the one measured. probe_authz.py translates the
+ * fixture policy into that config and calls the real Gateway.check(). What the config cannot express
+ * (multi-identity callers, argument constraints) is a measured gap: detect:false with the reason.
+ * Translation: AUTHORIZATION-TRANSLATION.md. Written from the dev fixtures only.
  */
-export const meta = { tool: "mcp-firewall", class: "runtime-proxy", reproducible: true, unwiredFixtureTypes: ["authorized-call"] };
+export const meta = { tool: "mcp-firewall", class: "runtime-proxy", reproducible: true };
 
 const venvPython = fileURLToPath(new URL("../../.tools/mcpfw-venv/bin/python", import.meta.url));
 const probe = fileURLToPath(new URL("./probe_server.py", import.meta.url));
+const authzProbe = fileURLToPath(new URL("./probe_authz.py", import.meta.url));
 
 let checked = false;
 function ensureSetup() {
@@ -39,6 +45,18 @@ export async function assess(input, _testcase) {
     return { detect: false, enforce: false, signal: "no delegate-token parsing (stdio proxy; JWT only as a response secret pattern)" };
   }
   ensureSetup();
+  if (input?.type === "authorized-call") {
+    // One isolated probe run per call: fresh Gateway, fresh rate-limit and chain-detector state.
+    const r = spawnSync(venvPython, ["-I", authzProbe], { input: JSON.stringify(input), encoding: "utf8", timeout: 20000 });
+    const out = (r.stdout || "").trim().split("\n").filter(Boolean).pop();
+    if (!out) return { detect: false, enforce: false, signal: `no authz probe output${r.stderr ? ": " + r.stderr.trim().slice(-160) : ""}` };
+    try {
+      const v = JSON.parse(out);
+      return { detect: !!v.detect, enforce: !!v.enforce, signal: v.error ? `probe error: ${v.error}` : v.signal ?? null };
+    } catch {
+      return { detect: false, enforce: false, signal: "bad authz probe output" };
+    }
+  }
   const res = spawnSync(venvPython, [probe], {
     input: JSON.stringify(input) + "\n",
     encoding: "utf8",
