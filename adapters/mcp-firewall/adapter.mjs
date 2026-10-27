@@ -11,7 +11,10 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
 
-export const meta = { tool: "mcp-firewall", class: "runtime-proxy", reproducible: true };
+/**
+ * mcp-firewall 0.1.0 has per-agent RBAC (`agents: { <id>: { allow, deny } }`), reachable through its Python SDK (`check(agent=...)`); its stdio proxy never sets an agent id. Commitment 6.5 of docs/AUTHORIZATION-PREREG.md allows `detect:false` only after confirming a peer has no per-caller authorization, so `authorized-call` stays unknown until a real SDK-path adapter is built (by an implementer blind to the held-out set).
+ */
+export const meta = { tool: "mcp-firewall", class: "runtime-proxy", reproducible: true, unwiredFixtureTypes: ["authorized-call"] };
 
 const venvPython = fileURLToPath(new URL("../../.tools/mcpfw-venv/bin/python", import.meta.url));
 const probe = fileURLToPath(new URL("./probe_server.py", import.meta.url));

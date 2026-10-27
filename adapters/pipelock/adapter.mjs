@@ -14,7 +14,10 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
 
-export const meta = { tool: "pipelock", class: "egress-firewall", reproducible: true };
+/**
+ * pipelock 3.0.0 has per-agent features (agent identification via `X-Pipelock-Agent`, per-agent MCP tool-call contracts). Commitment 6.5 of docs/AUTHORIZATION-PREREG.md allows `detect:false` only after confirming a peer has no per-caller authorization, so `authorized-call` stays unknown until a real adapter is built (by an implementer blind to the held-out set).
+ */
+export const meta = { tool: "pipelock", class: "egress-firewall", reproducible: true, unwiredFixtureTypes: ["authorized-call"] };
 
 const bin = fileURLToPath(new URL("../../.tools/pipelock/pipelock", import.meta.url));
 const URL_RE = /https?:\/\/[^\s"'<>)\]]+/g;

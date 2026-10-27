@@ -66,12 +66,14 @@ try {
 }
 
 /**
- * An adapter that declares the fixture types it is wired for (`meta.fixtureTypes`) is not run on
+ * An adapter that declares the fixture types it is wired for (`meta.fixtureTypes`), or the ones it is
+ * not yet wired for (`meta.unwiredFixtureTypes`), is not run on
  * other cases: their vectors stay `unknown` (scored 0, flagged), never counted as a real miss
  * (adapters/CONTRACT.md), and they do not count toward its benign-corpus denominator.
  */
 const wired = (tc) =>
-  !Array.isArray(adapter.meta?.fixtureTypes) || adapter.meta.fixtureTypes.includes(tc.fixture?.type);
+  (!Array.isArray(adapter.meta?.fixtureTypes) || adapter.meta.fixtureTypes.includes(tc.fixture?.type)) &&
+  !(Array.isArray(adapter.meta?.unwiredFixtureTypes) && adapter.meta.unwiredFixtureTypes.includes(tc.fixture?.type));
 
 // ── Benign-only corpus: measure the false-positive rate on realistic, non-attack inputs. ──────────
 if (corpus === "benign") {

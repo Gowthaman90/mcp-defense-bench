@@ -141,3 +141,53 @@ No change replaced an A label; every adopted change is a union (A's labels kept,
 
 Crosswalk version bumped to **0.9.0** (37 vectors; the 5 promoted rows carry `vectorFamily: "delegation"`).
 Post-adjudication agreement is inflated by construction and is not reported as a headline.
+
+# Authorization family — crosswalk v0.10.0-staged → v0.10.0
+
+_Source: `staging/authorization/ratings/AGREEMENT-pre-adjudication.md` (9 set-level disagreements over the
+4 authorization vectors, six dimensions; `euAiAct` / `iso42001` are single-rater and were not in the
+agreement scope). Adjudicated 2026-10-27 at promotion (`docs/AUTHORIZATION-PREREG.md` §7–§8)._
+
+**Who adjudicated, and the limit of that.** Same as the delegation round: a working session with both
+raters' rows visible, so a documented reconciliation against `RATING-CODEBOOK.md` v1.2, not a neutral third
+party. Same rule: **adopt a change only where a codebook rule clearly supports it, as a union** (A's labels
+kept, B's added); where both readings are defensible, Rater A stands. Pre-adjudication agreement in the
+prereg (STRIDE primary κ 1.00, mcpLayer sets 0/4) stays the headline figure.
+
+## Decision summary
+
+| Dimension | Disagreements | A kept | Union adopted |
+|---|--:|--:|--:|
+| mcpLayer | 4 | 3 | 1 |
+| stride | 1 | 1 | 0 |
+| owaspLlm2025 | 1 | 0 | 1 |
+| owaspAgentic2026 | 2 | 1 | 1 |
+| nsaGuidance | 1 | 1 | 0 |
+| **Total** | **9** | **6** | **3** |
+
+## Adopted changes (applied to `rubric/crosswalk.json`)
+
+| Vector | Dimension | Was (A) | Now | Why (codebook rule) |
+|---|---|---|---|---|
+| authz-delegated-agent-overreach | mcpLayer | host-orchestration | host-orchestration, server | A second layer is listed when a defence there is independently sufficient. An upstream server that receives the delegate token knows both the user and the acting agent and can require both grants on its own, as it can for the other three vectors (where A already listed `server`). |
+| authz-argument-overreach | owaspLlm2025 | LLM06 | LLM06, LLM05 | Map on mechanism or direct impact: tool arguments are model output passed to a downstream system, and the encoded variants (`..`, sibling prefixes, look-alike characters) are exactly unvalidated output reaching it. |
+| authz-delegated-agent-overreach | owaspAgentic2026 | ASI03, ASI07 | ASI03, ASI07, ASI02 | ASI02 (Tool Misuse) covers an agent using a tool beyond its intended authority; A gave ASI02 to the two sibling vectors for the same outcome. |
+
+## Kept as A (with reason)
+
+- **mcpLayer primary for the other three vectors (B: `server` only).** The gateway that sees every
+  caller is `host-orchestration` in this rubric, as adjudicated for the delegation family; B read the
+  gateway as "the server callers reach". Both are defensible, so A stands. This is the codebook ambiguity
+  the prereg (§7) flagged; a codebook note on gateway-placed controls is proposed for the next revision.
+- **authz-argument-overreach / stride InformationDisclosure (B: EoP only).** A path or record outside the
+  grant is often read, which discloses; B's reading (not every overreach discloses) is also defensible.
+  A stands.
+- **authz-asserted-identity / ASI07 (B added).** The assertion is caller-controlled request data from one
+  authenticated caller, not an inter-agent message; ASI07 is not clearly engaged.
+- **authz-asserted-identity / NSA RT (B added).** The control is to authorize on the authenticated
+  identity and ignore assertions (AUTH), not to verify the assertion's integrity (RT's message integrity).
+
+## Effect
+
+Rubric 0.9.0 → 0.10.0: 37 → 41 vectors. `docs/CHANGELOG-scoring.md` records the denominator change.
+
