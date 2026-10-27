@@ -39,8 +39,13 @@
       },
       "mcp-firewall": {
         "version": "0.1.0 (PyPI)",
-        "authorizedCall": "unknown (per-agent RBAC via SDK; prereg 6.5)",
-        "note": "Adapter not yet written. Written later by an implementer blind to the held-out set (dev fixtures only), at this pinned version; held-out run once after its adapter commit is added here."
+        "authorizedCall": "wired (adapter 5101a6e, written blind)",
+        "note": "Adapter written by an implementer blind to the held-out set, dev fixtures only; frozen at this commit before its single held-out run.",
+        "adapter": {
+          "commit": "5101a6e",
+          "frozenAt": "2026-10-27T14:54:28.353149Z",
+          "path": "SDK check(agent=...) via adapters/mcp-firewall/probe_authz.py, Python 3.12 -I"
+        }
       },
       "pipelock": {
         "version": "3.0.0",
@@ -51,7 +56,13 @@
       "agentgateway": {
         "version": "v1.6.0 (released 2026-10-02)",
         "repo": "https://github.com/agentgateway/agentgateway",
-        "note": "Adapter not yet written. Written later by an implementer blind to the held-out set (dev fixtures only), at this pinned version; held-out run once after its adapter commit is added here."
+        "note": "Adapter written by an implementer blind to the held-out set, dev fixtures only; frozen at this commit before its single held-out run. pathWithin is translated with a 64-pass regexReplace normalisation in CEL (adapters/agentgateway/AUTHORIZATION-TRANSLATION.md); a naive startsWith translation would miss '..' traversal.",
+        "binarySha256": "6cebe8bd57262edce23a65a376d2f5a27b97cdfef609740642edbe75e1e9c685",
+        "releaseChecksumVerified": true,
+        "adapter": {
+          "commit": "f43cf31",
+          "frozenAt": "2026-10-27T14:54:28.353149Z"
+        }
       },
       "toolhive": {
         "version": "v0.57.0 (released 2026-10-26)",
@@ -126,6 +137,7 @@
     }
   ],
   "observations": [
-    "The adapter's signal records bastion's refusal message, not its violation list; for argument-constraint refusals that message reads '(no matching grant)'. Scoring is unaffected (detect/enforce, with clean benign controls). Recorded here rather than changing the frozen adapter."
+    "The adapter's signal records bastion's refusal message, not its violation list; for argument-constraint refusals that message reads '(no matching grant)'. Scoring is unaffected (detect/enforce, with clean benign controls). Recorded here rather than changing the frozen adapter.",
+    "agentgateway's path results depend on the adapter's regexReplace-based normalisation, which an ordinary deployment is unlikely to write; the published result must say so."
   ]
 }
