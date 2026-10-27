@@ -2005,7 +2005,8 @@
         "A.6.2.8",
         "A.6.2.5",
         "A.9.2"
-      ]
+      ],
+      "vectorFamily": "authorization"
     },
     {
       "id": "authz-argument-overreach",
@@ -2062,7 +2063,8 @@
         "A.6.2.4",
         "A.6.2.5",
         "A.9.2"
-      ]
+      ],
+      "vectorFamily": "authorization"
     },
     {
       "id": "authz-delegated-agent-overreach",
@@ -2117,7 +2119,8 @@
         "A.6.2.8",
         "A.6.2.5",
         "A.9.2"
-      ]
+      ],
+      "vectorFamily": "authorization"
     },
     {
       "id": "authz-asserted-identity",
@@ -2172,7 +2175,8 @@
         "A.6.2.4",
         "A.8.4",
         "A.9.2"
-      ]
+      ],
+      "vectorFamily": "authorization"
     }
   ],
   "_specRevisions": {

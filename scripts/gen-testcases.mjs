@@ -1013,27 +1013,30 @@ for (const c of ALL) {
   seq[c.vector] = (seq[c.vector] ?? 0) + 1;
   emitOne(c, String(seq[c.vector]).padStart(3, "0"));
 }
-const staged = copyStagedFamily("dev", join(root, "testcases"));
+const staged = new Set([
+  ...copyStagedFamily("dev", join(root, "testcases"), "delegation"),
+  ...copyStagedFamily("dev", join(root, "testcases"), "authorization"),
+]);
 for (const id of familyVectors) {
   if (!staged.has(id)) {
     console.error(`✗ promoted vector '${id}' has no staged development fixture`);
     process.exit(1);
   }
 }
-console.log(`✓ copied the staged delegation dev fixtures byte-identical for ${staged.size} vectors`);
+console.log(`✓ copied the staged delegation + authorization dev fixtures byte-identical for ${staged.size} vectors`);
 console.log(
   `✓ wrote ${ALL.length} test cases (v1 ${CASES.length} + v2 ${CASES_V2.length} + v3 ${CASES_V3.length} + 2026-07-28 ${CASES_V4.length}) ` +
     `across ${seen.size} vectors (all ${rubricIds.size} rubric vectors covered)`,
 );
 
 // ── Promoted families: staged fixtures copied BYTE-IDENTICAL (never re-serialized) ─────────────────
-// docs/DELEGATION-PREREG.md §8.4: each staged file must still match the sha256 registered in
-// staging/delegation/MANIFEST.json; a file listed in MANIFEST.removals is skipped (removed, logged).
-// Returns the vector ids that received at least one fixture.
-function copyStagedFamily(split, destRoot) {
-  const manifest = JSON.parse(readFileSync(join(root, "staging", "delegation", "MANIFEST.json"), "utf8"));
+// docs/DELEGATION-PREREG.md and docs/AUTHORIZATION-PREREG.md §8: each staged file must still match
+// the sha256 registered in staging/<family>/MANIFEST.json; a file listed in MANIFEST.removals is
+// skipped (removed, logged). Returns the vector ids that received at least one fixture.
+function copyStagedFamily(split, destRoot, family = "delegation") {
+  const manifest = JSON.parse(readFileSync(join(root, "staging", family, "MANIFEST.json"), "utf8"));
   const removed = new Set((manifest.removals ?? []).map((r) => r.file));
-  const prefix = `staging/delegation/${split}/`;
+  const prefix = `staging/${family}/${split}/`;
   const vectors = new Set();
   for (const [rel, sha] of Object.entries(manifest.files)) {
     if (!rel.startsWith(prefix) || removed.has(rel)) continue;
