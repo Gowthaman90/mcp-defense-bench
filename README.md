@@ -84,7 +84,7 @@ novelty positioning — read it before citing this anywhere.
    protocol revision**, development **and** held-out side by side with the generalisation gap, and the
    benign-corpus FP rate with a Wilson 95% interval.
 
-## Status — rubric 0.10.0 (2026-10-27)
+## Status — v0.10.0 (2026-10-27)
 
 Full board: [docs/LEADERBOARD.md](docs/LEADERBOARD.md) · live site:
 [gowthaman90.github.io/mcp-defense-bench](https://gowthaman90.github.io/mcp-defense-bench/).
