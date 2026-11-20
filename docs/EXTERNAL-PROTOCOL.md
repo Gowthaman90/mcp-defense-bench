@@ -78,3 +78,31 @@ development and held-out RobustCoverage on the same vector (`tool-poisoning`, `r
 
 One run per tool and build. Results are published as measured. No converter rule, filler sentence, tool
 configuration or build changes after the first run; any later change is a new, separately labelled run.
+
+## Addendum A — outside defenders (registered 2026-11-20, before any of them was run on any corpus in this round)
+
+Three third-party Python defences, scored with the Python port of the benchmark (mcp-defense-bench-py at
+`b57b168`, configs in its `examples/` exactly as published there; one mechanical rule per tool, never per case):
+
+| Tool | Version (PyPI upload) | Config | Inspects | Held-out status |
+|---|---|---|---|---|
+| mcp-assure | 0.3.2 (2026-07-29) | `mcp_assure_example:operator_pack` (FastMCP middleware) | tool name allow-list, argument names | **frozen before registration (2026-09-05)**: held-out claim |
+| mcp-gate-policy | 0.3.2 (2026-08-07) | `mcp_gate_example:operator_policy` (stdio proxy) | `tools/call` argument values | **frozen before registration**: held-out claim |
+| agentx-mcp + agentx-security-sdk | 0.2.4 (2026-10-08) + 0.5.5 (2026-10-14) | `agentx_mcp_example:enforce` (stdio proxy) | `tools/call` floors; `tools/list` pins + hidden-Unicode | released **after** the held-out set was published (2026-09-07): re-measurement on a seen set, not a held-out claim (rule 7) |
+
+Environment: Python 3.12, fastmcp 4.1.0, mcp 2.3.0, isolated venv. agentx runs with `AGENTX_TELEMETRY=off` and a
+fresh `HOME` per input. Corpora: development, held-out and benign from this repository at the commit of the run;
+the external corpus through `scripts/run-external-py.py`, which applies the same scoring rule as
+`scripts/run-external.mjs` (ungated when a case has no control).
+
+Their authors did not see this benchmark's corpora while building these versions, so for them the development
+corpus is also unseen; their development-to-held-out difference therefore measures how much harder the held-out
+corpus is for an independent defender, a control for the co-development gap of the reference proxy.
+
+**Predictions.**
+1. None of the three flags any MCPTox definition or InjecAgent result above 1%: mcp-assure and mcp-gate do not
+   read definitions or results, and agentx reads descriptions only for hidden-Unicode carriers.
+2. For mcp-assure and mcp-gate the development-to-held-out difference on the base vectors is at most one
+   vector-equivalent in either direction.
+
+One run per tool and corpus; results published as measured.
