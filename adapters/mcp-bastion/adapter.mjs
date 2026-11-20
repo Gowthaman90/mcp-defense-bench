@@ -22,7 +22,10 @@ const require = createRequire(import.meta.url);
 
 // Resolve mcp-bastion: prefer an installed package; fall back to the sibling repo's built dist.
 let bastion;
-try {
+// MCP_BASTION_DIST: path to a specific build's dist/index.js (frozen-build re-runs). No fallback:
+// if it is set and fails to load, the run must fail rather than silently score another build.
+if (process.env.MCP_BASTION_DIST) bastion = await import(process.env.MCP_BASTION_DIST);
+else try {
   bastion = await import("mcp-bastion");
 } catch {
   const distUrl = new URL("../../../mcp_bastion/dist/index.js", import.meta.url);

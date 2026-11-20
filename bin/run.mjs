@@ -12,8 +12,13 @@
  *                                             reported beside, not instead of, development coverage)
  *   benign             testcases-benign/   → results/benign/<tool>.json   (benign-only items: every
  *                                             flag is a false positive; reports FP rate + 95% CI)
+ *   external           testcases-external/ → results/external/<tool>.json (attack corpora written by
+ *                                             others, converted mechanically; docs/EXTERNAL-PROTOCOL.md)
  *
- * Usage: node bin/run.mjs <tool> [--corpus dev|heldout|benign]
+ * --out <dir>   write the results file to <dir> instead, and never touch coverage.json (used to check
+ *               that a rebuilt frozen build reproduces recorded outcomes without overwriting them).
+ *
+ * Usage: node bin/run.mjs <tool> [--corpus dev|heldout|benign|external] [--out <dir>]
  */
 import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -23,13 +28,14 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 
 const argv = process.argv.slice(2);
-const tool = argv.find((a) => !a.startsWith("--"));
 const corpus = argv.includes("--corpus") ? argv[argv.indexOf("--corpus") + 1] : "dev";
-if (!tool || !["dev", "heldout", "benign"].includes(corpus)) {
-  console.error("usage: node bin/run.mjs <tool> [--corpus dev|heldout|benign]   (tool = a directory under adapters/)");
+const outOverride = argv.includes("--out") ? argv[argv.indexOf("--out") + 1] : null;
+const tool = argv.find((a, i) => !a.startsWith("--") && argv[i - 1] !== "--corpus" && argv[i - 1] !== "--out");
+if (!tool || !["dev", "heldout", "benign", "external"].includes(corpus)) {
+  console.error("usage: node bin/run.mjs <tool> [--corpus dev|heldout|benign|external] [--out <dir>]   (tool = a directory under adapters/)");
   process.exit(1);
 }
-const CORPUS_DIR = { dev: "testcases", heldout: "testcases-heldout", benign: "testcases-benign" }[corpus];
+const CORPUS_DIR = { dev: "testcases", heldout: "testcases-heldout", benign: "testcases-benign", external: "testcases-external" }[corpus];
 
 /** Wilson 95% interval for a proportion — small-sample honest. */
 function wilson(k, n, z = 1.96) {
@@ -211,10 +217,10 @@ const covOut = {
   measuredBy: "bin/run.mjs",
   coverage,
 };
-if (corpus === "dev") writeFileSync(covPath, JSON.stringify(covOut, null, 2) + "\n");
+if (corpus === "dev" && !outOverride) writeFileSync(covPath, JSON.stringify(covOut, null, 2) + "\n");
 
 // Detailed results.
-const outDir = corpus === "dev" ? join(root, "results") : join(root, "results", corpus);
+const outDir = outOverride ?? (corpus === "dev" ? join(root, "results") : join(root, "results", corpus));
 mkdirSync(outDir, { recursive: true });
 const robustWeighted = rubricIds.reduce((a, id) => a + (coverage[id].robustCoverage ?? 0), 0);
 const capabilityWeighted = rubricIds.reduce((a, id) => a + (coverage[id].capability ?? 0), 0);
