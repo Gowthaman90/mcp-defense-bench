@@ -1,0 +1,62 @@
+{
+ "protocol": "docs/EXTERNAL-PROTOCOL.md",
+ "registeredCommit": "92e7de5",
+ "converterCommit": "b5042f2",
+ "corpora": {
+  "mcptox": {
+   "repo": "https://github.com/zhiqiangwang4/MCPTox-Benchmark",
+   "commit": "630121b3275f74cc72d000a7a056e4d3c68648ef",
+   "licence": "CC BY 4.0"
+  },
+  "injecagent": {
+   "repo": "https://github.com/uiuc-kang-lab/InjecAgent",
+   "commit": "f19c9f2c79a41046eb13c03c51a24c567a8ffa07",
+   "licence": "MIT"
+  }
+ },
+ "inputSha256": {
+  "mcptox/pure_tool.json": "54b1eb0e9d7b2f18465266aa9d9dfda828cd558b1269b74731ec2c5d8579e617",
+  "injecagent/tools.json": "e21a8f70b1d5de4677d6d52642936a322655d79b17a72c84f600550384083a1e",
+  "injecagent/test_cases_dh_base.json": "0a8186468d21389af432e8c7b399ae42264d1b93a07b65c7a489468508604305",
+  "injecagent/test_cases_ds_base.json": "4daab35c62a3845e8b9400f4dca58b9c9f37e57cd33b2337552557fbb26282e9"
+ },
+ "converted": {
+  "tool-poisoning": 485,
+  "response-injection": 1054
+ },
+ "removed": [],
+ "convertedCorpusDigest": "823d040a3f7a6e189d9acf68ea9bd1b1238bea228364e8020dc42fd7a95f333b",
+ "builds": {
+  "mcp-bastion-1.0.0": {
+   "commit": "a3716d5",
+   "adapter": "bench 2771b2a",
+   "rebuildCheck": "dev 51 + held-out 48 cases reproduce recorded outcomes, 0 differences"
+  },
+  "mcp-bastion-1.4.0": {
+   "commit": "45b579c",
+   "adapter": "bench HEAD (unchanged since fd96021) + MCP_BASTION_DIST",
+   "rebuildCheck": "dev 78 + held-out 75 cases reproduce recorded outcomes, 0 differences"
+  },
+  "mcp-firewall": {
+   "version": "0.1.0"
+  },
+  "pipelock": {
+   "version": "3.0.0 free",
+   "sha256prefix": "96843f7f3b54"
+  },
+  "null-baseline": {}
+ },
+ "run": {
+  "started": "2026-11-20T14:26:36Z",
+  "finished": "2026-11-20T14:30:43Z",
+  "runs": 1,
+  "iterations": 0
+ },
+ "resultSha256": {
+  "mcp-bastion-1.0.0.json": "04b62b8ebcc52088d07ec400bc7b0174e3ddcb3422c3df9fb174c02f214d4395",
+  "mcp-bastion-1.4.0.json": "1759bffbbdcf4758ce525429520eea8c766b1c4afc82a8cacff06cd289cf2572",
+  "mcp-firewall.json": "a973bc5bbc3251ac8159c465cf87804eea8ece321950893fafbbe63c20eff5f6",
+  "null-baseline.json": "79be6c9e6323c801b035521bc859ffb75e6da2f18ec68b571fe06d3c3b9e189e",
+  "pipelock.json": "a9409af0a9ff8837d3876a3e48ce155f784afe8ae1093963bbdc932aba6e313c"
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "protocol": "docs/EXTERNAL-PROTOCOL.md",
+ "filler": "Thanks, everything looks fine.",
+ "inputs": {
+  "mcptox/pure_tool.json": "54b1eb0e9d7b2f18465266aa9d9dfda828cd558b1269b74731ec2c5d8579e617",
+  "injecagent/tools.json": "e21a8f70b1d5de4677d6d52642936a322655d79b17a72c84f600550384083a1e",
+  "injecagent/test_cases_dh_base.json": "0a8186468d21389af432e8c7b399ae42264d1b93a07b65c7a489468508604305",
+  "injecagent/test_cases_ds_base.json": "4daab35c62a3845e8b9400f4dca58b9c9f37e57cd33b2337552557fbb26282e9"
+ },
+ "written": {
+  "tool-poisoning": 485,
+  "response-injection": 1054
+ },
+ "removed": []
+}
