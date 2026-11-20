@@ -22,10 +22,11 @@ abstract: >-
   protocol revision and reports coverage per revision; v0.9.0 adds a
   pre-registered five-vector delegation family; v0.10.0 adds a pre-registered
   four-vector runtime authorization family measured against agentgateway and
-  ToolHive (41 vectors total).
+  ToolHive (41 vectors total); v0.11.0 adds a pre-registered external validation
+  on 1,539 attacks from MCPTox and InjecAgent and three independent defenders.
 license: Apache-2.0
-version: 0.10.0
-date-released: "2026-10-27"
+version: 0.11.0
+date-released: "2026-11-20"
 keywords:
   - Model Context Protocol
   - MCP

@@ -84,12 +84,44 @@ novelty positioning — read it before citing this anywhere.
    protocol revision**, development **and** held-out side by side with the generalisation gap, and the
    benign-corpus FP rate with a Wilson 95% interval.
 
-## Status — v0.10.0 (2026-10-27)
+## Status — v0.11.0 (2026-11-20)
 
 Full board: [docs/LEADERBOARD.md](docs/LEADERBOARD.md) · live site:
 [gowthaman90.github.io/mcp-defense-bench](https://gowthaman90.github.io/mcp-defense-bench/).
 
-**New: a pre-registered authorization family (4 vectors).** A deployment says which application, user and
+**New in v0.11.0: external validation on attacks written by others.** The held-out corpus was written by
+this benchmark's author. To test the result on inputs nobody here wrote, a protocol
+([`docs/EXTERNAL-PROTOCOL.md`](docs/EXTERNAL-PROTOCOL.md)) fixed two published corpora at pinned commits,
+mechanical conversion rules, the builds and three predictions, and was committed before any item was
+converted or any tool scored. [`testcases-external/`](testcases-external/) holds the result: 485 poisoned
+tool descriptions from MCPTox (CC BY 4.0, scored ungated: no benign counterparts) and 1,054 injected tool
+results from the InjecAgent base setting (MIT, each with a matched control). Each tool and build ran once;
+results are in [`results/external/`](results/external/) with a manifest.
+
+| Tool | tool-poisoning dev → held-out | MCPTox flagged (95% CI) | response-injection dev → held-out | InjecAgent flagged (95% CI) |
+|---|--:|--:|--:|--:|
+| `mcp-bastion` 1.0.0 and 1.4.0 (identical per case) | 50% → 0% | 45/485 = 9% (7.0–12%) | 50% → 25% | 34/1054 = 3% (2.3–4.5%) |
+| `mcp-firewall`, `pipelock`, `null-baseline` | — | 0/485 | — | 0/1054 |
+| `mcp-assure`, `mcp-gate`, `agentx-mcp` | — | 0/485 | — | 0/1054 |
+
+All three predictions held. Every control passed for every tool; no tool blocks any external case.
+
+**Independent defenders (Addendum A).** Three third-party Python defences, frozen at PyPI versions and run
+once through [mcp-defense-bench-py](https://github.com/Gowthaman90/mcp-defense-bench-py), separate
+co-development from corpus difficulty. Base vectors, in vector-equivalents
+(enforce 1, detect 0.5):
+
+| Tool | Held-out status | Dev → held-out | Benign FP |
+|---|---|--:|--:|
+| `mcp-assure` 0.3.2 | held-out (released before registration) | 1 → 1 | 0/312 |
+| `mcp-gate-policy` 0.3.2 | held-out (released before registration) | 2 → 0.5 | 0/312 |
+| `agentx-mcp` 0.2.4 + SDK 0.5.5 | re-measurement (released after the set was published) | 3.75 → 2.5 | 3/312 |
+
+Checks that compare with declared or recorded state (argument-name allow-lists, definition pinning) keep
+their credit; heuristic checks lose it. Registered prediction 2 (mcp-gate's gap at most one
+vector-equivalent) **failed**: the gap is 1.5.
+
+**v0.10.0: a pre-registered authorization family (4 vectors).** A deployment says which application, user and
 agent may call which tool with which arguments. The family asks whether a defender refuses, before any
 upstream contact, a caller with no grant for the tool, a permitted tool called with out-of-policy arguments
 (including `..` path escapes), an agent acting for a user when only one of the two is permitted, and an
