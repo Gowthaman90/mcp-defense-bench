@@ -58,5 +58,42 @@
   "mcp-firewall.json": "a973bc5bbc3251ac8159c465cf87804eea8ece321950893fafbbe63c20eff5f6",
   "null-baseline.json": "79be6c9e6323c801b035521bc859ffb75e6da2f18ec68b571fe06d3c3b9e189e",
   "pipelock.json": "a9409af0a9ff8837d3876a3e48ce155f784afe8ae1093963bbdc932aba6e313c"
+ },
+ "addendumA": {
+  "registeredCommit": "4b98938",
+  "driverCommit": "e52bd9d",
+  "scorer": "mcp-defense-bench-py b57b168 (0.3.0) with --bench-path at this repository, --allow-unpinned (dev/held-out/benign identical to v0.10.0)",
+  "environment": "Python 3.12, fastmcp 4.1.0, mcp 2.3.0",
+  "tools": {
+   "mcp-assure": "0.3.2 (PyPI 2026-07-29), examples.mcp_assure_example:operator_pack",
+   "mcp-gate": "mcp-gate-policy 0.3.2 (PyPI 2026-08-07), examples.mcp_gate_example:operator_policy",
+   "agentx-mcp": "0.2.4 (2026-10-08) + agentx-security-sdk 0.5.5 (2026-10-14), examples.agentx_mcp_example:enforce, AGENTX_TELEMETRY=off"
+  },
+  "run": {
+   "started": "2026-11-20T14:52:41Z",
+   "finished": "2026-11-20T15:41:51Z",
+   "runs": 1
+  },
+  "predictions": {
+   "1": "held (0/1539 flagged for all three)",
+   "2": "failed for mcp-gate (gap 1.5 VE > 1); held for mcp-assure (0)"
+  },
+  "resultSha256": {
+   "results/external/agentx-mcp.json": "597fef0055059595b87db893ebc2bec4844aff2dc7fef37cc914693169d8bbfe",
+   "results/external/mcp-assure.json": "98565a632329b51f7b0fd542dd81deff40eeae16014b40c173ef17de1f14d981",
+   "results/external/mcp-gate.json": "fb0228d2a599908f35bca62c93711b0ec797755d1c6f48905b944d687a64a0bb",
+   "results/outside/agentx-mcp.json": "cffaa0752f6053511d1a915b0a3f06d8920d84677571c78d307c338fc3c6aeb7",
+   "results/outside/benign/agentx-mcp.json": "18376dfa2b9cee515808a14d0fb9496ed93c3112f9dd84182c4491ef506c47bc",
+   "results/outside/benign/mcp-assure.json": "73dbd8d744b6a10f4d9ab3d16953050a8783513bcc2dcfb412f8a1ce819283fe",
+   "results/outside/benign/mcp-gate.json": "7a96e96b5645675e57b4fb7a921bafb3c15b49c68a01d886c63c94f58c6be2b3",
+   "results/outside/coverage/agentx-mcp.json": "9df8fc04015bf9ea21c1a3b5d2847bb392178045d1bf8b2006697d1c530a179e",
+   "results/outside/coverage/mcp-assure.json": "f7d96b0fef79d443bed3611634ceab6ba8930e433162b09bd7b0446a11a39d94",
+   "results/outside/coverage/mcp-gate.json": "c7a247899dc1e71247c2f7483c3150defaccc02b147f2d4ff3593d2846efccba",
+   "results/outside/heldout/heldout/agentx-mcp.json": "2df9daa613afe9fd982382ae1241789854f81819eb716a0daf135a474922e6f9",
+   "results/outside/heldout/heldout/mcp-assure.json": "da95f8a3ac0c4aa08229c3bd4da79f645a1aab349676902e3de88a41ab7d508a",
+   "results/outside/heldout/heldout/mcp-gate.json": "0bfa2b790abdbe15ee20c8e93247c1c2a1f90738fdf1dd370d0225c8b8330511",
+   "results/outside/mcp-assure.json": "15b28e3129b401310ced8e43f9cd2ac65f961813369f4474d08afe01f4671eb9",
+   "results/outside/mcp-gate.json": "d9513e350df837fc96d06a387ada75917dca875691cf23f33ec1a628988de187"
+  }
  }
 }

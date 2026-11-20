@@ -1,0 +1,421 @@
+{
+  "tool": "mcp-gate",
+  "repo": null,
+  "class": "runtime-proxy",
+  "reproducible": true,
+  "version": "0.3.2",
+  "rubricVersion": "0.10.0",
+  "measuredBy": "mcp_defense_bench (python)",
+  "coverage": {
+    "tool-poisoning": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "tool-poisoning/001-instruction-override",
+      "verified": true
+    },
+    "tool-shadowing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "rug-pull": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "rug-pull/001-post-trust-mutation",
+      "verified": true
+    },
+    "out-of-scope-params": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 1,
+      "guaranteed": 1,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "out-of-scope-params/001-argument-smuggling",
+      "verified": true
+    },
+    "response-injection": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 3,
+      "fpCount": 0,
+      "evidence": "response-injection/001-result-borne-instruction",
+      "verified": true
+    },
+    "indirect-retrieval-injection": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "indirect-retrieval-injection/001-document-borne-payload",
+      "verified": true
+    },
+    "cross-tool-exfiltration": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "cross-tool-exfiltration/001-confused-deputy-chain",
+      "verified": true
+    },
+    "tool-transfer": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.5,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "tool-transfer/002-cross-server-data-exfil",
+      "verified": true
+    },
+    "false-error-escalation": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "false-error-escalation/001-fake-failure-retry",
+      "verified": true
+    },
+    "package-squatting": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "supply-chain-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "config-drift": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "sandbox-escape": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "schema-bypass": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "schema-bypass/001-validation-bypass",
+      "verified": true
+    },
+    "mitm-transport": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "dns-rebinding": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "server-impersonation": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "excessive-permission": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "credential-token-theft": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "credential-token-theft/001-token-passthrough-leak",
+      "verified": true
+    },
+    "consent-fatigue": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "command-injection": {
+      "level": "enforce",
+      "capability": 1,
+      "robustCoverage": 0.5,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "command-injection/001-shell-metacharacter",
+      "verified": true
+    },
+    "system-prompt-leakage": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 2,
+      "fpCount": 0,
+      "evidence": "system-prompt-leakage/001-context-exfil-request",
+      "verified": true
+    },
+    "mid-session-tool-injection": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "mid-session-tool-injection/001-tool-framing-metadata",
+      "verified": true
+    },
+    "multi-tool-split-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "header-body-desync": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "requeststate-forgery": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "list-cache-poisoning": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mrtr-input-phishing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "task-authz-bypass": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "mcp-app-sandbox-bypass": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "roots-scope-gap": {
+      "level": "none",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 1,
+      "fpCount": 0,
+      "evidence": "roots-scope-gap/001-no-enforced-filesystem-boundary",
+      "verified": true
+    },
+    "transport-downgrade": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-audience-confusion": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-subject-mixing": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-stale-relay": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-chain-laundering": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "delegation-signature-forgery": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "authz-unentitled-tool": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "authz-argument-overreach": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "authz-delegated-agent-overreach": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    },
+    "authz-asserted-identity": {
+      "level": "unknown",
+      "capability": 0,
+      "robustCoverage": 0,
+      "guaranteed": 0,
+      "fixtures": 0,
+      "fpCount": 0,
+      "evidence": null,
+      "verified": false
+    }
+  }
+}
